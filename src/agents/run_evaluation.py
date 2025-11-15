@@ -117,11 +117,24 @@ class EvaluationController:
         """
 
         # Step 1: Run all specialist agents
+        print(f"\n{'='*60}")
+        print(f"TIMESTEP {timestep} - Decision Cycle {len(self.predictions) + 1}")
+        print(f"{'='*60}")
+        print(f"Time: {state.timestamp}")
+        print(f"L1: {state.L1:.2f}m | F1: {state.F1:.0f} m³/15min | Price: €{state.electricity_price:.3f}/kWh")
+        print(f"\n--- SPECIALIST AGENT ASSESSMENTS ---")
+
         recommendations = {}
         for name, agent in self.specialist_agents.items():
             try:
                 rec = agent.assess(state)
                 recommendations[name] = rec
+                print(f"\n{name.upper()}:")
+                print(f"  Priority: {rec.priority} | Confidence: {rec.confidence:.2f}")
+                print(f"  Type: {rec.recommendation_type}")
+                print(f"  Reasoning: {rec.reasoning[:150]}...")
+                if rec.data:
+                    print(f"  Key Data: {str(rec.data)[:200]}...")
             except Exception as e:
                 # Check if this is a rate limit error
                 if "429" in str(e) or "quota" in str(e).lower() or "rate" in str(e).lower():
@@ -130,8 +143,17 @@ class EvaluationController:
                 print(f"⚠️ {name} failed: {e}")
 
         # Step 2: Coordinator synthesis
+        print(f"\n--- COORDINATOR SYNTHESIS ---")
         try:
             pump_commands = self.coordinator.synthesize_recommendations(state, recommendations)
+
+            # Print coordinator's decision
+            if self.coordinator.history:
+                decision = self.coordinator.history[-1]
+                print(f"Coordinator Decision:")
+                print(f"  Reasoning: {decision.reasoning[:200]}...")
+                print(f"  Priority Applied: {decision.data.get('llm_response', {}).get('priority_applied', 'N/A')}")
+                print(f"  Confidence: {decision.confidence:.2f}")
         except Exception as e:
             # Check if this is a rate limit error
             if "429" in str(e) or "quota" in str(e).lower() or "rate" in str(e).lower():
@@ -169,6 +191,16 @@ class EvaluationController:
         cost_eur = energy_kwh * state.electricity_price
         flow_m3 = total_flow_m3h * 0.25
         specific_energy = energy_kwh / flow_m3 if flow_m3 > 0 else 0
+
+        # Print pump commands and costs
+        print(f"\n--- FINAL PUMP COMMANDS ---")
+        active_pumps = [cmd for cmd in enhanced_commands if cmd['start']]
+        print(f"Active Pumps: {len(active_pumps)}")
+        for cmd in active_pumps:
+            print(f"  {cmd['pump_id']}: {cmd['frequency_hz']:.1f} Hz → {cmd['flow_m3h']:.0f} m³/h @ {cmd['power_kw']:.1f} kW (η={cmd['efficiency']:.1%})")
+        print(f"\n💰 COST:")
+        print(f"  Power: {total_power_kw:.1f} kW | Energy: {energy_kwh:.2f} kWh | Cost: €{cost_eur:.2f}")
+        print(f"  Flow: {flow_m3:.0f} m³ | Specific Energy: {specific_energy:.6f} kWh/m³")
 
         # Step 5: Check constraints
         violations = []
