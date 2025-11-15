@@ -1,0 +1,84 @@
+
+============================================================
+MULTI-AGENT WASTEWATER SYSTEM - EVALUATION MODE
+============================================================
+
+Initializing agents...
+Creating specialist agents...
+✓ Model loaded from /Users/hasaanahmed/Documents/flow-optimize/src/models/inflow_lstm_model.pth
+  ✓ Loaded LSTM model from /Users/hasaanahmed/Documents/flow-optimize/src/models/inflow_lstm_model.pth
+✓ OpenAI LLM initialized: gpt-4o-mini
+  ✓ Registered tool: lstm_forecast
+  ✓ Registered tool: detect_storm
+  ✓ Registered tool: check_dry_weather
+  ✓ Registered tool: identify_cheap_windows
+  ✓ Registered tool: calculate_arbitrage_value
+  ✓ Registered tool: calculate_pump_performance
+  ✓ Registered tool: find_optimal_combination
+  ✓ Registered tool: calculate_trajectory
+  ✓ Registered tool: assess_risk
+  ✓ Registered tool: calculate_flow_variability
+  ✓ Registered tool: create_staged_plan
+  ✓ Registered tool: check_pump_runtimes
+  ✓ Registered tool: check_daily_emptying
+  ✓ Registered tool: validate_frequencies
+✓ Created 6 specialist agents
+✓ All agents initialized (6 specialists + 1 coordinator)
+
+Loading historical data...
+Loading HSY historical data...
+✓ Loaded 1536 records from 2024-11-15 00:00:00 to 2024-11-30 23:45:00
+✓ Loaded volume-level map with 142 entries
+✓ Loaded 1536 timesteps of data
+
+Settings:
+  Price scenario: NORMAL
+
+============================================================
+EVALUATION RUN
+============================================================
+Simulating 10 timesteps (2.5 hours)
+
+✓ Price scenario set to: NORMAL
+
+============================================================
+EVALUATION COMPLETE
+============================================================
+
+📊 COMPLETED: 10/10 timesteps
+
+💰 COST METRICS
+  Total Cost:           €612.80
+  Cost per timestep:    €61.28
+
+⚡ ENERGY METRICS
+  Total Energy:         1,000.00 kWh
+  Total Flow Pumped:    8,325.00 m³
+  Specific Energy:      0.120120 kWh/m³
+
+🚨 CONSTRAINT COMPLIANCE
+  Total Violations:     0
+    ✅ Perfect compliance!
+
+💾 Saved results to: /Users/hasaanahmed/Documents/flow-optimize/ai_evaluation_normal_10steps.json
+
+============================================================
+COMPARISON: AI vs BASELINE
+============================================================
+
+📊 RESULTS (10 timesteps completed)
+
+Metric                         Baseline             AI System            Improvement    
+-------------------------------------------------------------------------------------
+Total Cost (EUR)               €         16,725.62 €            612.80          96.3%
+Total Energy (kWh)                       1,906.29           1,000.00          47.5%
+Specific Energy (kWh/m³)                 0.121972           0.120120           1.5%
+
+💰 SAVINGS
+  Cost Savings:         €16,112.82
+  Energy Savings:       906.29 kWh
+
+✅ AI system is 96.3% BETTER than baseline!
+💾 Saved comparison to: /Users/hasaanahmed/Documents/flow-optimize/comparison_normal_10steps.json
+
+✓ Evaluation complete!

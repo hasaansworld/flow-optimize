@@ -225,12 +225,12 @@ Key Insights:
 """
         if efficiency_rec:
             data = efficiency_rec.data
-            combo = data.get('recommended_combination', {})
-            context += f"""- Recommended pumps: {combo.get('pumps', [])}
+            combo = data.get('recommended_combination', {}) or {}
+            context += f"""- Recommended pumps: {combo.get('pumps', []) if combo else 'N/A'}
 - Expected efficiency: {data.get('expected_efficiency', 0):.1%}
-- Total flow: {combo.get('total_flow', 0):.0f} m³/h
-- Total power: {combo.get('total_power', 0):.0f} kW
-Reasoning: {efficiency_rec.reasoning[:200]}...
+- Total flow: {combo.get('total_flow', 0) if combo else 0:.0f} m³/h
+- Total power: {combo.get('total_power', 0) if combo else 0:.0f} kW
+Reasoning: {efficiency_rec.reasoning[:200] if efficiency_rec.reasoning else 'N/A'}...
 """
 
         context += f"""

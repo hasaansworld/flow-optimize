@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "duration_days": 15,
+    "timesteps": 1536,
+    "price_scenario": "normal",
+    "start_date": "2024-11-15 00:00:00",
+    "end_date": "2024-11-30 23:45:00"
+  },
+  "baseline_metrics": {
+    "total_cost_eur": 2569055.33,
+    "total_energy_kwh": 292805.55,
+    "total_flow_m3": 2400586.72,
+    "specific_energy_kwh_per_m3": 0.121972,
+    "average_cost_per_day_eur": 171270.36,
+    "average_power_kw": 762.51
+  },
+  "constraints": {
+    "L1_min": -0.02,
+    "L1_max": 5.26,
+    "L1_violations": 1,
+    "F2_max": 10478.01,
+    "F2_violations": 0,
+    "total_violations": 1
+  },
+  "price_statistics": {
+    "price_min": -0.05,
+    "price_max": 47.949,
+    "price_mean": 8.8166,
+    "price_median": 4.6095
+  }
+}
