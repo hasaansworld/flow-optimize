@@ -808,7 +808,8 @@ def create_all_agents(lstm_model_path: str) -> Dict[str, BaseAgent]:
         'energy_cost': EnergyCostAgent(),
         'pump_efficiency': PumpEfficiencyAgent(),
         'water_level_safety': WaterLevelSafetyAgent(),
-        # Flow smoothness and constraint compliance agents can be added similarly
+        'flow_smoothness': FlowSmoothnessAgent(),
+        'constraint_compliance': ConstraintComplianceAgent()
     }
 
     print(f"✓ Created {len(agents)} specialist agents")

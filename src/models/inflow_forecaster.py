@@ -392,7 +392,7 @@ class InflowForecastingSystem:
 
     def load_model(self, path: str):
         """Load model and scalers"""
-        checkpoint = torch.load(path)
+        checkpoint = torch.load(path, weights_only=False)
 
         input_size = checkpoint['feature_scaler'].n_features_in_
 

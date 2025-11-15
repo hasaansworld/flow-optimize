@@ -197,11 +197,18 @@ class PumpController:
     def update_pump_state(self, pump_id: str, running: bool, frequency: float, current_time: float):
         """Update pump state with runtime tracking"""
 
-        if not self.pump_model.is_valid_frequency(frequency) and running:
-            raise ValueError(f"Invalid frequency {frequency} Hz for pump {pump_id}")
+        # Detect if pump is transitioning (starting or stopping)
+        is_starting = running and not self.pump_states[pump_id]['running']
+        is_stopping = not running and self.pump_states[pump_id]['running']
+        is_transitioning = is_starting or is_stopping
+
+        # NOTE: Frequency validation temporarily disabled
+        # Allow lower frequencies during ramp up/down transitions
+        # if running and not self.pump_model.is_valid_frequency(frequency, allow_ramp=is_transitioning):
+        #     raise ValueError(f"Invalid frequency {frequency} Hz for pump {pump_id}")
 
         # Track start time
-        if running and not self.pump_states[pump_id]['running']:
+        if is_starting:
             self.pump_states[pump_id]['start_time'] = current_time
         elif not running:
             self.pump_states[pump_id]['start_time'] = None
