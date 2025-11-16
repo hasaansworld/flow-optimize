@@ -1,0 +1,247 @@
+{
+  "name": "Multi-Agent Wastewater Control - Main Loop",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/15 * * * *"
+            }
+          ]
+        }
+      },
+      "name": "Schedule Every 15min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://agent-api:8000/api/v1/state/current",
+        "options": {}
+      },
+      "name": "Get Current State",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://agent-api:8000/api/v1/synthesize",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "L1",
+              "value": "={{ $json.L1 }}"
+            },
+            {
+              "name": "V",
+              "value": "={{ $json.V }}"
+            },
+            {
+              "name": "F1",
+              "value": "={{ $json.F1 }}"
+            },
+            {
+              "name": "F2",
+              "value": "={{ $json.F2 }}"
+            },
+            {
+              "name": "electricity_price",
+              "value": "={{ $json.electricity_price_normal }}"
+            },
+            {
+              "name": "price_scenario",
+              "value": "normal"
+            },
+            {
+              "name": "current_index",
+              "value": "={{ $json.current_index }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Run Multi-Agent Decision",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.priority_applied }}",
+              "operation": "equals",
+              "value2": "CRITICAL"
+            }
+          ]
+        }
+      },
+      "name": "Check if Critical",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://hooks.slack.com/services/YOUR_WEBHOOK_URL",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "🚨 CRITICAL: {{ $json.coordinator_reasoning }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Alert: Critical Decision",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO decisions (timestamp, pump_commands, reasoning, estimated_cost, priority, confidence) VALUES ({{ $json.timestamp }}, '{{ $json.pump_commands }}', '{{ $json.coordinator_reasoning }}', {{ $json.estimated_cost_eur_per_hour }}, '{{ $json.priority_applied }}', {{ $json.confidence }})"
+      },
+      "name": "Log Decision to Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "success"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "total_pumps_active",
+              "value": "={{ $json.pump_commands.filter(cmd => cmd.start).length }}"
+            },
+            {
+              "name": "estimated_flow",
+              "value": "={{ $json.estimated_flow_m3h }}"
+            }
+          ]
+        }
+      },
+      "name": "Format Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Every 15min": {
+      "main": [
+        [
+          {
+            "node": "Get Current State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Current State": {
+      "main": [
+        [
+          {
+            "node": "Run Multi-Agent Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Multi-Agent Decision": {
+      "main": [
+        [
+          {
+            "node": "Check if Critical",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Critical": {
+      "main": [
+        [
+          {
+            "node": "Alert: Critical Decision",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Decision to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert: Critical Decision": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Decision to Database": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-15T10:00:00.000Z",
+      "updatedAt": "2025-01-15T10:00:00.000Z",
+      "id": "1",
+      "name": "wastewater"
+    },
+    {
+      "createdAt": "2025-01-15T10:00:00.000Z",
+      "updatedAt": "2025-01-15T10:00:00.000Z",
+      "id": "2",
+      "name": "multi-agent"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+services:
+  # Multi-Agent API Server
+  agent-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wastewater-agent-api
+    ports:
+      - "8000:8000"
+    environment:
+      - API_PORT=8000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - LLM_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
+      - PRICE_SCENARIO=${PRICE_SCENARIO:-normal}
+    volumes:
+      - ./src:/app/src
+      - ./config:/app/config
+      - ./data:/app/data
+      - ./assets:/app/assets
+    restart: unless-stopped
+    networks:
+      - wastewater-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # n8n Workflow Automation
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: wastewater-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER:-admin}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD:-hackathon2025}
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://n8n:5678/
+      - GENERIC_TIMEZONE=Europe/Helsinki
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n_workflows:/workflows
+    restart: unless-stopped
+    networks:
+      - wastewater-network
+    depends_on:
+      - agent-api
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PostgreSQL for decision logging
+  postgres:
+    image: postgres:15-alpine
+    container_name: wastewater-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-wastewater}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-hackathon2025}
+      - POSTGRES_DB=${POSTGRES_DB:-wastewater_decisions}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    networks:
+      - wastewater-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wastewater"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Grafana for visualization (optional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: wastewater-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-hackathon2025}
+      - GF_INSTALL_PLUGINS=grafana-clock-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    restart: unless-stopped
+    networks:
+      - wastewater-network
+    depends_on:
+      - postgres
+
+networks:
+  wastewater-network:
+    driver: bridge
+
+volumes:
+  n8n_data:
+  postgres_data:
+  grafana_data:

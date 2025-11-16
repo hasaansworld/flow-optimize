@@ -1,0 +1,202 @@
+{
+  "name": "Multi-Agent Webhook API",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wastewater-decision",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "wastewater-decision-webhook",
+      "id": "webhook-trigger"
+    },
+    {
+      "parameters": {
+        "url": "http://agent-api:8000/api/v1/state/current",
+        "options": {}
+      },
+      "name": "Get Current State",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300],
+      "id": "get-state"
+    },
+    {
+      "parameters": {
+        "url": "http://agent-api:8000/api/v1/synthesize",
+        "method": "POST",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"timestamp\": \"{{ $json.timestamp }}\",\n  \"L1\": {{ $json.L1 }},\n  \"V\": {{ $json.V }},\n  \"F1\": {{ $json.F1 }},\n  \"F2\": {{ $json.F2 }},\n  \"electricity_price\": {{ $json.electricity_price_normal }},\n  \"price_scenario\": \"normal\",\n  \"current_index\": {{ $json.current_index }}\n}",
+        "options": {}
+      },
+      "name": "Run Multi-Agent Decision",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 300],
+      "id": "synthesize"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "=Decision Complete"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "priority",
+              "value": "={{ $json.priority_applied }}"
+            },
+            {
+              "name": "reasoning",
+              "value": "={{ $json.coordinator_reasoning }}"
+            }
+          ],
+          "number": [
+            {
+              "name": "pumps_active",
+              "value": "={{ $json.pump_commands.filter(cmd => cmd.start).length }}"
+            },
+            {
+              "name": "total_flow_m3h",
+              "value": "={{ $json.pump_commands.reduce((sum, cmd) => sum + (cmd.start ? cmd.flow_m3h : 0), 0) }}"
+            },
+            {
+              "name": "total_power_kw",
+              "value": "={{ $json.cost_calculation.total_power_kw }}"
+            },
+            {
+              "name": "energy_kwh_per_15min",
+              "value": "={{ $json.cost_calculation.energy_consumed_kwh }}"
+            },
+            {
+              "name": "cost_eur_per_15min",
+              "value": "={{ $json.cost_calculation.cost_eur }}"
+            },
+            {
+              "name": "specific_energy_kwh_m3",
+              "value": "={{ $json.cost_calculation.specific_energy_kwh_per_m3 }}"
+            },
+            {
+              "name": "violations",
+              "value": "={{ $json.constraint_violations.length }}"
+            },
+            {
+              "name": "confidence",
+              "value": "={{ $json.confidence }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Format Decision Summary",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [850, 300],
+      "id": "format-summary"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Return Response to Frontend",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 300],
+      "id": "respond-to-webhook"
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Current State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Current State": {
+      "main": [
+        [
+          {
+            "node": "Run Multi-Agent Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Multi-Agent Decision": {
+      "main": [
+        [
+          {
+            "node": "Format Decision Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Decision Summary": {
+      "main": [
+        [
+          {
+            "node": "Return Response to Frontend",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z",
+      "id": "1",
+      "name": "webhook"
+    },
+    {
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z",
+      "id": "2",
+      "name": "frontend"
+    }
+  ],
+  "meta": {
+    "instanceId": "webhook-api"
+  },
+  "pinData": {}
+}
