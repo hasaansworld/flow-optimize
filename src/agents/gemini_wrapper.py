@@ -60,19 +60,41 @@ class GeminiLLM:
             # Use OpenAI
             self.api_type = 'openai'
             self.client = OpenAI(api_key=openai_key)
-            print(f"✓ OpenAI LLM initialized: {model_name}")
+            # Ensure model name is valid for OpenAI
+            if model_name.startswith('gpt-'):
+                self.model_name = model_name
+            else:
+                # Default to gpt-4o-mini if invalid OpenAI model name
+                self.model_name = 'gpt-4o-mini'
+            print(f"✓ OpenAI LLM initialized: {self.model_name}")
         elif gemini_key and GEMINI_AVAILABLE:
             # Use Gemini
             self.api_type = 'gemini'
             genai.configure(api_key=gemini_key)
+            # Map OpenAI model names to Gemini equivalents, or use provided name if it's a Gemini model
+            gemini_model_map = {
+                'gpt-4o-mini': 'gemini-2.0-flash-exp',
+                'gpt-4': 'gemini-2.0-flash-exp',
+                'gpt-3.5-turbo': 'gemini-2.0-flash-exp',
+            }
+            # Use mapped model name or original if it's already a Gemini model
+            if model_name in gemini_model_map:
+                actual_model_name = gemini_model_map[model_name]
+            elif model_name.startswith('gemini-'):
+                actual_model_name = model_name
+            else:
+                # Default Gemini model
+                actual_model_name = 'gemini-2.0-flash-exp'
+            
             self.model = genai.GenerativeModel(
-                model_name=model_name,
+                model_name=actual_model_name,
                 generation_config={
                     'temperature': temperature,
                     'max_output_tokens': max_tokens,
                 }
             )
-            print(f"✓ Gemini LLM initialized: {model_name}")
+            self.model_name = actual_model_name  # Store actual model name used
+            print(f"✓ Gemini LLM initialized: {actual_model_name} (requested: {model_name})")
         else:
             raise ValueError(
                 "No LLM API available. Set OPENAI_API_KEY or GEMINI_API_KEY environment variable"
@@ -101,7 +123,11 @@ class GeminiLLM:
             else:
                 return self._generate_gemini(prompt, system_instruction, json_mode)
         except Exception as e:
-            print(f"Error generating response: {e}")
+            import traceback
+            error_details = traceback.format_exc()
+            print(f"❌ Error generating response: {e}")
+            print(f"Error type: {type(e).__name__}")
+            print(f"Full traceback:\n{error_details}")
             return self._get_fallback_response(json_mode)
 
     def _generate_openai(
@@ -124,13 +150,22 @@ class GeminiLLM:
         messages.append({"role": "user", "content": prompt})
 
         # Call OpenAI API
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=messages,
-            temperature=self.temperature,
-            max_tokens=self.max_tokens,
-            response_format={"type": "json_object"} if json_mode else {"type": "text"}
-        )
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=messages,
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+                response_format={"type": "json_object"} if json_mode else {"type": "text"}
+            )
+        except Exception as e:
+            print(f"❌ OpenAI API call failed: {type(e).__name__}: {e}")
+            # Check for specific error types
+            if hasattr(e, 'status_code'):
+                print(f"   Status code: {e.status_code}")
+            if hasattr(e, 'response'):
+                print(f"   Response: {e.response}")
+            raise  # Re-raise to be caught by outer handler
 
         # Extract text
         text = response.choices[0].message.content

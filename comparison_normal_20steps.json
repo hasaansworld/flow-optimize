@@ -1,0 +1,19 @@
+{
+  "baseline": {
+    "cost": 32929.4426053634,
+    "energy": 3726.1355084052807,
+    "specific_energy": 0.10886670555220866
+  },
+  "ai": {
+    "cost": 11698.364771799997,
+    "energy": 4921.956599999999,
+    "specific_energy": 0.11743320062930623
+  },
+  "improvement": {
+    "cost_savings_eur": 21231.077833563402,
+    "cost_improvement_pct": 64.47445250745112,
+    "energy_savings_kwh": -1195.821091594718,
+    "energy_improvement_pct": -32.09279664943017,
+    "specific_energy_improvement_pct": -7.86879242248162
+  }
+}
