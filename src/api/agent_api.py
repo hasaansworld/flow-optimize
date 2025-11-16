@@ -113,6 +113,15 @@ class AgentMessage(BaseModel):
 class DecisionResponse(BaseModel):
     """Complete decision response with evaluation metrics"""
     timestamp: str
+
+    # System state inputs (from Excel row)
+    L1: float = Field(..., description="Water level in meters")
+    V: float = Field(..., description="Volume in m³")
+    F1: float = Field(..., description="Inflow in m³/15min")
+    F2: float = Field(..., description="Outflow in m³/h")
+    electricity_price: float = Field(..., description="Price in EUR/kWh")
+
+    # Decision outputs
     pump_commands: List[PumpCommandResponse]
     coordinator_reasoning: str
     priority_applied: str
@@ -123,7 +132,7 @@ class DecisionResponse(BaseModel):
     cost_calculation: CostCalculation
     constraint_violations: List[Dict[str, Any]] = Field(default_factory=list)
 
-    # Individual agent messages (NEW!)
+    # Individual agent messages
     agent_messages: List[AgentMessage] = Field(default_factory=list)
 
 
@@ -615,6 +624,11 @@ async def synthesize(state_req: SystemStateRequest):
 
             return DecisionResponse(
                 timestamp=state.timestamp.isoformat(),
+                L1=state.L1,
+                V=state.V,
+                F1=state.F1,
+                F2=state.F2,
+                electricity_price=state.electricity_price,
                 pump_commands=enhanced_commands,
                 coordinator_reasoning=decision.reasoning,
                 priority_applied=decision.data.get('llm_response', {}).get('priority_applied', 'MEDIUM'),
