@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { HorizontalTunnel } from './components/HorizontalTunnel';
 import { PumpingStationBox } from './components/PumpingStationBox';
 import { TreatmentPlantBox } from './components/TreatmentPlantBox';
@@ -9,22 +9,138 @@ import { FloatingLabel } from './components/FloatingLabel';
 import { IndustrialPipe } from './components/IndustrialPipe';
 import { AgentPanel } from './components/AgentPanel';
 import { Activity, Droplets, Gauge, TrendingUp } from 'lucide-react';
+import { fetchAgentData, AgentResponse, AgentMessage } from './services/agentApi';
 
 export default function App() {
-  // 8 Pumps in the station
-  const [pumpStates] = useState([
+  // Agent data state
+  const [agentData, setAgentData] = useState<AgentResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Row number tracking for sequential API calls
+  const [currentRow, setCurrentRow] = useState(10);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Accumulated agent messages from all rows
+  const [allAgentMessages, setAllAgentMessages] = useState<AgentMessage[]>([]);
+
+  // System state values from API
+  const [waterLevel, setWaterLevel] = useState(0); // L1 in meters
+  const [waterLevelPercent, setWaterLevelPercent] = useState(0); // L1 as percentage of 8m
+  const [volume, setVolume] = useState(0); // V in m³
+  const [inflow, setInflow] = useState(0); // F1 in m³/15min
+  const [outflow, setOutflow] = useState(0); // F2 in m³/h
+  const [electricityPrice, setElectricityPrice] = useState(0); // EUR/kWh
+
+  // Pump states derived from agent data
+  const [pumpStates, setPumpStates] = useState([
     { id: 'P1.1', active: false, flow: '0 m³/h' },
     { id: 'P1.2', active: false, flow: '0 m³/h' },
-    { id: 'P1.3', active: true, flow: '1650 m³/h' },
+    { id: 'P1.3', active: false, flow: '0 m³/h' },
     { id: 'P2.1', active: false, flow: '0 m³/h' },
-    { id: 'P2.2', active: true, flow: '1547 m³/h' },
+    { id: 'P2.2', active: false, flow: '0 m³/h' },
     { id: 'P2.3', active: false, flow: '0 m³/h' },
     { id: 'P3', active: false, flow: '0 m³/h' },
     { id: 'P4', active: false, flow: '0 m³/h' },
   ]);
 
+  // Update system state and pump states based on agent response
+  const updatePumpStates = useCallback((data: AgentResponse) => {
+    // Update system state values
+    setWaterLevel(data.L1);
+    setWaterLevelPercent((data.L1 / 8) * 100); // Convert to percentage (0-8m range)
+    setVolume(data.V);
+    setInflow(data.F1);
+    setOutflow(data.F2);
+    setElectricityPrice(data.electricity_price);
+
+    // Update pump states
+    setPumpStates(prevPumpStates => {
+      return prevPumpStates.map(pump => {
+        // Map UI pump IDs to agent pump IDs
+        // Note: P1L maps to pump 1.1, P2L maps to pump 1.2 (based on user clarification)
+        const pumpIdMap: { [key: string]: string[] } = {
+          'P1.1': ['1.1', 'P1L'],
+          'P1.2': ['1.2', 'P2L'],
+          'P1.3': ['1.3'],
+          'P1.4': ['1.4'],
+          'P2.1': ['2.1'],
+          'P2.2': ['2.2'],
+          'P2.3': ['2.3'],
+          'P2.4': ['2.4'],
+          'P3': ['P3'],
+          'P4': ['P4'],
+        };
+
+        const possibleIds = pumpIdMap[pump.id] || [pump.id];
+        const pumpCommand = data.pump_commands.find(cmd =>
+          possibleIds.includes(cmd.pump_id)
+        );
+
+        if (pumpCommand) {
+          return {
+            id: pump.id,
+            active: pumpCommand.start,
+            flow: `${Math.round(pumpCommand.flow_m3h)} m³/h`,
+          };
+        }
+        return pump;
+      });
+    });
+  }, []);
+
+  // Fetch agent data for a specific row
+  const loadAgentDataForRow = useCallback(async (rowNumber: number) => {
+    try {
+      setIsLoading(true);
+      const data = await fetchAgentData(rowNumber);
+      setAgentData(data);
+      updatePumpStates(data);
+
+      // Accumulate agent messages
+      if (data.agent_messages && data.agent_messages.length > 0) {
+        setAllAgentMessages(prev => [...prev, ...data.agent_messages]);
+      }
+
+      setError(null);
+      return data;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch agent data');
+      console.error(`Error loading agent data for row ${rowNumber}:`, err);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [updatePumpStates]);
+
+  // Process rows sequentially from 1 to 1500
+  const processAllRows = useCallback(async () => {
+    setIsProcessing(true);
+
+    for (let row = 1; row <= 1500; row++) {
+      try {
+        setCurrentRow(row);
+        await loadAgentDataForRow(row);
+
+        // Small delay to ensure UI updates are visible
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } catch (err) {
+        console.error(`Failed to process row ${row}, stopping:`, err);
+        setIsProcessing(false);
+        return;
+      }
+    }
+
+    setIsProcessing(false);
+    console.log('Completed processing all 1500 rows');
+  }, [loadAgentDataForRow]);
+
+  // Start processing rows on mount
+  useEffect(() => {
+    processAllRows();
+  }, [processAllRows]);
+
   const activePumpCount = pumpStates.filter(p => p.active).length;
-  const waterLevel = 62; // 62% current level
 
   // Fixed pipe Y position
   const pipeY = 250;
@@ -60,6 +176,9 @@ export default function App() {
                 minute: '2-digit',
                 second: '2-digit'
               })}</p>
+              <p className="text-[#00E5FF] mt-1">
+                {isProcessing ? `Processing Row: ${currentRow} / 1500` : `Completed Row: ${currentRow}`}
+              </p>
             </div>
             <StatusBadge status="operational" label="System Operational" />
           </div>
@@ -69,23 +188,23 @@ export default function App() {
             <StatusCard
               icon={<Activity className="w-5 h-5" />}
               title="Inflow"
-              value="1202 m³/15min"
+              value={`${Math.round(inflow)} m³/15min`}
               status="good"
               trend="Normal"
             />
             <StatusCard
               icon={<Droplets className="w-5 h-5" />}
               title="Outflow"
-              value="3197 m³/h"
+              value={`${Math.round(outflow)} m³/h`}
               status="good"
-              trend="Stable"
+              trend={`€${electricityPrice.toFixed(3)}/kWh`}
             />
             <StatusCard
               icon={<Gauge className="w-5 h-5" />}
               title="Water Level"
-              value="2.33 m"
-              status="good"
-              trend="Volume: 9685 m³"
+              value={`${waterLevel.toFixed(2)} m`}
+              status={waterLevel > 7.2 ? 'warning' : 'good'}
+              trend={`Volume: ${Math.round(volume)} m³`}
             />
             <StatusCard
               icon={<TrendingUp className="w-5 h-5" />}
@@ -108,7 +227,7 @@ export default function App() {
             {/* Inflow Box - Left */}
             <div className="absolute" style={{ left: inflowPos.left, top: inflowPos.top }}>
               <InflowBox
-                flowRate="1202 m³/15min"
+                flowRate={`${Math.round(inflow)} m³/15min`}
                 pressure="2.1 bar"
               />
             </div>
@@ -123,15 +242,15 @@ export default function App() {
             {/* Horizontal Water Tunnel - Center Left */}
             <div className="absolute" style={{ left: tunnelPos.left, top: tunnelPos.top }}>
               <HorizontalTunnel
-                waterLevel={waterLevel}
+                waterLevel={waterLevelPercent}
                 width={tunnelWidth}
                 height={240}
               />
 
               {/* Tunnel Level Info */}
               <FloatingLabel
-                text="L1 = 2.33 m"
-                value="V = 9685 m³"
+                text={`L1 = ${waterLevel.toFixed(2)} m`}
+                value={`V = ${Math.round(volume)} m³`}
                 position={{ top: -50, left: 150 }}
                 compact
               />
@@ -170,7 +289,14 @@ export default function App() {
         {/* Right Section - Agent Panel (20%) */}
         <div className="flex-shrink-0 px-4" style={{ width: '20%', minWidth: '320px', maxWidth: '400px' }}>
           <div className="h-full">
-            <AgentPanel hasData={true} />
+            <AgentPanel
+              hasData={!isLoading && agentData !== null}
+              agentData={agentData}
+              allMessages={allAgentMessages}
+              isLoading={isLoading}
+              error={error}
+              currentRow={currentRow}
+            />
           </div>
         </div>
 

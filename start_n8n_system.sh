@@ -44,8 +44,8 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-if ! command -v docker-compose &> /dev/null; then
-    echo "❌ docker-compose not found. Please install docker-compose first."
+if ! command -v docker compose &> /dev/null; then
+    echo "❌ docker compose not found. Please install docker compose first."
     exit 1
 fi
 
@@ -57,7 +57,7 @@ if [ "$SKIP_BUILD" = false ]; then
     echo "🔍 Checking if rebuild is needed..."
     if [ -f "requirements.txt" ] || [ -f "requirements-api.txt" ]; then
         echo "📦 Rebuilding agent-api with latest dependencies..."
-        docker-compose build agent-api
+        docker compose build agent-api
         echo "✅ Build complete"
         echo ""
     fi
@@ -68,7 +68,7 @@ fi
 
 # Start services
 echo "🚀 Starting all services..."
-docker-compose up -d
+docker compose up -d
 
 echo ""
 echo "⏳ Waiting for services to be healthy..."
@@ -130,15 +130,15 @@ echo "3. Test the API:"
 echo "   curl http://localhost:8000/api/v1/health"
 echo ""
 echo "4. View logs:"
-echo "   docker-compose logs -f agent-api"
+echo "   docker compose logs -f agent-api"
 echo ""
 echo "5. Stop services:"
-echo "   docker-compose down"
+echo "   docker compose down"
 echo ""
 echo "💡 Tips:"
 echo "   - Fast restart (skip rebuild): ./start_n8n_system.sh --no-build"
-echo "   - View logs: docker-compose logs -f agent-api"
-echo "   - Restart API only: docker-compose restart agent-api"
+echo "   - View logs: docker compose logs -f agent-api"
+echo "   - Restart API only: docker compose restart agent-api"
 echo ""
 echo "📚 Full documentation: N8N_INTEGRATION.md"
 echo ""
