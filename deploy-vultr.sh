@@ -80,6 +80,19 @@ fi
 echo -e "${GREEN}📁 Creating nginx SSL directory...${NC}"
 mkdir -p nginx/ssl
 
+# Check for port 80 conflict
+echo -e "${GREEN}🔍 Checking for port 80 conflicts...${NC}"
+if command -v netstat &> /dev/null && netstat -tuln | grep -q ":80 "; then
+    echo -e "${YELLOW}⚠️  Port 80 is already in use!${NC}"
+    echo -e "${YELLOW}   Run ./fix-port-80.sh to resolve this${NC}"
+    echo -e "${YELLOW}   Or stop conflicting service: systemctl stop apache2 nginx${NC}"
+    read -p "Continue anyway? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+fi
+
 # Build and start services
 echo -e "${GREEN}🏗️  Building and starting Docker services...${NC}"
 docker compose -f docker-compose.prod.yml up -d --build

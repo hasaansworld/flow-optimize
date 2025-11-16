@@ -245,11 +245,52 @@ free -h
 
 ### Port Already in Use
 
-```bash
-# Check what's using the port
-netstat -tulpn | grep :80
+If you get an error like "address already in use" for port 80:
 
-# Stop conflicting service or change port in docker-compose.prod.yml
+**Quick Fix:**
+```bash
+# Run the port conflict resolution script
+./fix-port-80.sh
+```
+
+**Manual Fix:**
+
+1. **Identify what's using port 80:**
+```bash
+# Check what's using port 80
+sudo netstat -tulpn | grep :80
+# OR
+sudo ss -tulpn | grep :80
+# OR
+sudo lsof -i :80
+```
+
+2. **Stop the conflicting service:**
+```bash
+# If Apache is running:
+sudo systemctl stop apache2
+sudo systemctl disable apache2
+
+# If system Nginx is running:
+sudo systemctl stop nginx
+sudo systemctl disable nginx
+
+# If another service, check the process name from step 1
+```
+
+3. **Alternative: Use a different port:**
+```bash
+# Edit docker-compose.prod.yml
+nano docker-compose.prod.yml
+
+# Change nginx ports from:
+#   - "80:80"
+#   - "443:443"
+# To:
+#   - "8080:80"
+#   - "8443:443"
+
+# Then access at: http://YOUR_SERVER_IP:8080
 ```
 
 ### Database Connection Issues

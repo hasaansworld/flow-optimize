@@ -130,15 +130,21 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
 
 ## 🆘 Troubleshooting
 
+**Port 80 already in use?**
+```bash
+# Quick fix script
+./fix-port-80.sh
+
+# Or manually check and stop conflicting service
+sudo netstat -tulpn | grep :80
+sudo systemctl stop apache2  # if Apache is running
+sudo systemctl stop nginx    # if system Nginx is running
+```
+
 **Services not starting?**
 ```bash
 docker compose -f docker-compose.prod.yml ps
 docker compose -f docker-compose.prod.yml logs
-```
-
-**Port conflicts?**
-```bash
-netstat -tulpn | grep :80
 ```
 
 **Need help?** Check [DEPLOYMENT.md](DEPLOYMENT.md) troubleshooting section.
