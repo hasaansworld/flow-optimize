@@ -1,0 +1,1875 @@
+[
+    {
+        "label": "dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "field",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "field",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Literal",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
+        "label": "BaseAgent",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "SystemState",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "AgentRecommendation",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "BaseAgent",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "SystemState",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "AgentRecommendation",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "SystemState",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "SystemState",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "BaseAgent",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "SystemState",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "AgentRecommendation",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "SystemState",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "AgentRecommendation",
+        "importPath": "base_agent",
+        "description": "base_agent",
+        "isExtraImport": true,
+        "detail": "base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "get_gemini_llm",
+        "importPath": "gemini_wrapper",
+        "description": "gemini_wrapper",
+        "isExtraImport": true,
+        "detail": "gemini_wrapper",
+        "documentation": {}
+    },
+    {
+        "label": "get_gemini_llm",
+        "importPath": "gemini_wrapper",
+        "description": "gemini_wrapper",
+        "isExtraImport": true,
+        "detail": "gemini_wrapper",
+        "documentation": {}
+    },
+    {
+        "label": "get_gemini_llm",
+        "importPath": "gemini_wrapper",
+        "description": "gemini_wrapper",
+        "isExtraImport": true,
+        "detail": "gemini_wrapper",
+        "documentation": {}
+    },
+    {
+        "label": "PumpModel",
+        "importPath": "pump_models",
+        "description": "pump_models",
+        "isExtraImport": true,
+        "detail": "pump_models",
+        "documentation": {}
+    },
+    {
+        "label": "PumpModel",
+        "importPath": "pump_models",
+        "description": "pump_models",
+        "isExtraImport": true,
+        "detail": "pump_models",
+        "documentation": {}
+    },
+    {
+        "label": "PumpModel",
+        "importPath": "pump_models",
+        "description": "pump_models",
+        "isExtraImport": true,
+        "detail": "pump_models",
+        "documentation": {}
+    },
+    {
+        "label": "PumpModel",
+        "importPath": "pump_models",
+        "description": "pump_models",
+        "isExtraImport": true,
+        "detail": "pump_models",
+        "documentation": {}
+    },
+    {
+        "label": "PumpModel",
+        "importPath": "pump_models",
+        "description": "pump_models",
+        "isExtraImport": true,
+        "detail": "pump_models",
+        "documentation": {}
+    },
+    {
+        "label": "PumpModel",
+        "importPath": "pump_models",
+        "description": "pump_models",
+        "isExtraImport": true,
+        "detail": "pump_models",
+        "documentation": {}
+    },
+    {
+        "label": "PumpController",
+        "importPath": "pump_models",
+        "description": "pump_models",
+        "isExtraImport": true,
+        "detail": "pump_models",
+        "documentation": {}
+    },
+    {
+        "label": "PumpCommand",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "PumpCommand",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "PumpCommand",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "PumpCommand",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "TunnelSimulator",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "PumpCommand",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "SystemState",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "TunnelSimulator",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "PumpCommand",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "TunnelSimulator",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "PumpCommand",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "SystemState",
+        "importPath": "physics_simulator",
+        "description": "physics_simulator",
+        "isExtraImport": true,
+        "detail": "physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "CONSTRAINTS",
+        "importPath": "constraints",
+        "description": "constraints",
+        "isExtraImport": true,
+        "detail": "constraints",
+        "documentation": {}
+    },
+    {
+        "label": "CONSTRAINTS",
+        "importPath": "constraints",
+        "description": "constraints",
+        "isExtraImport": true,
+        "detail": "constraints",
+        "documentation": {}
+    },
+    {
+        "label": "CONSTRAINTS",
+        "importPath": "constraints",
+        "description": "constraints",
+        "isExtraImport": true,
+        "detail": "constraints",
+        "documentation": {}
+    },
+    {
+        "label": "CONSTRAINTS",
+        "importPath": "constraints",
+        "description": "constraints",
+        "isExtraImport": true,
+        "detail": "constraints",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "load_dotenv",
+        "importPath": "dotenv",
+        "description": "dotenv",
+        "isExtraImport": true,
+        "detail": "dotenv",
+        "documentation": {}
+    },
+    {
+        "label": "InflowForecastingSystem",
+        "importPath": "inflow_forecaster",
+        "description": "inflow_forecaster",
+        "isExtraImport": true,
+        "detail": "inflow_forecaster",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "pandas",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pandas",
+        "description": "pandas",
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "create_all_agents",
+        "importPath": "specialist_agents",
+        "description": "specialist_agents",
+        "isExtraImport": true,
+        "detail": "specialist_agents",
+        "documentation": {}
+    },
+    {
+        "label": "create_all_agents",
+        "importPath": "specialist_agents",
+        "description": "specialist_agents",
+        "isExtraImport": true,
+        "detail": "specialist_agents",
+        "documentation": {}
+    },
+    {
+        "label": "create_all_agents",
+        "importPath": "specialist_agents",
+        "description": "specialist_agents",
+        "isExtraImport": true,
+        "detail": "specialist_agents",
+        "documentation": {}
+    },
+    {
+        "label": "CoordinatorAgent",
+        "importPath": "coordinator_agent",
+        "description": "coordinator_agent",
+        "isExtraImport": true,
+        "detail": "coordinator_agent",
+        "documentation": {}
+    },
+    {
+        "label": "CoordinatorAgent",
+        "importPath": "coordinator_agent",
+        "description": "coordinator_agent",
+        "isExtraImport": true,
+        "detail": "coordinator_agent",
+        "documentation": {}
+    },
+    {
+        "label": "CoordinatorAgent",
+        "importPath": "coordinator_agent",
+        "description": "coordinator_agent",
+        "isExtraImport": true,
+        "detail": "coordinator_agent",
+        "documentation": {}
+    },
+    {
+        "label": "HSYDataLoader",
+        "importPath": "data_loader",
+        "description": "data_loader",
+        "isExtraImport": true,
+        "detail": "data_loader",
+        "documentation": {}
+    },
+    {
+        "label": "HSYDataLoader",
+        "importPath": "data_loader",
+        "description": "data_loader",
+        "isExtraImport": true,
+        "detail": "data_loader",
+        "documentation": {}
+    },
+    {
+        "label": "HSYDataLoader",
+        "importPath": "data_loader",
+        "description": "data_loader",
+        "isExtraImport": true,
+        "detail": "data_loader",
+        "documentation": {}
+    },
+    {
+        "label": "HSYDataLoader",
+        "importPath": "data_loader",
+        "description": "data_loader",
+        "isExtraImport": true,
+        "detail": "data_loader",
+        "documentation": {}
+    },
+    {
+        "label": "HSYDataLoader",
+        "importPath": "data_loader",
+        "description": "data_loader",
+        "isExtraImport": true,
+        "detail": "data_loader",
+        "documentation": {}
+    },
+    {
+        "label": "HSYDataLoader",
+        "importPath": "data_loader",
+        "description": "data_loader",
+        "isExtraImport": true,
+        "detail": "data_loader",
+        "documentation": {}
+    },
+    {
+        "label": "HSYDataLoader",
+        "importPath": "data_loader",
+        "description": "data_loader",
+        "isExtraImport": true,
+        "detail": "data_loader",
+        "documentation": {}
+    },
+    {
+        "label": "HSYDataLoader",
+        "importPath": "data_loader",
+        "description": "data_loader",
+        "isExtraImport": true,
+        "detail": "data_loader",
+        "documentation": {}
+    },
+    {
+        "label": "HSYDataLoader",
+        "importPath": "data_loader",
+        "description": "data_loader",
+        "isExtraImport": true,
+        "detail": "data_loader",
+        "documentation": {}
+    },
+    {
+        "label": "asyncio",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "asyncio",
+        "description": "asyncio",
+        "detail": "asyncio",
+        "documentation": {}
+    },
+    {
+        "label": "PriceManager",
+        "importPath": "price_manager",
+        "description": "price_manager",
+        "isExtraImport": true,
+        "detail": "price_manager",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "BackgroundTasks",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "APIRouter",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "BackgroundTasks",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "CORSMiddleware",
+        "importPath": "fastapi.middleware.cors",
+        "description": "fastapi.middleware.cors",
+        "isExtraImport": true,
+        "detail": "fastapi.middleware.cors",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "Field",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "Field",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "router",
+        "importPath": "webhooks",
+        "description": "webhooks",
+        "isExtraImport": true,
+        "detail": "webhooks",
+        "documentation": {}
+    },
+    {
+        "label": "torch",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torch",
+        "description": "torch",
+        "detail": "torch",
+        "documentation": {}
+    },
+    {
+        "label": "torch.nn",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torch.nn",
+        "description": "torch.nn",
+        "detail": "torch.nn",
+        "documentation": {}
+    },
+    {
+        "label": "StandardScaler",
+        "importPath": "sklearn.preprocessing",
+        "description": "sklearn.preprocessing",
+        "isExtraImport": true,
+        "detail": "sklearn.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "pickle",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pickle",
+        "description": "pickle",
+        "detail": "pickle",
+        "documentation": {}
+    },
+    {
+        "label": "Server",
+        "importPath": "asyncua",
+        "description": "asyncua",
+        "isExtraImport": true,
+        "detail": "asyncua",
+        "documentation": {}
+    },
+    {
+        "label": "ua",
+        "importPath": "asyncua",
+        "description": "asyncua",
+        "isExtraImport": true,
+        "detail": "asyncua",
+        "documentation": {}
+    },
+    {
+        "label": "Client",
+        "importPath": "asyncua",
+        "description": "asyncua",
+        "isExtraImport": true,
+        "detail": "asyncua",
+        "documentation": {}
+    },
+    {
+        "label": "Client",
+        "importPath": "asyncua",
+        "description": "asyncua",
+        "isExtraImport": true,
+        "detail": "asyncua",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib.pyplot",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib.pyplot",
+        "description": "matplotlib.pyplot",
+        "detail": "matplotlib.pyplot",
+        "documentation": {}
+    },
+    {
+        "label": "FuncAnimation",
+        "importPath": "matplotlib.animation",
+        "description": "matplotlib.animation",
+        "isExtraImport": true,
+        "detail": "matplotlib.animation",
+        "documentation": {}
+    },
+    {
+        "label": "FuncAnimation",
+        "importPath": "matplotlib.animation",
+        "description": "matplotlib.animation",
+        "isExtraImport": true,
+        "detail": "matplotlib.animation",
+        "documentation": {}
+    },
+    {
+        "label": "WastewaterVisualizer",
+        "importPath": "visualizer",
+        "description": "visualizer",
+        "isExtraImport": true,
+        "detail": "visualizer",
+        "documentation": {}
+    },
+    {
+        "label": "WastewaterVisualizer",
+        "importPath": "visualizer",
+        "description": "visualizer",
+        "isExtraImport": true,
+        "detail": "visualizer",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib",
+        "description": "matplotlib",
+        "detail": "matplotlib",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib.patches",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib.patches",
+        "description": "matplotlib.patches",
+        "detail": "matplotlib.patches",
+        "documentation": {}
+    },
+    {
+        "label": "BadZipFile",
+        "importPath": "zipfile",
+        "description": "zipfile",
+        "isExtraImport": true,
+        "detail": "zipfile",
+        "documentation": {}
+    },
+    {
+        "label": "ZipFile",
+        "importPath": "zipfile",
+        "description": "zipfile",
+        "isExtraImport": true,
+        "detail": "zipfile",
+        "documentation": {}
+    },
+    {
+        "label": "SystemConstraints",
+        "kind": 6,
+        "importPath": "config.constraints",
+        "description": "config.constraints",
+        "peekOfCode": "class SystemConstraints:\n    \"\"\"\n    Operational constraints for HSY Blominmäki pumping station\n    Based on official challenge specifications\n    \"\"\"\n    # Water level constraints (meters)\n    L1_MIN: float = 0.0  # Minimum water level\n    L1_MAX: float = 8.0  # Maximum water level (hard limit)\n    L1_ALARM: float = 7.2  # Alarm threshold\n    L1_EMPTY: float = 0.5  # Emptying target level",
+        "detail": "config.constraints",
+        "documentation": {}
+    },
+    {
+        "label": "CONSTRAINTS",
+        "kind": 5,
+        "importPath": "config.constraints",
+        "description": "config.constraints",
+        "peekOfCode": "CONSTRAINTS = SystemConstraints()\nif __name__ == \"__main__\":\n    \"\"\"Test constraints\"\"\"\n    print(\"=== System Constraints ===\\n\")\n    c = CONSTRAINTS\n    print(f\"Water Level Limits:\")\n    print(f\"  Min: {c.L1_MIN}m\")\n    print(f\"  Alarm: {c.L1_ALARM}m\")\n    print(f\"  Max: {c.L1_MAX}m\")\n    print(f\"  Empty target: {c.L1_EMPTY}m\")",
+        "detail": "config.constraints",
+        "documentation": {}
+    },
+    {
+        "label": "AgentMessage",
+        "kind": 6,
+        "importPath": "src.agents.base_agent",
+        "description": "src.agents.base_agent",
+        "peekOfCode": "class AgentMessage:\n    \"\"\"Message passed between agents\"\"\"\n    from_agent: str\n    to_agent: str\n    content: str\n    timestamp: datetime\n    data: Optional[Dict] = None\n@dataclass\nclass SystemState:\n    \"\"\"Shared system state accessible by all agents\"\"\"",
+        "detail": "src.agents.base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "SystemState",
+        "kind": 6,
+        "importPath": "src.agents.base_agent",
+        "description": "src.agents.base_agent",
+        "peekOfCode": "class SystemState:\n    \"\"\"Shared system state accessible by all agents\"\"\"\n    timestamp: datetime\n    L1: float  # Water level (m)\n    V: float  # Volume (m³)\n    F1: float  # Inflow (m³/15min)\n    F2: float  # Total outflow (m³/h)\n    electricity_price: float  # EUR/kWh\n    price_scenario: str  # 'high' or 'normal'\n    active_pumps: Dict[str, Dict] = field(default_factory=dict)",
+        "detail": "src.agents.base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "AgentRecommendation",
+        "kind": 6,
+        "importPath": "src.agents.base_agent",
+        "description": "src.agents.base_agent",
+        "peekOfCode": "class AgentRecommendation:\n    \"\"\"Recommendation from an agent\"\"\"\n    agent_name: str\n    timestamp: datetime\n    recommendation_type: str\n    priority: str  # 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'\n    confidence: float  # 0-1\n    reasoning: str\n    data: Dict[str, Any] = field(default_factory=dict)\n    def to_dict(self) -> Dict:",
+        "detail": "src.agents.base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "BaseAgent",
+        "kind": 6,
+        "importPath": "src.agents.base_agent",
+        "description": "src.agents.base_agent",
+        "peekOfCode": "class BaseAgent:\n    \"\"\"\n    Base class for all specialized agents\n    Each agent:\n    - Has ONE specific job\n    - Uses tools (ML models, optimizers, calculators)\n    - Generates recommendations using LLM reasoning\n    - Communicates with other agents\n    \"\"\"\n    def __init__(self, name: str, role: str):",
+        "detail": "src.agents.base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "AgentRegistry",
+        "kind": 6,
+        "importPath": "src.agents.base_agent",
+        "description": "src.agents.base_agent",
+        "peekOfCode": "class AgentRegistry:\n    \"\"\"Registry for managing all agents\"\"\"\n    def __init__(self):\n        self.agents = {}\n    def register(self, agent: BaseAgent):\n        \"\"\"Register an agent\"\"\"\n        self.agents[agent.name] = agent\n        print(f\"✓ Registered agent: {agent.name}\")\n    def get(self, name: str) -> Optional[BaseAgent]:\n        \"\"\"Get agent by name\"\"\"",
+        "detail": "src.agents.base_agent",
+        "documentation": {}
+    },
+    {
+        "label": "CoordinatorAgent",
+        "kind": 6,
+        "importPath": "src.agents.coordinator_agent",
+        "description": "src.agents.coordinator_agent",
+        "peekOfCode": "class CoordinatorAgent(BaseAgent):\n    \"\"\"\n    Coordinator Agent - Master decision maker\n    Priority Hierarchy:\n    1. CRITICAL: Safety (water level)\n    2. CRITICAL: Compliance (hard constraints)\n    3. HIGH: Cost optimization\n    4. MEDIUM: Efficiency, Smoothness\n    5. LOW: Inflow forecasting context\n    Decision Process:",
+        "detail": "src.agents.coordinator_agent",
+        "documentation": {}
+    },
+    {
+        "label": "GeminiLLM",
+        "kind": 6,
+        "importPath": "src.agents.gemini_wrapper",
+        "description": "src.agents.gemini_wrapper",
+        "peekOfCode": "class GeminiLLM:\n    \"\"\"\n    Wrapper for LLM APIs (OpenAI or Gemini)\n    Used by all agents for reasoning\n    \"\"\"\n    def __init__(\n        self,\n        api_key: Optional[str] = None,\n        model_name: str = \"gpt-4o-mini\",\n        temperature: float = 0.7,",
+        "detail": "src.agents.gemini_wrapper",
+        "documentation": {}
+    },
+    {
+        "label": "get_gemini_llm",
+        "kind": 2,
+        "importPath": "src.agents.gemini_wrapper",
+        "description": "src.agents.gemini_wrapper",
+        "peekOfCode": "def get_gemini_llm() -> GeminiLLM:\n    \"\"\"Get or create global LLM instance (OpenAI or Gemini)\"\"\"\n    global _gemini_instance\n    if _gemini_instance is None:\n        # Get settings from environment\n        model_name = os.getenv('LLM_MODEL', os.getenv('GEMINI_MODEL', 'gpt-4o-mini'))\n        temperature = float(os.getenv('AGENT_TEMPERATURE', '0.7'))\n        max_tokens = int(os.getenv('AGENT_MAX_TOKENS', '2048'))\n        _gemini_instance = GeminiLLM(\n            model_name=model_name,",
+        "detail": "src.agents.gemini_wrapper",
+        "documentation": {}
+    },
+    {
+        "label": "_gemini_instance",
+        "kind": 5,
+        "importPath": "src.agents.gemini_wrapper",
+        "description": "src.agents.gemini_wrapper",
+        "peekOfCode": "_gemini_instance = None\ndef get_gemini_llm() -> GeminiLLM:\n    \"\"\"Get or create global LLM instance (OpenAI or Gemini)\"\"\"\n    global _gemini_instance\n    if _gemini_instance is None:\n        # Get settings from environment\n        model_name = os.getenv('LLM_MODEL', os.getenv('GEMINI_MODEL', 'gpt-4o-mini'))\n        temperature = float(os.getenv('AGENT_TEMPERATURE', '0.7'))\n        max_tokens = int(os.getenv('AGENT_MAX_TOKENS', '2048'))\n        _gemini_instance = GeminiLLM(",
+        "detail": "src.agents.gemini_wrapper",
+        "documentation": {}
+    },
+    {
+        "label": "InflowForecastingAgent",
+        "kind": 6,
+        "importPath": "src.agents.inflow_agent",
+        "description": "src.agents.inflow_agent",
+        "peekOfCode": "class InflowForecastingAgent(BaseAgent):\n    \"\"\"\n    Agent specialized in predicting future inflow\n    Tools:\n    - LSTM model for 6h and 24h forecasts\n    - Storm pattern detector\n    - Dry weather classifier\n    - Trend analyzer\n    Outputs:\n    - Inflow forecast (next 6h and 24h)",
+        "detail": "src.agents.inflow_agent",
+        "documentation": {}
+    },
+    {
+        "label": "EvaluationController",
+        "kind": 6,
+        "importPath": "src.agents.run_evaluation",
+        "description": "src.agents.run_evaluation",
+        "peekOfCode": "class EvaluationController:\n    \"\"\"\n    Multi-Agent Controller with Full Evaluation Tracking\n    \"\"\"\n    def __init__(\n        self,\n        lstm_model_path: str,\n        price_scenario: str = 'normal'\n    ):\n        print(\"\\n\" + \"=\"*60)",
+        "detail": "src.agents.run_evaluation",
+        "documentation": {}
+    },
+    {
+        "label": "compare_with_baseline",
+        "kind": 2,
+        "importPath": "src.agents.run_evaluation",
+        "description": "src.agents.run_evaluation",
+        "peekOfCode": "def compare_with_baseline(ai_results: dict, baseline_path: str):\n    \"\"\"\n    Compare AI results with baseline for the SAME timesteps\n    This calculates baseline metrics for the exact same timesteps that the AI\n    evaluation ran on, ensuring an apples-to-apples comparison.\n    \"\"\"\n    print(\"\\n\" + \"=\"*60)\n    print(\"COMPARISON: AI vs BASELINE\")\n    print(\"=\"*60)\n    # Load historical data to calculate baseline for same timesteps",
+        "detail": "src.agents.run_evaluation",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "src.agents.run_evaluation",
+        "description": "src.agents.run_evaluation",
+        "peekOfCode": "def main():\n    \"\"\"Main entry point\"\"\"\n    import argparse\n    parser = argparse.ArgumentParser(description='Multi-Agent System Evaluation')\n    parser.add_argument('--price', choices=['normal', 'high'], default='normal')\n    parser.add_argument('--steps', type=int, default=100,\n                        help='Number of timesteps to simulate')\n    parser.add_argument('--start', type=int, default=500)\n    args = parser.parse_args()\n    # Get model path",
+        "detail": "src.agents.run_evaluation",
+        "documentation": {}
+    },
+    {
+        "label": "MultiAgentController",
+        "kind": 6,
+        "importPath": "src.agents.run_multi_agent",
+        "description": "src.agents.run_multi_agent",
+        "peekOfCode": "class MultiAgentController:\n    \"\"\"\n    Multi-Agent Controller\n    Orchestrates the entire decision-making process:\n    1. Gather system state (from OPC UA or simulation)\n    2. Run all specialist agents in parallel\n    3. Coordinator synthesizes recommendations\n    4. Execute pump commands (to OPC UA or simulation)\n    \"\"\"\n    def __init__(",
+        "detail": "src.agents.run_multi_agent",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "src.agents.run_multi_agent",
+        "description": "src.agents.run_multi_agent",
+        "peekOfCode": "def main():\n    \"\"\"Main entry point\"\"\"\n    import argparse\n    parser = argparse.ArgumentParser(description='Multi-Agent Wastewater Pumping System')\n    parser.add_argument('--mode', choices=['backtest', 'live'], default='backtest',\n                        help='Run mode: backtest (historical data) or live (OPC UA)')\n    parser.add_argument('--price', choices=['normal', 'high'], default='normal',\n                        help='Electricity price scenario')\n    parser.add_argument('--opcua', type=str, default=None,\n                        help='OPC UA server URL (e.g., opc.tcp://localhost:4840)')",
+        "detail": "src.agents.run_multi_agent",
+        "documentation": {}
+    },
+    {
+        "label": "EnergyCostAgent",
+        "kind": 6,
+        "importPath": "src.agents.specialist_agents",
+        "description": "src.agents.specialist_agents",
+        "peekOfCode": "class EnergyCostAgent(BaseAgent):\n    \"\"\"\n    Agent specialized in identifying energy cost arbitrage opportunities\n    Tools:\n    - Price pattern analyzer\n    - Cheap window detector\n    - Cost-benefit calculator\n    - Risk assessor\n    \"\"\"\n    def __init__(self):",
+        "detail": "src.agents.specialist_agents",
+        "documentation": {}
+    },
+    {
+        "label": "PumpEfficiencyAgent",
+        "kind": 6,
+        "importPath": "src.agents.specialist_agents",
+        "description": "src.agents.specialist_agents",
+        "peekOfCode": "class PumpEfficiencyAgent(BaseAgent):\n    \"\"\"\n    Agent specialized in selecting optimal pump combinations\n    Tools:\n    - Pump performance calculator\n    - Efficiency optimizer\n    - Combination generator\n    \"\"\"\n    def __init__(self):\n        super().__init__(",
+        "detail": "src.agents.specialist_agents",
+        "documentation": {}
+    },
+    {
+        "label": "WaterLevelSafetyAgent",
+        "kind": 6,
+        "importPath": "src.agents.specialist_agents",
+        "description": "src.agents.specialist_agents",
+        "peekOfCode": "class WaterLevelSafetyAgent(BaseAgent):\n    \"\"\"\n    Agent specialized in water level safety monitoring\n    Tools:\n    - Level trajectory simulator\n    - Risk calculator\n    - Time-to-alarm calculator\n    \"\"\"\n    def __init__(self):\n        super().__init__(",
+        "detail": "src.agents.specialist_agents",
+        "documentation": {}
+    },
+    {
+        "label": "FlowSmoothnessAgent",
+        "kind": 6,
+        "importPath": "src.agents.specialist_agents",
+        "description": "src.agents.specialist_agents",
+        "peekOfCode": "class FlowSmoothnessAgent(BaseAgent):\n    \"\"\"\n    Agent specialized in ensuring smooth flow transitions\n    Tools:\n    - Flow variability calculator\n    - Staged transition planner\n    - Downstream impact assessor\n    Goal: Prevent shock loading to WWTP\n    \"\"\"\n    def __init__(self):",
+        "detail": "src.agents.specialist_agents",
+        "documentation": {}
+    },
+    {
+        "label": "ConstraintComplianceAgent",
+        "kind": 6,
+        "importPath": "src.agents.specialist_agents",
+        "description": "src.agents.specialist_agents",
+        "peekOfCode": "class ConstraintComplianceAgent(BaseAgent):\n    \"\"\"\n    Agent specialized in enforcing operational constraints\n    Tools:\n    - Pump runtime tracker\n    - Daily emptying checker\n    - Constraint validator\n    - Violation detector\n    Critical constraints:\n    - Min pump runtime: 2 hours",
+        "detail": "src.agents.specialist_agents",
+        "documentation": {}
+    },
+    {
+        "label": "create_all_agents",
+        "kind": 2,
+        "importPath": "src.agents.specialist_agents",
+        "description": "src.agents.specialist_agents",
+        "peekOfCode": "def create_all_agents(lstm_model_path: str) -> Dict[str, BaseAgent]:\n    \"\"\"\n    Create all specialist agents\n    Args:\n        lstm_model_path: Path to LSTM model file\n    Returns:\n        Dictionary of agent_name → agent instance\n    \"\"\"\n    from inflow_agent import InflowForecastingAgent\n    print(\"Creating specialist agents...\")",
+        "detail": "src.agents.specialist_agents",
+        "documentation": {}
+    },
+    {
+        "label": "SystemStateRequest",
+        "kind": 6,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "class SystemStateRequest(BaseModel):\n    \"\"\"Request model for system state\"\"\"\n    # Optional: If row_number is provided, read data from Excel row\n    row_number: Optional[int] = Field(default=None, description=\"Excel row number to read data from (1-based index)\")\n    # System state fields (will be auto-populated if row_number is provided)\n    timestamp: Optional[str] = Field(default=None)\n    L1: Optional[float] = Field(default=None, description=\"Water level in meters\")\n    V: Optional[float] = Field(default=None, description=\"Volume in m³\")\n    F1: Optional[float] = Field(default=None, description=\"Inflow in m³/15min\")\n    F2: Optional[float] = Field(default=None, description=\"Outflow in m³/h\")",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "AgentRecommendationResponse",
+        "kind": 6,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "class AgentRecommendationResponse(BaseModel):\n    \"\"\"Response model for agent recommendations\"\"\"\n    agent_name: str\n    timestamp: str\n    recommendation_type: str\n    priority: str\n    confidence: float\n    reasoning: str\n    data: Dict[str, Any]\nclass SynthesizeRequest(BaseModel):",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "SynthesizeRequest",
+        "kind": 6,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "class SynthesizeRequest(BaseModel):\n    \"\"\"Request for coordinator synthesis\"\"\"\n    state: SystemStateRequest\n    recommendations: Dict[str, AgentRecommendationResponse]\nclass PumpCommandResponse(BaseModel):\n    \"\"\"Response model for pump commands with detailed metrics\"\"\"\n    pump_id: str\n    start: bool\n    frequency: float\n    flow_m3h: float = Field(default=0, description=\"Flow rate in m³/h\")",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "PumpCommandResponse",
+        "kind": 6,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "class PumpCommandResponse(BaseModel):\n    \"\"\"Response model for pump commands with detailed metrics\"\"\"\n    pump_id: str\n    start: bool\n    frequency: float\n    flow_m3h: float = Field(default=0, description=\"Flow rate in m³/h\")\n    power_kw: float = Field(default=0, description=\"Power consumption in kW\")\n    efficiency: float = Field(default=0, description=\"Pump efficiency (0-1)\")\nclass CostCalculation(BaseModel):\n    \"\"\"Detailed cost calculation breakdown\"\"\"",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "CostCalculation",
+        "kind": 6,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "class CostCalculation(BaseModel):\n    \"\"\"Detailed cost calculation breakdown\"\"\"\n    total_power_kw: float\n    energy_consumed_kwh: float\n    cost_eur: float\n    flow_pumped_m3: float\n    specific_energy_kwh_per_m3: float\nclass AgentMessage(BaseModel):\n    \"\"\"Individual agent assessment message\"\"\"\n    agent_name: str",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "AgentMessage",
+        "kind": 6,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "class AgentMessage(BaseModel):\n    \"\"\"Individual agent assessment message\"\"\"\n    agent_name: str\n    priority: str\n    confidence: float\n    recommendation_type: str\n    reasoning: str\n    key_data: Dict[str, Any] = Field(default_factory=dict)\nclass DecisionResponse(BaseModel):\n    \"\"\"Complete decision response with evaluation metrics\"\"\"",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "DecisionResponse",
+        "kind": 6,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "class DecisionResponse(BaseModel):\n    \"\"\"Complete decision response with evaluation metrics\"\"\"\n    timestamp: str\n    # System state inputs (from Excel row)\n    L1: float = Field(..., description=\"Water level in meters\")\n    V: float = Field(..., description=\"Volume in m³\")\n    F1: float = Field(..., description=\"Inflow in m³/15min\")\n    F2: float = Field(..., description=\"Outflow in m³/h\")\n    electricity_price: float = Field(..., description=\"Price in EUR/kWh\")\n    # Decision outputs",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "MetricsResponse",
+        "kind": 6,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "class MetricsResponse(BaseModel):\n    \"\"\"System metrics response\"\"\"\n    total_decisions: int\n    total_energy_cost: float\n    total_energy_kwh: float\n    avg_water_level: float\n    min_water_level: float\n    max_water_level: float\n    safety_violations: int\n    uptime_hours: float",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "HealthResponse",
+        "kind": 6,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "class HealthResponse(BaseModel):\n    \"\"\"Health check response\"\"\"\n    status: str\n    version: str\n    agents_loaded: int\n    data_available: bool\n    timestamp: str\n# ===== FastAPI App =====\napp = FastAPI(\n    title=\"Multi-Agent Wastewater Control API\",",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "AppState",
+        "kind": 6,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "class AppState:\n    \"\"\"Application state container\"\"\"\n    def __init__(self):\n        self.specialist_agents = None\n        self.coordinator = None\n        self.data = None\n        self.loader = None\n        self.pump_model = None\n        self.decision_history = []\n        self.metrics = {",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "populate_request_from_excel",
+        "kind": 2,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "def populate_request_from_excel(req: SystemStateRequest) -> SystemStateRequest:\n    \"\"\"\n    If row_number is provided, populate request fields from Excel data\n    Returns the populated request\n    \"\"\"\n    if req.row_number is None:\n        # No row_number provided, use request as-is\n        return req\n    if app_state.data is None:\n        raise HTTPException(status_code=503, detail=\"Historical data not loaded\")",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "request_to_system_state",
+        "kind": 2,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "def request_to_system_state(req: SystemStateRequest) -> SystemState:\n    \"\"\"Convert request model to SystemState\"\"\"\n    return SystemState(\n        timestamp=datetime.fromisoformat(req.timestamp) if isinstance(req.timestamp, str) else req.timestamp,\n        L1=req.L1,\n        V=req.V,\n        F1=req.F1,\n        F2=req.F2,\n        electricity_price=req.electricity_price,\n        price_scenario=req.price_scenario,",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "recommendation_to_response",
+        "kind": 2,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "def recommendation_to_response(rec: AgentRecommendation) -> AgentRecommendationResponse:\n    \"\"\"Convert AgentRecommendation to response model\"\"\"\n    return AgentRecommendationResponse(\n        agent_name=rec.agent_name,\n        timestamp=rec.timestamp.isoformat() if isinstance(rec.timestamp, datetime) else str(rec.timestamp),\n        recommendation_type=rec.recommendation_type,\n        priority=rec.priority,\n        confidence=rec.confidence,\n        reasoning=rec.reasoning,\n        data=rec.data",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "calculate_pump_metrics",
+        "kind": 2,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "def calculate_pump_metrics(pump_id: str, frequency: float, L1: float) -> tuple:\n    \"\"\"\n    Calculate flow, power, and efficiency for a pump command\n    (Matches logic from run_evaluation.py)\n    Returns:\n        (flow_m3h, power_kw, efficiency)\n    \"\"\"\n    if frequency == 0:\n        return 0, 0, 0\n    try:",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "app = FastAPI(\n    title=\"Multi-Agent Wastewater Control API\",\n    description=\"REST API for n8n integration with multi-agent pumping system\",\n    version=\"1.0.0\"\n)\n# Enable CORS for n8n\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],  # In production, specify n8n URL\n    allow_credentials=True,",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "app_state",
+        "kind": 5,
+        "importPath": "src.api.agent_api",
+        "description": "src.api.agent_api",
+        "peekOfCode": "app_state = AppState()\n# ===== Startup/Shutdown =====\n@app.on_event(\"startup\")\nasync def startup_event():\n    \"\"\"Initialize agents and load data on startup\"\"\"\n    print(\"🚀 Starting Multi-Agent API Server...\")\n    try:\n        # Get model path\n        script_dir = Path(__file__).parent.parent / 'agents'\n        model_path = script_dir.parent / 'models' / 'inflow_lstm_model.pth'",
+        "detail": "src.api.agent_api",
+        "documentation": {}
+    },
+    {
+        "label": "PriceAlertWebhook",
+        "kind": 6,
+        "importPath": "src.api.webhooks",
+        "description": "src.api.webhooks",
+        "peekOfCode": "class PriceAlertWebhook(BaseModel):\n    \"\"\"Price alert webhook payload\"\"\"\n    timestamp: str\n    new_price: float = Field(..., description=\"New electricity price in EUR/kWh\")\n    old_price: float = Field(..., description=\"Previous price in EUR/kWh\")\n    change_percent: float = Field(..., description=\"Price change percentage\")\n    scenario: str = Field(default=\"normal\", description=\"Price scenario\")\nclass OPCUAEventWebhook(BaseModel):\n    \"\"\"OPC UA event webhook payload\"\"\"\n    timestamp: str",
+        "detail": "src.api.webhooks",
+        "documentation": {}
+    },
+    {
+        "label": "OPCUAEventWebhook",
+        "kind": 6,
+        "importPath": "src.api.webhooks",
+        "description": "src.api.webhooks",
+        "peekOfCode": "class OPCUAEventWebhook(BaseModel):\n    \"\"\"OPC UA event webhook payload\"\"\"\n    timestamp: str\n    event_type: str = Field(..., description=\"Type of event (alarm, warning, state_change)\")\n    severity: str = Field(..., description=\"Severity level (low, medium, high, critical)\")\n    message: str = Field(..., description=\"Event message\")\n    data: Dict[str, Any] = Field(default_factory=dict, description=\"Additional event data\")\nclass EmergencyWebhook(BaseModel):\n    \"\"\"Emergency override webhook payload\"\"\"\n    timestamp: str",
+        "detail": "src.api.webhooks",
+        "documentation": {}
+    },
+    {
+        "label": "EmergencyWebhook",
+        "kind": 6,
+        "importPath": "src.api.webhooks",
+        "description": "src.api.webhooks",
+        "peekOfCode": "class EmergencyWebhook(BaseModel):\n    \"\"\"Emergency override webhook payload\"\"\"\n    timestamp: str\n    emergency_type: str = Field(..., description=\"Type of emergency (overflow, power_failure, pump_failure)\")\n    current_L1: float = Field(..., description=\"Current water level\")\n    message: str = Field(..., description=\"Emergency description\")\n    override_command: Optional[Dict] = Field(None, description=\"Manual override pump commands\")\nclass ManualDecisionWebhook(BaseModel):\n    \"\"\"Manual decision request webhook payload\"\"\"\n    timestamp: str",
+        "detail": "src.api.webhooks",
+        "documentation": {}
+    },
+    {
+        "label": "ManualDecisionWebhook",
+        "kind": 6,
+        "importPath": "src.api.webhooks",
+        "description": "src.api.webhooks",
+        "peekOfCode": "class ManualDecisionWebhook(BaseModel):\n    \"\"\"Manual decision request webhook payload\"\"\"\n    timestamp: str\n    requester: str = Field(..., description=\"Person/system requesting decision\")\n    reason: str = Field(..., description=\"Reason for manual decision\")\n    state_index: Optional[int] = Field(None, description=\"Historical data index to use\")\n    force_reassessment: bool = Field(default=True, description=\"Force all agents to reassess\")\n# ===== Webhook Endpoints =====\n@router.post(\"/price_alert\")\nasync def price_alert_webhook(payload: PriceAlertWebhook, background_tasks: BackgroundTasks):",
+        "detail": "src.api.webhooks",
+        "documentation": {}
+    },
+    {
+        "label": "router",
+        "kind": 5,
+        "importPath": "src.api.webhooks",
+        "description": "src.api.webhooks",
+        "peekOfCode": "router = APIRouter(prefix=\"/webhooks\", tags=[\"webhooks\"])\n# ===== Request Models =====\nclass PriceAlertWebhook(BaseModel):\n    \"\"\"Price alert webhook payload\"\"\"\n    timestamp: str\n    new_price: float = Field(..., description=\"New electricity price in EUR/kWh\")\n    old_price: float = Field(..., description=\"Previous price in EUR/kWh\")\n    change_percent: float = Field(..., description=\"Price change percentage\")\n    scenario: str = Field(default=\"normal\", description=\"Price scenario\")\nclass OPCUAEventWebhook(BaseModel):",
+        "detail": "src.api.webhooks",
+        "documentation": {}
+    },
+    {
+        "label": "LSTMInflowForecaster",
+        "kind": 6,
+        "importPath": "src.models.inflow_forecaster",
+        "description": "src.models.inflow_forecaster",
+        "peekOfCode": "class LSTMInflowForecaster(nn.Module):\n    \"\"\"\n    LSTM model for inflow forecasting\n    Features:\n    - Historical inflow values (lags)\n    - Time features (hour, day of week, weekend)\n    - Rolling statistics (mean, std)\n    Outputs:\n    - Forecast for next 6h (24 timesteps)\n    - Forecast for next 24h (96 timesteps)",
+        "detail": "src.models.inflow_forecaster",
+        "documentation": {}
+    },
+    {
+        "label": "InflowForecastingSystem",
+        "kind": 6,
+        "importPath": "src.models.inflow_forecaster",
+        "description": "src.models.inflow_forecaster",
+        "peekOfCode": "class InflowForecastingSystem:\n    \"\"\"\n    Complete system for inflow forecasting including:\n    - Feature engineering\n    - Model training\n    - Prediction generation\n    - Storm detection\n    \"\"\"\n    def __init__(\n        self,",
+        "detail": "src.models.inflow_forecaster",
+        "documentation": {}
+    },
+    {
+        "label": "HSYDataLoader",
+        "kind": 6,
+        "importPath": "src.simulation.data_loader",
+        "description": "src.simulation.data_loader",
+        "peekOfCode": "class HSYDataLoader:\n    \"\"\"Load and preprocess HSY historical data\"\"\"\n    def __init__(self, data_dir: str = None):\n        if data_dir is None:\n            # Auto-detect project root (2 levels up from this file)\n            script_dir = Path(__file__).parent\n            project_root = script_dir.parent.parent\n            data_dir = project_root / \"assets\"\n        self.data_dir = Path(data_dir)\n        self.main_data = None",
+        "detail": "src.simulation.data_loader",
+        "documentation": {}
+    },
+    {
+        "label": "WastewaterOPCUAServer",
+        "kind": 6,
+        "importPath": "src.simulation.opcua_server",
+        "description": "src.simulation.opcua_server",
+        "peekOfCode": "class WastewaterOPCUAServer:\n    \"\"\"\n    OPC UA Server that wraps the physics simulator\n    Provides industrial-standard interface for agent control\n    \"\"\"\n    def __init__(\n        self,\n        endpoint: str = \"opc.tcp://0.0.0.0:4840/hsy/wastewater/\",\n        simulation_speedup: float = 1.0\n    ):",
+        "detail": "src.simulation.opcua_server",
+        "documentation": {}
+    },
+    {
+        "label": "OPCUAVisualizer",
+        "kind": 6,
+        "importPath": "src.simulation.opcua_visualizer",
+        "description": "src.simulation.opcua_visualizer",
+        "peekOfCode": "class OPCUAVisualizer:\n    \"\"\"\n    Connects to OPC UA server and displays real-time visualization\n    \"\"\"\n    def __init__(self, url=\"opc.tcp://localhost:4840/hsy/wastewater/\"):\n        self.url = url\n        self.client = Client(url=url)\n        self.viz = WastewaterVisualizer()\n        self.running = True\n        self.nsidx = None",
+        "detail": "src.simulation.opcua_visualizer",
+        "documentation": {}
+    },
+    {
+        "label": "SystemState",
+        "kind": 6,
+        "importPath": "src.simulation.physics_simulator",
+        "description": "src.simulation.physics_simulator",
+        "peekOfCode": "class SystemState:\n    \"\"\"Current state of the wastewater system\"\"\"\n    timestamp: datetime\n    L1: float  # Water level (m)\n    V: float  # Volume (m³)\n    F1: float  # Inflow (m³/15min)\n    F2: float  # Total outflow (m³/h)\n    electricity_price: float  # EUR/kWh\n    active_pumps: Dict[str, Dict] = field(default_factory=dict)\n    total_energy_cost: float = 0.0",
+        "detail": "src.simulation.physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "PumpCommand",
+        "kind": 6,
+        "importPath": "src.simulation.physics_simulator",
+        "description": "src.simulation.physics_simulator",
+        "peekOfCode": "class PumpCommand:\n    \"\"\"Command to control a pump\"\"\"\n    pump_id: str\n    start: bool  # True to start/keep running, False to stop\n    frequency: float = 50.0  # Hz (47.5-50)\nclass TunnelSimulator:\n    \"\"\"\n    Simulates the tunnel water dynamics and pump operations\n    Physics:\n    - dV/dt = F1 - F2 (mass balance)",
+        "detail": "src.simulation.physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "TunnelSimulator",
+        "kind": 6,
+        "importPath": "src.simulation.physics_simulator",
+        "description": "src.simulation.physics_simulator",
+        "peekOfCode": "class TunnelSimulator:\n    \"\"\"\n    Simulates the tunnel water dynamics and pump operations\n    Physics:\n    - dV/dt = F1 - F2 (mass balance)\n    - V(t+1) = V(t) + ΔV\n    - L1 = f(V) from lookup table\n    - F2 = Σ pump_flows\n    \"\"\"\n    def __init__(",
+        "detail": "src.simulation.physics_simulator",
+        "documentation": {}
+    },
+    {
+        "label": "PriceManager",
+        "kind": 6,
+        "importPath": "src.simulation.price_manager",
+        "description": "src.simulation.price_manager",
+        "peekOfCode": "class PriceManager:\n    \"\"\"\n    Manages electricity price data with scenario selection\n    Two scenarios available:\n    - \"high\": Period of high variation and peak prices\n    - \"normal\": Contemporary everyday situation\n    Both are real price data from different time slots\n    \"\"\"\n    def __init__(self, historical_data: pd.DataFrame):\n        \"\"\"",
+        "detail": "src.simulation.price_manager",
+        "documentation": {}
+    },
+    {
+        "label": "PumpSpecs",
+        "kind": 6,
+        "importPath": "src.simulation.pump_models",
+        "description": "src.simulation.pump_models",
+        "peekOfCode": "class PumpSpecs:\n    \"\"\"Pump specifications from datasheets\"\"\"\n    name: str\n    rated_power_kw: float\n    rated_flow_ls: float  # liters/second\n    rated_head_m: float\n    rated_efficiency: float  # decimal (0-1)\n    impeller_diameter_mm: float\n    nominal_speed_rpm: float\n    nominal_frequency_hz: float = 50.0",
+        "detail": "src.simulation.pump_models",
+        "documentation": {}
+    },
+    {
+        "label": "PumpModel",
+        "kind": 6,
+        "importPath": "src.simulation.pump_models",
+        "description": "src.simulation.pump_models",
+        "peekOfCode": "class PumpModel:\n    \"\"\"Model for pump performance based on affinity laws and curves\"\"\"\n    # Pump specifications from Excel data - CALIBRATED PER PUMP\n    # Each pump has individual characteristics derived from actual operational data\n    # Using cubic law: P_measured = P_rated × (f/50)³ to reverse-engineer P_rated\n    # Data points from Excel operational records\n    LARGE_PUMP_SPECS = PumpSpecs(\n        name=\"Large Pump Template\",\n        rated_power_kw=386,\n        rated_flow_ls=925,",
+        "detail": "src.simulation.pump_models",
+        "documentation": {}
+    },
+    {
+        "label": "PumpController",
+        "kind": 6,
+        "importPath": "src.simulation.pump_models",
+        "description": "src.simulation.pump_models",
+        "peekOfCode": "class PumpController:\n    \"\"\"Helper class for managing pump states and transitions\"\"\"\n    def __init__(self):\n        self.pump_model = PumpModel()\n        self.pump_states = {pid: {'running': False, 'frequency': 50.0, 'start_time': None}\n                           for pid in self.pump_model.get_all_pump_ids()}\n        self.current_time = None\n    def update_pump_state(self, pump_id: str, running: bool, frequency: float, current_time: float):\n        \"\"\"Update pump state with runtime tracking\"\"\"\n        # Detect if pump is transitioning (starting or stopping)",
+        "detail": "src.simulation.pump_models",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "src.simulation.quick_viz_test",
+        "description": "src.simulation.quick_viz_test",
+        "peekOfCode": "def main():\n    \"\"\"Run simulation and save snapshots\"\"\"\n    print(\"Loading data...\")\n    loader = HSYDataLoader()\n    loader.load_all_data()\n    print(\"Creating simulator...\")\n    simulator = TunnelSimulator(loader, initial_L1=2.0)\n    print(\"Creating visualizer...\")\n    viz = WastewaterVisualizer(figsize=(16, 10))\n    # Run for a few timesteps and save snapshots",
+        "detail": "src.simulation.quick_viz_test",
+        "documentation": {}
+    },
+    {
+        "label": "WastewaterVisualizer",
+        "kind": 6,
+        "importPath": "src.simulation.visualizer",
+        "description": "src.simulation.visualizer",
+        "peekOfCode": "class WastewaterVisualizer:\n    \"\"\"\n    Real-time 2D visualization of the wastewater pumping system\n    Shows cross-sectional view with tunnel, pumps, and water level\n    \"\"\"\n    def __init__(self, figsize=(16, 10)):\n        \"\"\"Initialize visualizer\"\"\"\n        self.figsize = figsize\n        # Create figure with subplots\n        self.fig = plt.figure(figsize=figsize)",
+        "detail": "src.simulation.visualizer",
+        "documentation": {}
+    },
+    {
+        "label": "SimulationVisualizer",
+        "kind": 6,
+        "importPath": "src.simulation.visualizer",
+        "description": "src.simulation.visualizer",
+        "peekOfCode": "class SimulationVisualizer:\n    # ... (Keep this class largely unchanged) ...\n    def __init__(self, simulator: TunnelSimulator, interval_ms: int = 100):\n        \"\"\"\n        Args:\n            simulator: TunnelSimulator instance\n            interval_ms: Update interval in milliseconds\n        \"\"\"\n        self.simulator = simulator\n        self.interval_ms = interval_ms",
+        "detail": "src.simulation.visualizer",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "src.simulation.visualizer",
+        "description": "src.simulation.visualizer",
+        "peekOfCode": "def main():\n    \"\"\"Test the visualizer\"\"\"\n    print(\"Loading data...\")\n    loader = HSYDataLoader()\n    loader.load_all_data()\n    print(\"Creating simulator...\")\n    simulator = TunnelSimulator(loader, initial_L1=2.0)\n    print(\"Starting visualization...\")\n    print(\"This will run through the 15-day dataset with visualization\")\n    print(\"Update interval: 100ms per timestep\")",
+        "detail": "src.simulation.visualizer",
+        "documentation": {}
+    },
+    {
+        "label": "TestClient",
+        "kind": 6,
+        "importPath": "tests.test_opcua_client",
+        "description": "tests.test_opcua_client",
+        "peekOfCode": "class TestClient:\n    \"\"\"Simple OPC UA client for testing\"\"\"\n    def __init__(self, url=\"opc.tcp://localhost:4840/hsy/wastewater/\"):\n        self.client = Client(url=url)\n        self.logger = logging.getLogger(__name__)\n    async def connect(self):\n        \"\"\"Connect to OPC UA server\"\"\"\n        await self.client.connect()\n        self.logger.info(f\"✓ Connected to {self.client.server_url}\")\n    async def disconnect(self):",
+        "detail": "tests.test_opcua_client",
+        "documentation": {}
+    },
+    {
+        "label": "extract_file",
+        "kind": 2,
+        "importPath": "venv.bin.vba_extract",
+        "description": "venv.bin.vba_extract",
+        "peekOfCode": "def extract_file(xlsm_zip, filename):\n    # Extract a single file from an Excel xlsm macro file.\n    data = xlsm_zip.read(\"xl/\" + filename)\n    # Write the data to a local file.\n    file = open(filename, \"wb\")\n    file.write(data)\n    file.close()\n# The VBA project file and project signature file we want to extract.\nvba_filename = \"vbaProject.bin\"\nvba_signature_filename = \"vbaProjectSignature.bin\"",
+        "detail": "venv.bin.vba_extract",
+        "documentation": {}
+    },
+    {
+        "label": "vba_filename",
+        "kind": 5,
+        "importPath": "venv.bin.vba_extract",
+        "description": "venv.bin.vba_extract",
+        "peekOfCode": "vba_filename = \"vbaProject.bin\"\nvba_signature_filename = \"vbaProjectSignature.bin\"\n# Get the xlsm file name from the commandline.\nif len(sys.argv) > 1:\n    xlsm_file = sys.argv[1]\nelse:\n    print(\n        \"\\nUtility to extract a vbaProject.bin binary from an Excel 2007+ \"\n        \"xlsm macro file for insertion into an XlsxWriter file.\\n\"\n        \"If the macros are digitally signed, extracts also a vbaProjectSignature.bin \"",
+        "detail": "venv.bin.vba_extract",
+        "documentation": {}
+    },
+    {
+        "label": "vba_signature_filename",
+        "kind": 5,
+        "importPath": "venv.bin.vba_extract",
+        "description": "venv.bin.vba_extract",
+        "peekOfCode": "vba_signature_filename = \"vbaProjectSignature.bin\"\n# Get the xlsm file name from the commandline.\nif len(sys.argv) > 1:\n    xlsm_file = sys.argv[1]\nelse:\n    print(\n        \"\\nUtility to extract a vbaProject.bin binary from an Excel 2007+ \"\n        \"xlsm macro file for insertion into an XlsxWriter file.\\n\"\n        \"If the macros are digitally signed, extracts also a vbaProjectSignature.bin \"\n        \"file.\\n\"",
+        "detail": "venv.bin.vba_extract",
+        "documentation": {}
+    },
+    {
+        "label": "calculate_baseline_metrics",
+        "kind": 2,
+        "importPath": "calculate_baseline_cost",
+        "description": "calculate_baseline_cost",
+        "peekOfCode": "def calculate_baseline_metrics(data: pd.DataFrame, price_scenario: str = 'normal'):\n    \"\"\"\n    Calculate baseline metrics from historical data\n    Args:\n        data: Historical operational data\n        price_scenario: 'normal' or 'high'\n    Returns:\n        Dictionary with baseline metrics\n    \"\"\"\n    print(\"\\n\" + \"=\"*60)",
+        "detail": "calculate_baseline_cost",
+        "documentation": {}
+    },
+    {
+        "label": "print_baseline_report",
+        "kind": 2,
+        "importPath": "calculate_baseline_cost",
+        "description": "calculate_baseline_cost",
+        "peekOfCode": "def print_baseline_report(results: dict):\n    \"\"\"Print formatted baseline report\"\"\"\n    print(\"\\n\" + \"=\"*60)\n    print(\"BASELINE METRICS REPORT\")\n    print(\"=\"*60)\n    meta = results['metadata']\n    metrics = results['baseline_metrics']\n    constraints = results['constraints']\n    prices = results['price_statistics']\n    print(f\"\\n📅 DURATION\")",
+        "detail": "calculate_baseline_cost",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "calculate_baseline_cost",
+        "description": "calculate_baseline_cost",
+        "peekOfCode": "def main():\n    \"\"\"Main execution\"\"\"\n    # Load data\n    print(\"Loading HSY data...\")\n    loader = HSYDataLoader()\n    data_dict = loader.load_all_data()\n    data = data_dict['operational_data']\n    print(f\"\\n✓ Loaded {len(data)} timesteps\")\n    # Calculate for both price scenarios\n    for scenario in ['normal', 'high']:",
+        "detail": "calculate_baseline_cost",
+        "documentation": {}
+    }
+]

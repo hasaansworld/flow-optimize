@@ -44,8 +44,9 @@ export interface AgentResponse {
 }
 
 // Configure your backend API URL here
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-const SYNTHESIZE_URL = 'http://localhost:5678/webhook/wastewater-decision'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8000');
+const N8N_BASE_URL = import.meta.env.VITE_N8N_BASE_URL || (typeof window !== 'undefined' ? `${window.location.origin}/n8n` : 'http://localhost:5678');
+const SYNTHESIZE_URL = `${N8N_BASE_URL}/webhook/wastewater-decision`
 
 export async function fetchAgentData(rowNumber: number): Promise<AgentResponse> {
   try {

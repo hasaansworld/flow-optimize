@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+build
+.vite
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+Thumbs.db
+
