@@ -447,49 +447,100 @@ class EvaluationController:
 
 def compare_with_baseline(ai_results: dict, baseline_path: str):
     """
-    Compare AI results with baseline
+    Compare AI results with baseline for the SAME timesteps
+
+    This calculates baseline metrics for the exact same timesteps that the AI
+    evaluation ran on, ensuring an apples-to-apples comparison.
     """
     print("\n" + "="*60)
     print("COMPARISON: AI vs BASELINE")
     print("="*60)
 
-    # Load baseline
-    with open(baseline_path, 'r') as f:
-        baseline = json.load(f)
+    # Load historical data to calculate baseline for same timesteps
+    loader = HSYDataLoader()
+    data_dict = loader.load_all_data()
+    data = data_dict['operational_data']
 
+    # Get AI evaluation parameters
+    ai_timesteps = ai_results['metadata']['timesteps_completed']
+    start_index = ai_results['metadata']['start_index']
+    price_scenario = ai_results['metadata']['price_scenario']
+    price_col = 'Price_High' if price_scenario == 'high' else 'Price_Normal'
+
+    print(f"\n📊 Calculating baseline for SAME timesteps as AI evaluation:")
+    print(f"  Start index: {start_index}")
+    print(f"  Timesteps: {ai_timesteps}")
+    print(f"  Price scenario: {price_scenario}")
+
+    # Calculate baseline metrics for the SAME timesteps
+    pump_power_cols = [
+        'Pump efficiency 1.1', 'Pump efficiency 1.2', 'Pump efficiency 1.3', 'Pump efficiency 1.4',
+        'Pump efficiency 2.1', 'Pump efficiency 2.2', 'Pump efficiency 2.3', 'Pump efficiency 2.4'
+    ]
+
+    baseline_cost = 0.0
+    baseline_energy = 0.0
+    baseline_flow = 0.0
+
+    # Process the SAME timesteps as AI evaluation
+    for i in range(ai_timesteps):
+        idx = start_index + i
+        if idx >= len(data):
+            break
+
+        row = data.iloc[idx]
+
+        # Sum power from all pumps
+        total_power_kw = 0
+        for col in pump_power_cols:
+            power = row[col]
+            if pd.notna(power) and power > 0:
+                total_power_kw += power
+
+        # Energy consumed (kW × 0.25h = kWh)
+        energy_kwh = total_power_kw * 0.25
+
+        # Cost for this timestep
+        price = row[price_col]
+        if pd.isna(price):
+            price = 0.0
+        cost_eur = energy_kwh * price
+
+        # Flow pumped (m³/h × 0.25h = m³)
+        F2 = row['F2']
+        if pd.isna(F2):
+            F2 = 0.0
+        flow_m3 = F2 * 0.25
+
+        # Accumulate
+        baseline_cost += cost_eur
+        baseline_energy += energy_kwh
+        baseline_flow += flow_m3
+
+    baseline_specific = baseline_energy / baseline_flow if baseline_flow > 0 else 0
+
+    # Get AI metrics
     ai_cost = ai_results['metrics']['total_cost_eur']
     ai_energy = ai_results['metrics']['total_energy_kwh']
     ai_flow = ai_results['metrics']['total_flow_m3']
     ai_specific = ai_results['metrics']['specific_energy_kwh_per_m3']
 
-    baseline_cost = baseline['baseline_metrics']['total_cost_eur']
-    baseline_energy = baseline['baseline_metrics']['total_energy_kwh']
-    baseline_flow = baseline['baseline_metrics']['total_flow_m3']
-    baseline_specific = baseline['baseline_metrics']['specific_energy_kwh_per_m3']
+    # Calculate improvements (no scaling needed - direct comparison!)
+    cost_savings = baseline_cost - ai_cost
+    cost_improvement = (cost_savings / baseline_cost * 100) if baseline_cost > 0 else 0
 
-    # Scale baseline to same duration
-    ai_timesteps = ai_results['metadata']['timesteps_completed']
-    duration_ratio = ai_timesteps / baseline['metadata']['timesteps']
-    baseline_cost_scaled = baseline_cost * duration_ratio
-    baseline_energy_scaled = baseline_energy * duration_ratio
-    baseline_flow_scaled = baseline_flow * duration_ratio
-
-    # Calculate improvements
-    cost_savings = baseline_cost_scaled - ai_cost
-    cost_improvement = (cost_savings / baseline_cost_scaled * 100) if baseline_cost_scaled > 0 else 0
-
-    energy_savings = baseline_energy_scaled - ai_energy
-    energy_improvement = (energy_savings / baseline_energy_scaled * 100) if baseline_energy_scaled > 0 else 0
+    energy_savings = baseline_energy - ai_energy
+    energy_improvement = (energy_savings / baseline_energy * 100) if baseline_energy > 0 else 0
 
     specific_improvement = ((baseline_specific - ai_specific) / baseline_specific * 100) if baseline_specific > 0 else 0
 
-    print(f"\n📊 RESULTS ({ai_timesteps} timesteps completed)")
+    print(f"\n📊 RESULTS ({ai_timesteps} timesteps)")
     if not ai_results['metadata']['completed_successfully']:
         print(f"⚠️  Partial results - API rate limit hit at {ai_timesteps}/{ai_results['metadata']['timesteps_requested']} timesteps")
     print(f"\n{'Metric':<30} {'Baseline':<20} {'AI System':<20} {'Improvement':<15}")
     print(f"{'-'*85}")
-    print(f"{'Total Cost (EUR)':<30} €{baseline_cost_scaled:>18,.2f} €{ai_cost:>18,.2f} {cost_improvement:>13.1f}%")
-    print(f"{'Total Energy (kWh)':<30} {baseline_energy_scaled:>18,.2f} {ai_energy:>18,.2f} {energy_improvement:>13.1f}%")
+    print(f"{'Total Cost (EUR)':<30} €{baseline_cost:>18,.2f} €{ai_cost:>18,.2f} {cost_improvement:>13.1f}%")
+    print(f"{'Total Energy (kWh)':<30} {baseline_energy:>18,.2f} {ai_energy:>18,.2f} {energy_improvement:>13.1f}%")
     print(f"{'Specific Energy (kWh/m³)':<30} {baseline_specific:>18.6f} {ai_specific:>18.6f} {specific_improvement:>13.1f}%")
 
     print(f"\n💰 SAVINGS")
@@ -503,13 +554,15 @@ def compare_with_baseline(ai_results: dict, baseline_path: str):
 
     return {
         'baseline': {
-            'cost': baseline_cost_scaled,
-            'energy': baseline_energy_scaled,
+            'cost': baseline_cost,
+            'energy': baseline_energy,
+            'flow': baseline_flow,
             'specific_energy': baseline_specific
         },
         'ai': {
             'cost': ai_cost,
             'energy': ai_energy,
+            'flow': ai_flow,
             'specific_energy': ai_specific
         },
         'improvement': {

@@ -1,19 +1,21 @@
 {
   "baseline": {
-    "cost": 16725.620638020835,
-    "energy": 1906.2861328125,
-    "specific_energy": 0.121972
+    "cost": 576.1927914161682,
+    "energy": 938.481388092041,
+    "flow": 7314.287536621094,
+    "specific_energy": 0.1283079703106096
   },
   "ai": {
-    "cost": 589.8199999999999,
-    "energy": 962.5,
-    "specific_energy": 0.11524185823754789
+    "cost": 324.590225,
+    "energy": 529.825,
+    "flow": 4593.6,
+    "specific_energy": 0.11533982061999304
   },
   "improvement": {
-    "cost_savings_eur": 16135.800638020835,
-    "cost_improvement_pct": 96.47355388021168,
-    "energy_savings_kwh": 943.7861328125,
-    "energy_improvement_pct": 49.50915377116315,
-    "specific_energy_improvement_pct": 5.5177760161775735
+    "cost_savings_eur": 251.60256641616826,
+    "cost_improvement_pct": 43.66638565501293,
+    "energy_savings_kwh": 408.65638809204097,
+    "energy_improvement_pct": 43.54443181050728,
+    "specific_energy_improvement_pct": 10.107049202963061
   }
 }
