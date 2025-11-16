@@ -49,12 +49,16 @@ from webhooks import router as webhook_router
 
 class SystemStateRequest(BaseModel):
     """Request model for system state"""
-    timestamp: str
-    L1: float = Field(..., description="Water level in meters")
-    V: float = Field(..., description="Volume in m³")
-    F1: float = Field(..., description="Inflow in m³/15min")
-    F2: float = Field(..., description="Outflow in m³/h")
-    electricity_price: float = Field(..., description="Price in EUR/kWh")
+    # Optional: If row_number is provided, read data from Excel row
+    row_number: Optional[int] = Field(default=None, description="Excel row number to read data from (1-based index)")
+
+    # System state fields (will be auto-populated if row_number is provided)
+    timestamp: Optional[str] = Field(default=None)
+    L1: Optional[float] = Field(default=None, description="Water level in meters")
+    V: Optional[float] = Field(default=None, description="Volume in m³")
+    F1: Optional[float] = Field(default=None, description="Inflow in m³/15min")
+    F2: Optional[float] = Field(default=None, description="Outflow in m³/h")
+    electricity_price: Optional[float] = Field(default=None, description="Price in EUR/kWh")
     price_scenario: str = Field(default="normal", description="'normal' or 'high'")
     active_pumps: Dict[str, Dict] = Field(default_factory=dict)
     current_index: int = Field(default=0, description="Historical data index")
@@ -237,6 +241,51 @@ async def shutdown_event():
 
 # ===== Helper Functions =====
 
+def populate_request_from_excel(req: SystemStateRequest) -> SystemStateRequest:
+    """
+    If row_number is provided, populate request fields from Excel data
+    Returns the populated request
+    """
+    if req.row_number is None:
+        # No row_number provided, use request as-is
+        return req
+
+    if app_state.data is None:
+        raise HTTPException(status_code=503, detail="Historical data not loaded")
+
+    # Convert 1-based row number to 0-based index
+    row_index = req.row_number - 1
+
+    if row_index < 0 or row_index >= len(app_state.data):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Row number {req.row_number} out of range. Valid range: 1-{len(app_state.data)}"
+        )
+
+    # Get the row from Excel data
+    row = app_state.data.iloc[row_index]
+
+    # Determine electricity price based on price_scenario
+    if req.price_scenario == "high":
+        electricity_price = float(row['Price_High'])
+    else:
+        electricity_price = float(row['Price_Normal'])
+
+    # Create a new request with populated fields
+    return SystemStateRequest(
+        row_number=req.row_number,
+        timestamp=str(row['Time stamp']),
+        L1=float(row['L1']),
+        V=float(row['V']),
+        F1=float(row['F1']),
+        F2=float(row['F2']),
+        electricity_price=electricity_price,
+        price_scenario=req.price_scenario,
+        active_pumps=req.active_pumps,
+        current_index=row_index
+    )
+
+
 def request_to_system_state(req: SystemStateRequest) -> SystemState:
     """Convert request model to SystemState"""
     return SystemState(
@@ -327,6 +376,7 @@ async def assess_inflow(state_req: SystemStateRequest):
         raise HTTPException(status_code=503, detail="Service not initialized")
 
     try:
+        state_req = populate_request_from_excel(state_req)
         state = request_to_system_state(state_req)
         agent = app_state.specialist_agents['inflow_forecasting']
         recommendation = agent.assess(state)
@@ -342,6 +392,7 @@ async def assess_cost(state_req: SystemStateRequest):
         raise HTTPException(status_code=503, detail="Service not initialized")
 
     try:
+        state_req = populate_request_from_excel(state_req)
         state = request_to_system_state(state_req)
         agent = app_state.specialist_agents['energy_cost']
         recommendation = agent.assess(state)
@@ -357,6 +408,7 @@ async def assess_efficiency(state_req: SystemStateRequest):
         raise HTTPException(status_code=503, detail="Service not initialized")
 
     try:
+        state_req = populate_request_from_excel(state_req)
         state = request_to_system_state(state_req)
         agent = app_state.specialist_agents['pump_efficiency']
         recommendation = agent.assess(state)
@@ -372,6 +424,7 @@ async def assess_safety(state_req: SystemStateRequest):
         raise HTTPException(status_code=503, detail="Service not initialized")
 
     try:
+        state_req = populate_request_from_excel(state_req)
         state = request_to_system_state(state_req)
         agent = app_state.specialist_agents['water_level_safety']
         recommendation = agent.assess(state)
@@ -387,6 +440,7 @@ async def assess_smoothness(state_req: SystemStateRequest):
         raise HTTPException(status_code=503, detail="Service not initialized")
 
     try:
+        state_req = populate_request_from_excel(state_req)
         state = request_to_system_state(state_req)
         agent = app_state.specialist_agents['flow_smoothness']
         recommendation = agent.assess(state)
@@ -402,6 +456,7 @@ async def assess_compliance(state_req: SystemStateRequest):
         raise HTTPException(status_code=503, detail="Service not initialized")
 
     try:
+        state_req = populate_request_from_excel(state_req)
         state = request_to_system_state(state_req)
         agent = app_state.specialist_agents['constraint_compliance']
         recommendation = agent.assess(state)
@@ -417,6 +472,7 @@ async def assess_all(state_req: SystemStateRequest):
         raise HTTPException(status_code=503, detail="Service not initialized")
 
     try:
+        state_req = populate_request_from_excel(state_req)
         state = request_to_system_state(state_req)
         recommendations = {}
 
@@ -434,12 +490,20 @@ async def synthesize(state_req: SystemStateRequest):
     """
     Complete decision cycle: Run all agents + coordinator synthesis
     This is the main endpoint for n8n workflows
+
+    Two usage modes:
+    1. Provide row_number (e.g., {"row_number": 100}) - reads data from Excel row
+    2. Provide all fields manually - uses provided values
     """
     if not app_state.initialized:
         raise HTTPException(status_code=503, detail="Service not initialized")
 
     try:
+        # Populate request from Excel if row_number is provided
+        state_req = populate_request_from_excel(state_req)
+
         state = request_to_system_state(state_req)
+        print(f"State: {state}")
 
         # Step 1: Run all specialist agents
         recommendations = {}

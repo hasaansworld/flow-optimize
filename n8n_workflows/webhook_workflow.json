@@ -1,5 +1,5 @@
 {
-  "name": "Multi-Agent Webhook API",
+  "name": "Multi-Agent Webhook API (Row Number)",
   "nodes": [
     {
       "parameters": {
@@ -17,28 +17,17 @@
     },
     {
       "parameters": {
-        "url": "http://agent-api:8000/api/v1/state/current",
-        "options": {}
-      },
-      "name": "Get Current State",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [450, 300],
-      "id": "get-state"
-    },
-    {
-      "parameters": {
         "url": "http://agent-api:8000/api/v1/synthesize",
         "method": "POST",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"timestamp\": \"{{ $json.timestamp }}\",\n  \"L1\": {{ $json.L1 }},\n  \"V\": {{ $json.V }},\n  \"F1\": {{ $json.F1 }},\n  \"F2\": {{ $json.F2 }},\n  \"electricity_price\": {{ $json.electricity_price_normal }},\n  \"price_scenario\": \"normal\",\n  \"current_index\": {{ $json.current_index }}\n}",
+        "jsonBody": "={\n  \"row_number\": {{ $json.body.row_number || 1 }},\n  \"price_scenario\": \"{{ $json.body.price_scenario || 'normal' }}\"\n}",
         "options": {}
       },
       "name": "Run Multi-Agent Decision",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [650, 300],
+      "position": [450, 300],
       "id": "synthesize"
     },
     {
@@ -102,7 +91,7 @@
       "name": "Format Decision Summary",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.2,
-      "position": [850, 300],
+      "position": [650, 300],
       "id": "format-summary"
     },
     {
@@ -127,23 +116,12 @@
       "name": "Return Response to Frontend",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [1050, 300],
+      "position": [850, 300],
       "id": "respond-to-webhook"
     }
   ],
   "connections": {
     "Webhook Trigger": {
-      "main": [
-        [
-          {
-            "node": "Get Current State",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Current State": {
       "main": [
         [
           {
