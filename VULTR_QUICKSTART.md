@@ -46,10 +46,11 @@ docker compose -f docker-compose.prod.yml restart
 ```
 
 ### 5. Access Your Application
-- **Frontend**: http://YOUR_SERVER_IP
-- **API Health**: http://YOUR_SERVER_IP/api/v1/health
-- **n8n**: http://YOUR_SERVER_IP/n8n/
-- **Grafana**: http://YOUR_SERVER_IP/grafana/
+- **Frontend**: http://YOUR_SERVER_IP (port 80)
+- **API**: http://YOUR_SERVER_IP:8000
+- **API Docs**: http://YOUR_SERVER_IP:8000/docs
+- **n8n**: http://YOUR_SERVER_IP:5678
+- **Grafana**: http://YOUR_SERVER_IP:3000
 
 ## 📋 Manual Steps (Alternative)
 
@@ -73,26 +74,9 @@ nano .env  # Edit with your keys
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-## 🔒 SSL Setup (Recommended)
+## 🔒 SSL Setup (Optional)
 
-```bash
-# Install certbot
-apt-get install certbot python3-certbot-nginx -y
-
-# Get certificate (replace with your domain)
-certbot certonly --standalone -d your-domain.com
-
-# Copy certificates
-mkdir -p nginx/ssl
-cp /etc/letsencrypt/live/your-domain.com/fullchain.pem nginx/ssl/cert.pem
-cp /etc/letsencrypt/live/your-domain.com/privkey.pem nginx/ssl/key.pem
-
-# Enable HTTPS in nginx/nginx.conf (uncomment HTTPS block)
-nano nginx/nginx.conf
-
-# Restart nginx
-docker compose -f docker-compose.prod.yml restart nginx
-```
+If you want SSL/HTTPS, you'll need to set up a reverse proxy (nginx, Caddy, or Traefik) in front of your services. For now, services are accessible directly on their ports.
 
 ## 🛠️ Common Commands
 

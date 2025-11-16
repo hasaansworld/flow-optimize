@@ -76,16 +76,19 @@ if [ ! -f .env ]; then
     fi
 fi
 
-# Create nginx ssl directory
-echo -e "${GREEN}📁 Creating nginx SSL directory...${NC}"
-mkdir -p nginx/ssl
-
-# Check for port 80 conflict
-echo -e "${GREEN}🔍 Checking for port 80 conflicts...${NC}"
-if command -v netstat &> /dev/null && netstat -tuln | grep -q ":80 "; then
-    echo -e "${YELLOW}⚠️  Port 80 is already in use!${NC}"
-    echo -e "${YELLOW}   Run ./fix-port-80.sh to resolve this${NC}"
-    echo -e "${YELLOW}   Or stop conflicting service: systemctl stop apache2 nginx${NC}"
+# Check for port conflicts
+echo -e "${GREEN}🔍 Checking for port conflicts...${NC}"
+PORTS_IN_USE=""
+if command -v netstat &> /dev/null; then
+    for port in 80 8000 5678 3000; do
+        if netstat -tuln | grep -q ":${port} "; then
+            PORTS_IN_USE="${PORTS_IN_USE} ${port}"
+        fi
+    done
+fi
+if [ -n "$PORTS_IN_USE" ]; then
+    echo -e "${YELLOW}⚠️  Ports in use:${PORTS_IN_USE}${NC}"
+    echo -e "${YELLOW}   You may need to stop conflicting services${NC}"
     read -p "Continue anyway? (y/n) " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -113,9 +116,10 @@ echo -e "${GREEN}✅ Deployment Complete!${NC}"
 echo ""
 echo -e "${YELLOW}Access your services at:${NC}"
 echo "  Frontend:  http://$(hostname -I | awk '{print $1}')"
-echo "  API:       http://$(hostname -I | awk '{print $1}')/api/v1/health"
-echo "  n8n:       http://$(hostname -I | awk '{print $1}')/n8n/"
-echo "  Grafana:   http://$(hostname -I | awk '{print $1}')/grafana/"
+echo "  API:       http://$(hostname -I | awk '{print $1}'):8000"
+echo "  API Docs:  http://$(hostname -I | awk '{print $1}'):8000/docs"
+echo "  n8n:       http://$(hostname -I | awk '{print $1}'):5678"
+echo "  Grafana:   http://$(hostname -I | awk '{print $1}'):3000"
 echo ""
 echo -e "${YELLOW}Useful commands:${NC}"
 echo "  View logs:     docker compose -f docker-compose.prod.yml logs -f"
@@ -123,9 +127,26 @@ echo "  Restart:       docker compose -f docker-compose.prod.yml restart"
 echo "  Stop:          docker compose -f docker-compose.prod.yml down"
 echo "  Status:        docker compose -f docker-compose.prod.yml ps"
 echo ""
-echo -e "${RED}⚠️  Don't forget to:${NC}"
-echo "  1. Set up SSL certificates (see DEPLOYMENT.md)"
-echo "  2. Change default passwords in .env"
-echo "  3. Configure your domain DNS (if using custom domain)"
+echo -e "${RED}⚠️  IMPORTANT: Next Steps${NC}"
+echo ""
+echo "1. Configure .env file with your API keys:"
+echo "   nano .env"
+echo "   (Set GEMINI_API_KEY, OPENAI_API_KEY, and change passwords)"
+echo ""
+echo "2. Restart services to load new environment:"
+echo "   docker compose -f docker-compose.prod.yml restart"
+echo "   OR: ./start_production.sh --no-build"
+echo ""
+echo "3. Verify services are running:"
+echo "   docker compose -f docker-compose.prod.yml ps"
+echo ""
+echo "4. Test your application:"
+echo "   http://$(hostname -I | awk '{print $1}')"
+echo ""
+echo "📚 See POST_DEPLOYMENT.md for detailed next steps"
+echo ""
+echo -e "${YELLOW}Optional:${NC}"
+echo "  - Set up SSL certificates (see DEPLOYMENT.md)"
+echo "  - Configure your domain DNS (if using custom domain)"
 echo ""
 

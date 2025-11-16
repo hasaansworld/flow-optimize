@@ -82,13 +82,6 @@ echo ""
 echo "📊 Service Status:"
 echo ""
 
-# Check nginx
-if curl -s http://localhost/health > /dev/null 2>&1; then
-    echo "✅ Nginx Reverse Proxy: http://${SERVER_IP}"
-else
-    echo "⚠️  Nginx: Starting..."
-fi
-
 # Check frontend
 if curl -s http://localhost/health > /dev/null 2>&1; then
     echo "✅ Frontend: http://${SERVER_IP}"
@@ -97,24 +90,25 @@ else
 fi
 
 # Check agent API
-if curl -s http://localhost/api/v1/health > /dev/null 2>&1; then
-    echo "✅ Agent API Server: http://${SERVER_IP}/api/v1/health"
-    echo "   📚 API Docs: http://${SERVER_IP}/api/docs"
+if curl -s http://localhost:8000/api/v1/health > /dev/null 2>&1; then
+    echo "✅ Agent API Server: http://${SERVER_IP}:8000"
+    echo "   📚 API Docs: http://${SERVER_IP}:8000/docs"
+    echo "   Health: http://${SERVER_IP}:8000/api/v1/health"
 else
     echo "⚠️  Agent API Server: Starting..."
 fi
 
 # Check n8n
-if curl -s http://localhost/n8n/healthz > /dev/null 2>&1; then
-    echo "✅ n8n Workflow UI: http://${SERVER_IP}/n8n/"
+if curl -s http://localhost:5678/healthz > /dev/null 2>&1; then
+    echo "✅ n8n Workflow UI: http://${SERVER_IP}:5678"
     echo "   👤 Login: Check .env for N8N_USER and N8N_PASSWORD"
 else
     echo "⚠️  n8n: Starting..."
 fi
 
 # Check Grafana
-if curl -s http://localhost/grafana/api/health > /dev/null 2>&1; then
-    echo "✅ Grafana Dashboard: http://${SERVER_IP}/grafana/"
+if curl -s http://localhost:3000/api/health > /dev/null 2>&1; then
+    echo "✅ Grafana Dashboard: http://${SERVER_IP}:3000"
     echo "   👤 Login: Check .env for GRAFANA_USER and GRAFANA_PASSWORD"
 else
     echo "⚠️  Grafana: Starting..."
@@ -135,14 +129,15 @@ echo ""
 echo "📖 Access Your Services:"
 echo ""
 echo "  Frontend:  http://${SERVER_IP}"
-echo "  API:       http://${SERVER_IP}/api/v1/health"
-echo "  n8n:       http://${SERVER_IP}/n8n/"
-echo "  Grafana:   http://${SERVER_IP}/grafana/"
+echo "  API:       http://${SERVER_IP}:8000"
+echo "  API Docs:  http://${SERVER_IP}:8000/docs"
+echo "  n8n:       http://${SERVER_IP}:5678"
+echo "  Grafana:   http://${SERVER_IP}:3000"
 echo ""
 echo "📖 Next Steps:"
 echo ""
 echo "1. Access n8n UI:"
-echo "   http://${SERVER_IP}/n8n/"
+echo "   http://${SERVER_IP}:5678"
 echo "   Login: Check .env file for credentials"
 echo ""
 echo "2. Import workflow:"

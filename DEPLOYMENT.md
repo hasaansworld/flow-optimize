@@ -139,12 +139,13 @@ ufw status
 
 ## Step 8: Access Your Application
 
-Once deployed, access your services:
+Once deployed, access your services directly on their ports:
 
-- **Frontend**: `http://YOUR_SERVER_IP`
-- **API**: `http://YOUR_SERVER_IP/api/v1/health`
-- **n8n**: `http://YOUR_SERVER_IP/n8n/`
-- **Grafana**: `http://YOUR_SERVER_IP/grafana/`
+- **Frontend**: `http://YOUR_SERVER_IP` (port 80)
+- **API**: `http://YOUR_SERVER_IP:8000`
+- **API Docs**: `http://YOUR_SERVER_IP:8000/docs`
+- **n8n**: `http://YOUR_SERVER_IP:5678`
+- **Grafana**: `http://YOUR_SERVER_IP:3000`
 
 ## Step 9: Set Up SSL (Optional but Recommended)
 
