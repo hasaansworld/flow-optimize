@@ -28,9 +28,7 @@ echo -e "${GREEN}📦 Installing required packages...${NC}"
 apt-get install -y \
     curl \
     git \
-    ufw \
-    certbot \
-    python3-certbot-nginx
+    ufw
 
 # Install Docker
 if ! command -v docker &> /dev/null; then

@@ -13,7 +13,9 @@ RUN npm ci
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN echo "Building application..." && \
+    npm run build && \
+    echo "Build completed successfully!"
 
 # Verify build output exists
 RUN echo "Checking build output..." && \
@@ -41,6 +43,6 @@ RUN if [ ! -d "build" ] || [ -z "$(ls -A build)" ]; then \
 EXPOSE 80
 
 # Serve on port 80 with SPA routing support (-s for single-page app)
-# Health check endpoint will be handled by the app itself
-CMD ["serve", "-s", "build", "-l", "80"]
+# Use node serve directly to ensure it binds to 0.0.0.0
+CMD ["node", "/usr/local/lib/node_modules/serve/bin/serve.js", "-s", "build", "-l", "tcp://0.0.0.0:80"]
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Production start script for Vultr deployment
-# Uses docker-compose.prod.yml with nginx reverse proxy
+# Uses docker-compose.prod.yml (no nginx - services exposed directly on ports)
 #
 # Usage:
 #   ./start_production.sh           # Normal start with rebuild
@@ -149,7 +149,7 @@ echo "   - Select: n8n_workflows/main_control_loop.json"
 echo "   - Activate the workflow"
 echo ""
 echo "3. Test the API:"
-echo "   curl http://${SERVER_IP}/api/v1/health"
+echo "   curl http://${SERVER_IP}:8000/api/v1/health"
 echo ""
 echo "4. View logs:"
 echo "   docker compose -f docker-compose.prod.yml logs -f"
