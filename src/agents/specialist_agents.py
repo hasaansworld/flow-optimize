@@ -132,13 +132,20 @@ Think like an energy trader who understands price volatility and temporal arbitr
             expected_fields=["analysis", "recommendation", "estimated_savings_eur", "risk_level", "confidence", "priority"]
         )
 
-        # Determine priority
-        if arbitrage_info.get('price_ratio', 1) > 10:
-            priority = "HIGH"
+        # Determine priority based on price AND opportunity
+        # HIGH priority when:
+        # 1. Current price is VERY expensive (>15 EUR/kWh) - alert to minimize pumping
+        # 2. Large arbitrage opportunity (price_ratio > 5) - alert to defer pumping
+        if state.electricity_price > 15.0:
+            priority = "CRITICAL"  # VERY expensive - minimize pumping!
+        elif state.electricity_price > 10.0:
+            priority = "HIGH"  # Expensive - reduce unnecessary pumping
+        elif arbitrage_info.get('price_ratio', 1) > 10:
+            priority = "HIGH"  # Huge savings opportunity
         elif arbitrage_info.get('price_ratio', 1) > 5:
-            priority = "MEDIUM"
+            priority = "MEDIUM"  # Good savings opportunity
         else:
-            priority = "LOW"
+            priority = "LOW"  # Normal pricing
 
         return AgentRecommendation(
             agent_name=self.name,
@@ -149,6 +156,7 @@ Think like an energy trader who understands price volatility and temporal arbitr
             reasoning=response.get('analysis', ''),
             data={
                 'current_price': state.electricity_price,
+                'price_level': 'VERY_HIGH' if state.electricity_price > 15 else 'HIGH' if state.electricity_price > 10 else 'NORMAL',
                 'cheap_windows': cheap_windows,
                 'arbitrage_value': arbitrage_info,
                 'recommendation': response.get('recommendation', 'PUMP_NORMALLY'),

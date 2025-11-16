@@ -118,12 +118,12 @@ class EvaluationController:
 
     def _validate_and_correct_pump_commands(self, pump_commands: list, state: SystemState) -> list:
         """
-        Validate pump commands and correct obvious errors.
+        Validate pump commands for minimum operational requirements.
         
-        Issues fixed:
-        - Ensure at least 1 pump is running
-        - Verify total flow can handle current inflow (F1)
-        - Add backup pumps if LLM solution is inadequate
+        MINIMAL validation - let coordinator make smart decisions:
+        - Ensure at least 1 pump is running (hard constraint)
+        - Don't force additional pumps (that's coordinator's job, considering price)
+        - Only warn if flow is insufficient
         """
         active_pumps = [cmd for cmd in pump_commands if cmd.start]
         
@@ -134,33 +134,24 @@ class EvaluationController:
             current_total_flow += flow
         
         # Minimum required: handle current inflow rate (convert F1 from m³/15min to m³/h)
-        min_required_flow = state.F1 * 4 if state.F1 > 0 else 3000  # F1 is per 15 min
+        min_required_flow = state.F1 * 4 if state.F1 > 0 else 1000  # F1 is per 15 min
         
-        # If not enough flow, add more pumps
-        if current_total_flow < min_required_flow or len(active_pumps) == 0:
-            print(f"  ⚠️ VALIDATION: Adding pumps - current {current_total_flow:.0f}m³/h < required {min_required_flow:.0f}m³/h")
-            
-            # Add second pump if not already running
+        # ONLY enforce: At least 1 pump must be running
+        if len(active_pumps) == 0:
+            print(f"  ⚠️ VALIDATION: No pumps active! Enabling P1L at minimum frequency")
             for cmd in pump_commands:
-                # Look for P2L or another large pump that's off
-                if cmd.pump_id in ['P2L', '1.2', '2.2', '2.3'] and not cmd.start:
+                if cmd.pump_id == 'P1L':
                     cmd.start = True
-                    cmd.frequency = 50.0
-                    flow, _, _ = self.calculate_pump_power(cmd.pump_id, cmd.frequency, state.L1)
-                    current_total_flow += flow
-                    print(f"    Added {cmd.pump_id}, new total: {current_total_flow:.0f}m³/h")
+                    cmd.frequency = 47.8  # Minimum operating frequency
                     break
-            
-            # Add third pump if still not enough
-            if current_total_flow < min_required_flow:
-                for cmd in pump_commands:
-                    if not cmd.start and cmd.pump_id not in ['P1L', 'P2L']:
-                        cmd.start = True
-                        cmd.frequency = 50.0
-                        flow, _, _ = self.calculate_pump_power(cmd.pump_id, cmd.frequency, state.L1)
-                        current_total_flow += flow
-                        print(f"    Added {cmd.pump_id}, new total: {current_total_flow:.0f}m³/h")
-                        break
+            return pump_commands
+        
+        # CHECK (but don't fix): Warn if flow is insufficient
+        if current_total_flow < min_required_flow:
+            print(f"  ⚠️ WARNING: Flow may be insufficient - current {current_total_flow:.0f}m³/h < inflow {min_required_flow:.0f}m³/h")
+            print(f"     Coordinator should increase pump speeds or add pumps for cost savings")
+        else:
+            print(f"  ✓ Flow adequate: {current_total_flow:.0f}m³/h >= required {min_required_flow:.0f}m³/h")
         
         return pump_commands
 
