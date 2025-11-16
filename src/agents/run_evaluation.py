@@ -70,10 +70,27 @@ class EvaluationController:
         self.total_flow_m3 = 0.0
         self.constraint_violations = []
         self.predictions = []
-        
+
         # Track pump states across cycles for constraint compliance agent
         self.active_pumps = {}  # pump_id -> {'start_time': timestamp, 'frequency': float}
         self.pump_start_times = {}  # pump_id -> when it was turned on
+
+        # Approximate tank surface area from historical L1/V data
+        # This lets us convert between stored volume (V) and level (L1) in the simulator.
+        try:
+            V_series = self.data['V']
+            L1_series = self.data['L1']
+            dV = float(V_series.max() - V_series.min())
+            dL1 = float(L1_series.max() - L1_series.min())
+            self.tank_area = dV / dL1 if dL1 != 0 else 1.0
+        except Exception:
+            # Fallback: arbitrary area of 1.0 m² if we cannot compute it
+            self.tank_area = 1.0
+
+        # Simulated level/volume for closed-loop evaluation
+        # These are initialized in run_evaluation based on the chosen start index.
+        self.sim_L1 = None
+        self.sim_V = None
 
         print(f"\nSettings:")
         print(f"  Price scenario: {price_scenario.upper()}")
@@ -107,52 +124,58 @@ class EvaluationController:
                     specs = self.pump_model.LARGE_PUMP_SPECS
                 else:
                     specs = self.pump_model.SMALL_PUMP_SPECS
-            
+
             freq_ratio = frequency / 50.0
-            
+
             flow = specs.rated_flow_ls * freq_ratio * 3.6  # l/s to m³/h
             power = specs.rated_power_kw * (freq_ratio ** 3)  # Cubic law
             efficiency = max(0.7, specs.rated_efficiency * max(0.95, 1.0 - abs(freq_ratio - 1.0) * 0.05))
-            
+
             return flow, power, efficiency
 
     def _validate_and_correct_pump_commands(self, pump_commands: list, state: SystemState) -> list:
         """
         Validate pump commands for minimum operational requirements.
-        
+
         MINIMAL validation - let coordinator make smart decisions:
         - Ensure at least 1 pump is running (hard constraint)
         - Don't force additional pumps (that's coordinator's job, considering price)
         - Only warn if flow is insufficient
         """
         active_pumps = [cmd for cmd in pump_commands if cmd.start]
-        
+
         # Calculate what the current commands will produce
         current_total_flow = 0
         for cmd in active_pumps:
             flow, _, _ = self.calculate_pump_power(cmd.pump_id, cmd.frequency, state.L1)
             current_total_flow += flow
-        
-        # Minimum required: handle current inflow rate (convert F1 from m³/15min to m³/h)
-        min_required_flow = state.F1 * 4 if state.F1 > 0 else 1000  # F1 is per 15 min
-        
-        # ONLY enforce: At least 1 pump must be running
+
+        min_required_flow = state.F1 if state.F1 > 0 else 0.0  # ✅
+
+        # HARD constraint: at least one pump must be running
         if len(active_pumps) == 0:
-            print(f"  ⚠️ VALIDATION: No pumps active! Enabling P1L at minimum frequency")
+            print("  ⚠️ VALIDATION: No pumps active! Enabling P1L at minimum frequency")
+            # Try to find existing P1L command
+            found = False
             for cmd in pump_commands:
                 if cmd.pump_id == 'P1L':
                     cmd.start = True
-                    cmd.frequency = 47.8  # Minimum operating frequency
+                    cmd.frequency = 47.8
+                    found = True
                     break
+            # If no P1L command exists, add one explicitly
+            if not found:
+                pump_commands.append(PumpCommand(pump_id='P1L', start=True, frequency=47.8))
+
             return pump_commands
-        
+
         # CHECK (but don't fix): Warn if flow is insufficient
         if current_total_flow < min_required_flow:
-            print(f"  ⚠️ WARNING: Flow may be insufficient - current {current_total_flow:.0f}m³/h < inflow {min_required_flow:.0f}m³/h")
+            print(f"  ⚠️ WARNING: Flow may be insufficient - current_total_flow {current_total_flow:.0f}m³/h < inflow {min_required_flow:.0f}m³/h")
             print(f"     Coordinator should increase pump speeds or add pumps for cost savings")
         else:
             print(f"  ✓ Flow adequate: {current_total_flow:.0f}m³/h >= required {min_required_flow:.0f}m³/h")
-        
+
         return pump_commands
 
     def run_decision_cycle(self, state: SystemState, timestep: int) -> dict:
@@ -177,16 +200,22 @@ class EvaluationController:
             try:
                 rec = agent.assess(state)
                 recommendations[name] = rec
-                print(f"\n{name.upper()}:")
-                print(f"  Priority: {rec.priority} | Confidence: {rec.confidence:.2f}")
-                print(f"  Type: {rec.recommendation_type}")
-                print(f"  Reasoning: {rec.reasoning[:150]}...")
+
+                print(f"\n[{name}]")
+                print(f"  Priority:   {rec.priority}")
+                print(f"  Confidence: {rec.confidence:.2f}")
+                print(f"  Type:       {rec.recommendation_type}")
+                if rec.reasoning:
+                    print(f"  Reasoning: {rec.reasoning[:150]}...")
                 if rec.data:
-                    print(f"  Key Data: {str(rec.data)[:200]}...")
+                    try:
+                        print(f"  Key Data: {str(rec.data)[:200]}...")
+                    except Exception:
+                        print("  Key Data: <unprintable>")
             except Exception as e:
                 # Check if this is a rate limit error
-                if "429" in str(e) or "quota" in str(e).lower() or "rate" in str(e).lower():
-                    print(f"\n❌ API Rate Limit Hit - Aborting evaluation")
+                if "429" in str(e) or "quota" in str(e).lower() or "rate limit" in str(e).lower():
+                    print(f"\n❌ API Rate Limit Hit in Specialist Agent '{name}' - Aborting evaluation")
                     return None
                 print(f"⚠️ {name} failed: {e}")
 
@@ -204,7 +233,7 @@ class EvaluationController:
                 print(f"  Confidence: {decision.confidence:.2f}")
         except Exception as e:
             # Check if this is a rate limit error
-            if "429" in str(e) or "quota" in str(e).lower() or "rate" in str(e).lower():
+            if "429" in str(e) or "quota" in str(e).lower() or "rate limit" in str(e).lower():
                 print(f"\n❌ API Rate Limit Hit in Coordinator - Aborting evaluation")
                 return None
             raise
@@ -255,7 +284,7 @@ class EvaluationController:
         active_pumps = [cmd for cmd in enhanced_commands if cmd['start']]
         print(f"Active Pumps: {len(active_pumps)}")
         for cmd in active_pumps:
-            print(f"  {cmd['pump_id']}: {cmd['frequency_hz']:.1f} Hz → {cmd['flow_m3h']:.0f} m³/h @ {cmd['power_kw']:.1f} kW (η={cmd['efficiency']:.1%})")
+            print(f"  {cmd['pump_id']}: {cmd['frequency_hz']:.1f} Hz -> {cmd['flow_m3h']:.1f} m³/h @ {cmd['power_kw']:.1f} kW (η={cmd['efficiency']:.1%})")
         print(f"\n💰 COST:")
         print(f"  Power: {total_power_kw:.1f} kW | Energy: {energy_kwh:.2f} kWh | Cost: €{cost_eur:.2f}")
         print(f"  Flow: {flow_m3:.0f} m³ | Specific Energy: {specific_energy:.6f} kWh/m³")
@@ -320,7 +349,7 @@ class EvaluationController:
 
             'cost_calculation': {
                 'total_power_kw': float(total_power_kw),
-                'energy_consumed_kwh': float(energy_kwh),
+                'energy_kwh': float(energy_kwh),
                 'cost_eur': float(cost_eur),
                 'flow_pumped_m3': float(flow_m3),
                 'specific_energy_kwh_per_m3': float(specific_energy)
@@ -344,10 +373,16 @@ class EvaluationController:
 
     def run_evaluation(self, start_index: int = 0, num_steps: int = 100):
         """
-        Run evaluation over historical data
+        Run evaluation over historical data in a CLOSED LOOP.
+
+        Instead of replaying historical L1/V directly from the CSV, we:
+        - Initialize simulated level/volume from the chosen start index.
+        - At each timestep, use historical inflow (F1) and agent-decided pump outflow
+          to update the simulated storage state.
+        - Feed the simulated L1/V into the agents at the next step.
 
         Args:
-            start_index: Starting timestep
+            start_index: Starting timestep (row index in the historical dataframe)
             num_steps: Number of 15-min timesteps to simulate
         """
         print("\n" + "="*60)
@@ -358,6 +393,46 @@ class EvaluationController:
 
         price_col = 'Price_High' if self.price_scenario == 'high' else 'Price_Normal'
 
+        # Basic sanity check
+        if start_index >= len(self.data):
+            print("❌ start_index is beyond available data – nothing to simulate.")
+            return {
+                'metadata': {
+                    'timesteps_requested': num_steps,
+                    'timesteps_completed': 0,
+                    'duration_hours': 0.0,
+                    'price_scenario': self.price_scenario,
+                    'start_index': start_index,
+                    'completed_successfully': False,
+                },
+                'metrics': {
+                    'total_cost_eur': 0.0,
+                    'total_energy_kwh': 0.0,
+                    'total_flow_m3': 0.0,
+                    'specific_energy_kwh_per_m3': 0.0,
+                },
+                'violations': {
+                    'count': 0,
+                    'details': [],
+                },
+                'predictions': [],
+            }
+
+        # Initialise simulated storage state from the starting row
+        first_row = self.data.iloc[start_index]
+        try:
+            self.sim_V = float(first_row['V'])
+        except Exception:
+            # If V is not available, fall back to using L1 as a proxy for storage
+            self.sim_V = float(first_row.get('L1', 0.0))
+
+        try:
+            self.sim_L1 = float(first_row['L1'])
+        except Exception:
+            # If L1 is missing, derive it from volume and tank area
+            self.sim_L1 = self.sim_V / self.tank_area if getattr(self, 'tank_area', 1.0) > 0 else 0.0
+
+        # Main simulation loop
         for i in range(num_steps):
             idx = start_index + i
 
@@ -365,34 +440,62 @@ class EvaluationController:
                 print("⚠️ Reached end of data")
                 break
 
-            # Create state from historical data
+            row = self.data.iloc[idx]
+
+            # Historical exogenous signals (things our policy cannot change)
+            timestamp = row['Time stamp']
+            inflow_F1 = float(row['F1'])   # Assumed m³ per 15-min interval
+            electricity_price = float(row[price_col])
+
+            # Build SystemState using the SIMULATED storage state
             state = SystemState(
-                timestamp=self.data['Time stamp'].iloc[idx],
-                L1=self.data['L1'].iloc[idx],
-                V=self.data['V'].iloc[idx],
-                F1=self.data['F1'].iloc[idx],
-                F2=self.data['F2'].iloc[idx],
-                electricity_price=self.data[price_col].iloc[idx],
+                timestamp=timestamp,
+                L1=self.sim_L1,
+                V=self.sim_V,
+                F1=inflow_F1,
+                F2=0.0,  # Outflow is determined by our pump commands, not taken from CSV
+                electricity_price=electricity_price,
                 price_scenario=self.price_scenario,
                 active_pumps=self.active_pumps.copy(),  # Pass previous pump states
                 historical_data=self.data,
-                current_index=idx
+                current_index=idx,
             )
 
-            # Run decision cycle
+            # Run full decision cycle for this timestep
             prediction = self.run_decision_cycle(state, idx)
 
-            # Check if API failed (rate limit)
+            # If API failed (e.g. rate limit), abort the run and keep partial results
             if prediction is None:
-                print(f"\n⚠️ Stopping evaluation at timestep {i+1}/{num_steps} due to API rate limit")
+                print(f"\n⚠️ Stopping evaluation at timestep {i+1}/{num_steps} due to API issue")
                 print(f"⚠️ Returning results for {len(self.predictions)} completed timesteps")
                 break
 
-            # Progress update
+            # --- CLOSED-LOOP STATE UPDATE ---
+            # Use pump outflow from the decision cycle and historical inflow to update storage.
+            try:
+                # Pumped volume during this 15-min step (m³)
+                pumped_m3 = float(prediction['cost_calculation']['flow_pumped_m3'])
+            except Exception:
+                # Fallback: if for some reason the key is missing, assume zero pumped volume
+                pumped_m3 = 0.0
+
+            # Inflow during this 15-min step (m³). F1 is already per 15-min in the dataset.
+            inflow_m3 = inflow_F1 * 0.25  # ✅ convert m³/h -> m³ per 15 min
+
+            # Mass balance: new volume = old volume + inflow − outflow
+            self.sim_V = max(0.0, float(self.sim_V) + inflow_m3 - pumped_m3)
+
+            # Convert volume back to level using the approximate tank area
+            if getattr(self, 'tank_area', 1.0) > 0:
+                self.sim_L1 = self.sim_V / self.tank_area
+
+            # Progress update every 50 timesteps
             if (i + 1) % 50 == 0:
-                print(f"Progress: {i+1}/{num_steps} timesteps | "
-                      f"Cost so far: €{self.total_cost:,.2f} | "
-                      f"Violations: {len(self.constraint_violations)}")
+                print(
+                    f"Progress: {i+1}/{num_steps} timesteps | "
+                    f"Cost so far: €{self.total_cost:,.2f} | "
+                    f"Violations: {len(self.constraint_violations)}"
+                )
 
         # Final summary
         print("\n" + "="*60)
@@ -400,12 +503,16 @@ class EvaluationController:
         print("="*60)
 
         actual_steps = len(self.predictions)
-        specific_energy = self.total_energy_kwh / self.total_flow_m3 if self.total_flow_m3 > 0 else 0
+        specific_energy = self.total_energy_kwh / self.total_flow_m3 if self.total_flow_m3 > 0 else 0.0
 
         print(f"\n📊 COMPLETED: {actual_steps}/{num_steps} timesteps")
         print(f"\n💰 COST METRICS")
         print(f"  Total Cost:           €{self.total_cost:,.2f}")
-        print(f"  Cost per timestep:    €{self.total_cost/actual_steps:,.2f}" if actual_steps > 0 else "  Cost per timestep:    N/A")
+        print(
+            f"  Cost per timestep:    €{self.total_cost/actual_steps:,.2f}"
+            if actual_steps > 0
+            else "  Cost per timestep:    N/A"
+        )
 
         print(f"\n⚡ ENERGY METRICS")
         print(f"  Total Energy:         {self.total_energy_kwh:,.2f} kWh")
@@ -414,7 +521,6 @@ class EvaluationController:
 
         print(f"\n🚨 CONSTRAINT COMPLIANCE")
         print(f"  Total Violations:     {len(self.constraint_violations)}")
-
         if len(self.constraint_violations) == 0:
             print(f"    ✅ Perfect compliance!")
         else:
@@ -429,118 +535,74 @@ class EvaluationController:
                 'duration_hours': actual_steps * 0.25,
                 'price_scenario': self.price_scenario,
                 'start_index': start_index,
-                'completed_successfully': actual_steps == num_steps
+                'completed_successfully': actual_steps == num_steps,
             },
             'metrics': {
                 'total_cost_eur': self.total_cost,
                 'total_energy_kwh': self.total_energy_kwh,
                 'total_flow_m3': self.total_flow_m3,
-                'specific_energy_kwh_per_m3': specific_energy
+                'specific_energy_kwh_per_m3': specific_energy,
             },
             'violations': {
                 'count': len(self.constraint_violations),
-                'details': self.constraint_violations
+                'details': self.constraint_violations,
             },
-            'predictions': self.predictions
+            'predictions': self.predictions,
         }
 
 
-def compare_with_baseline(ai_results: dict, baseline_path: str):
+def compare_with_baseline(ai_results: dict, baseline_results: dict) -> dict:
     """
-    Compare AI results with baseline for the SAME timesteps
+    Compare AI system performance with baseline and print results
 
-    This calculates baseline metrics for the exact same timesteps that the AI
-    evaluation ran on, ensuring an apples-to-apples comparison.
+    Args:
+        ai_results: Results from run_evaluation
+        baseline_results: Loaded from baseline_evaluation.json
     """
     print("\n" + "="*60)
-    print("COMPARISON: AI vs BASELINE")
+    print("COMPARISON WITH BASELINE")
     print("="*60)
 
-    # Load historical data to calculate baseline for same timesteps
-    loader = HSYDataLoader()
-    data_dict = loader.load_all_data()
-    data = data_dict['operational_data']
-
-    # Get AI evaluation parameters
-    ai_timesteps = ai_results['metadata']['timesteps_completed']
-    start_index = ai_results['metadata']['start_index']
-    price_scenario = ai_results['metadata']['price_scenario']
-    price_col = 'Price_High' if price_scenario == 'high' else 'Price_Normal'
-
-    print(f"\n📊 Calculating baseline for SAME timesteps as AI evaluation:")
-    print(f"  Start index: {start_index}")
-    print(f"  Timesteps: {ai_timesteps}")
-    print(f"  Price scenario: {price_scenario}")
-
-    # Calculate baseline metrics for the SAME timesteps
-    pump_power_cols = [
-        'Pump efficiency 1.1', 'Pump efficiency 1.2', 'Pump efficiency 1.3', 'Pump efficiency 1.4',
-        'Pump efficiency 2.1', 'Pump efficiency 2.2', 'Pump efficiency 2.3', 'Pump efficiency 2.4'
-    ]
-
-    baseline_cost = 0.0
-    baseline_energy = 0.0
-    baseline_flow = 0.0
-
-    # Process the SAME timesteps as AI evaluation
-    for i in range(ai_timesteps):
-        idx = start_index + i
-        if idx >= len(data):
-            break
-
-        row = data.iloc[idx]
-
-        # Sum power from all pumps
-        total_power_kw = 0
-        for col in pump_power_cols:
-            power = row[col]
-            if pd.notna(power) and power > 0:
-                total_power_kw += power
-
-        # Energy consumed (kW × 0.25h = kWh)
-        energy_kwh = total_power_kw * 0.25
-
-        # Cost for this timestep
-        price = row[price_col]
-        if pd.isna(price):
-            price = 0.0
-        cost_eur = energy_kwh * price
-
-        # Flow pumped (m³/h × 0.25h = m³)
-        F2 = row['F2']
-        if pd.isna(F2):
-            F2 = 0.0
-        flow_m3 = F2 * 0.25
-
-        # Accumulate
-        baseline_cost += cost_eur
-        baseline_energy += energy_kwh
-        baseline_flow += flow_m3
-
-    baseline_specific = baseline_energy / baseline_flow if baseline_flow > 0 else 0
-
-    # Get AI metrics
+    # Extract AI metrics
     ai_cost = ai_results['metrics']['total_cost_eur']
     ai_energy = ai_results['metrics']['total_energy_kwh']
     ai_flow = ai_results['metrics']['total_flow_m3']
     ai_specific = ai_results['metrics']['specific_energy_kwh_per_m3']
+    ai_timesteps = ai_results['metadata']['timesteps_completed']
 
-    # Calculate improvements (no scaling needed - direct comparison!)
-    cost_savings = baseline_cost - ai_cost
-    cost_improvement = (cost_savings / baseline_cost * 100) if baseline_cost > 0 else 0
+    # Extract baseline metrics
+    baseline_cost = baseline_results['metrics']['total_cost_eur']
+    baseline_energy = baseline_results['metrics']['total_energy_kwh']
+    baseline_flow = baseline_results['metrics']['total_flow_m3']
+    baseline_specific = baseline_results['metrics']['specific_energy_kwh_per_m3']
+    baseline_timesteps = baseline_results['metadata']['timesteps_completed']
 
-    energy_savings = baseline_energy - ai_energy
-    energy_improvement = (energy_savings / baseline_energy * 100) if baseline_energy > 0 else 0
+    # Normalize baseline metrics to same number of timesteps (if different)
+    if baseline_timesteps > 0 and ai_timesteps > 0:
+        duration_ratio = ai_timesteps / baseline_timesteps
+        baseline_cost_scaled = baseline_cost * duration_ratio
+        baseline_energy_scaled = baseline_energy * duration_ratio
+        baseline_flow_scaled = baseline_flow * duration_ratio
+    else:
+        baseline_cost_scaled = baseline_cost
+        baseline_energy_scaled = baseline_energy
+        baseline_flow_scaled = baseline_flow
+
+    cost_savings = baseline_cost_scaled - ai_cost
+    cost_improvement = (cost_savings / baseline_cost_scaled * 100) if baseline_cost_scaled > 0 else 0
+
+    energy_savings = baseline_energy_scaled - ai_energy
+    energy_improvement = (energy_savings / baseline_energy_scaled * 100) if baseline_energy_scaled > 0 else 0
 
     specific_improvement = ((baseline_specific - ai_specific) / baseline_specific * 100) if baseline_specific > 0 else 0
 
-    print(f"\n📊 RESULTS ({ai_timesteps} timesteps)")
+    print(f"\n📊 RESULTS ({ai_timesteps} timesteps completed)")
     if not ai_results['metadata']['completed_successfully']:
         print(f"⚠️  Partial results - API rate limit hit at {ai_timesteps}/{ai_results['metadata']['timesteps_requested']} timesteps")
     print(f"\n{'Metric':<30} {'Baseline':<20} {'AI System':<20} {'Improvement':<15}")
     print(f"{'-'*85}")
-    print(f"{'Total Cost (EUR)':<30} €{baseline_cost:>18,.2f} €{ai_cost:>18,.2f} {cost_improvement:>13.1f}%")
-    print(f"{'Total Energy (kWh)':<30} {baseline_energy:>18,.2f} {ai_energy:>18,.2f} {energy_improvement:>13.1f}%")
+    print(f"{'Total Cost (EUR)':<30} €{baseline_cost_scaled:>18,.2f} €{ai_cost:>18,.2f} {cost_improvement:>13.1f}%")
+    print(f"{'Total Energy (kWh)':<30} {baseline_energy_scaled:>18,.2f} {ai_energy:>18,.2f} {energy_improvement:>13.1f}%")
     print(f"{'Specific Energy (kWh/m³)':<30} {baseline_specific:>18.6f} {ai_specific:>18.6f} {specific_improvement:>13.1f}%")
 
     print(f"\n💰 SAVINGS")
@@ -554,15 +616,13 @@ def compare_with_baseline(ai_results: dict, baseline_path: str):
 
     return {
         'baseline': {
-            'cost': baseline_cost,
-            'energy': baseline_energy,
-            'flow': baseline_flow,
+            'cost': baseline_cost_scaled,
+            'energy': baseline_energy_scaled,
             'specific_energy': baseline_specific
         },
         'ai': {
             'cost': ai_cost,
             'energy': ai_energy,
-            'flow': ai_flow,
             'specific_energy': ai_specific
         },
         'improvement': {
@@ -576,43 +636,57 @@ def compare_with_baseline(ai_results: dict, baseline_path: str):
 
 
 def main():
-    """Main entry point"""
     import argparse
 
-    parser = argparse.ArgumentParser(description='Multi-Agent System Evaluation')
-    parser.add_argument('--price', choices=['normal', 'high'], default='normal')
-    parser.add_argument('--steps', type=int, default=100,
-                        help='Number of timesteps to simulate')
-    parser.add_argument('--start', type=int, default=500)
-
+    parser = argparse.ArgumentParser(description="Run Multi-Agent Evaluation")
+    parser.add_argument(
+        "--price",
+        choices=["normal", "high"],
+        default="normal",
+        help="Price scenario (normal or high)",
+    )
+    parser.add_argument(
+        "--steps",
+        type=int,
+        default=100,
+        help="Number of timesteps (15-min) to simulate",
+    )
+    parser.add_argument(
+        "--start",
+        type=int,
+        default=0,
+        help="Start index in the historical dataset",
+    )
+    parser.add_argument(
+        "--lstm-model",
+        type=str,
+        default=str(Path(__file__).parent.parent / "models" / "lstm_inflow_model.pth"),
+        help="Path to LSTM inflow forecasting model",
+    )
     args = parser.parse_args()
 
-    # Get model path
-    script_dir = Path(__file__).parent
-    model_path = script_dir.parent / 'models' / 'inflow_lstm_model.pth'
-
-    # Create controller
     controller = EvaluationController(
-        lstm_model_path=str(model_path),
-        price_scenario=args.price
+        lstm_model_path=args.lstm_model,
+        price_scenario=args.price,
     )
 
-    # Run evaluation
     results = controller.run_evaluation(
         start_index=args.start,
-        num_steps=args.steps
+        num_steps=args.steps,
     )
 
-    # Save results
-    output_file = Path(__file__).parent.parent.parent / f'ai_evaluation_{args.price}_{args.steps}steps.json'
-    with open(output_file, 'w') as f:
+    # Save AI evaluation results
+    results_file = Path(__file__).parent.parent.parent / f"ai_evaluation_{args.price}_{args.steps}steps.json"
+    with open(results_file, "w") as f:
         json.dump(results, f, indent=2)
-    print(f"\n💾 Saved results to: {output_file}")
+    print(f"\n💾 Saved AI evaluation results to: {results_file}")
 
-    # Compare with baseline
-    baseline_file = Path(__file__).parent.parent.parent / f'baseline_metrics_{args.price}.json'
+    # Try to load baseline results for comparison
+    baseline_file = Path(__file__).parent.parent.parent / "baseline_evaluation.json"
     if baseline_file.exists():
-        comparison = compare_with_baseline(results, str(baseline_file))
+        with open(baseline_file, "r") as f:
+            baseline_results = json.load(f)
+        comparison = compare_with_baseline(results, baseline_results)
 
         # Save comparison
         comparison_file = Path(__file__).parent.parent.parent / f'comparison_{args.price}_{args.steps}steps.json'

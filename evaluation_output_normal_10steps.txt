@@ -5,8 +5,8 @@ MULTI-AGENT WASTEWATER SYSTEM - EVALUATION MODE
 
 Initializing agents...
 Creating specialist agents...
-✓ Model loaded from /Users/hasaanahmed/Documents/flow-optimize/src/models/inflow_lstm_model.pth
-  ✓ Loaded LSTM model from /Users/hasaanahmed/Documents/flow-optimize/src/models/inflow_lstm_model.pth
+  ⚠️  LSTM model not found at /Users/applepc/Documents/flow-optimize/src/models/lstm_inflow_model.pth
+     Will train when data is available
 ✓ OpenAI LLM initialized: gpt-4o-mini
   ✓ Registered tool: lstm_forecast
   ✓ Registered tool: detect_storm
@@ -48,54 +48,60 @@ L1: 1.57m | F1: 698 m³/15min | Price: €0.497/kWh
 
 --- SPECIALIST AGENT ASSESSMENTS ---
 
-INFLOW_FORECASTING:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: inflow_forecast
-  Reasoning: The current inflow rate of 698 m³/15min is within the dry weather threshold but is showing a slight upward trend based on the LSTM forecast. The forec...
-  Key Data: {'forecast_6h': [666.3152465820312, 670.472900390625, 672.364501953125, 670.9532470703125, 668.4586181640625, 681.2962646484375, 689.9345092773438, 711.0455932617188, 718.4861450195312, 731.7564697265...
+[inflow_forecasting]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       inflow_forecast
+  Reasoning: The current inflow of 698 m³/15min is within the safe range given the dry weather conditions, which indicates a normal daily pattern for this time of ...
+  Key Data: {'forecast_6h': [697.9119262695312, 697.9119262695312, 697.9119262695312, 697.9119262695312, 697.9119262695312, 697.9119262695312, 697.9119262695312, 697.9119262695312, 697.9119262695312, 697.91192626...
 ✓ Price scenario set to: NORMAL
 
-ENERGY_COST:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: cost_optimization
-  Reasoning: The current electricity price of 0.497 EUR/kWh is within a normal scenario, yet it is high compared to the identified cheap windows. The average price...
-  Key Data: {'current_price': np.float64(0.497), 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 7, 'duration_hours': 2.0, 'avg_price': np.float64(0.554)}, {'start_step': 28, 'end_step': ...
+[energy_cost]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       cost_optimization
+  Reasoning: The current electricity price is 0.497 EUR/kWh, which is within the normal range for this time period. However, there are identified cheap windows whe...
+  Key Data: {'current_price': 0.497, 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 7, 'duration_hours': 2.0, 'avg_price': np.float64(0.554)}, {'start_step': 28, 'end_step': 43, 'duratio...
 
-PUMP_EFFICIENCY:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: pump_selection
-  Reasoning: Choosing pump 1.2 is optimal due to its balance of efficiency (0.848) and flow capacity (3330 m³/h), which slightly exceeds the target flow. Starting ...
-  Key Data: {'target_flow': np.float64(3164.544189453125), 'recommended_combination': {'pumps': ['1.2'], 'frequencies': {'1.2': 50.0}, 'total_flow': 3330.0, 'total_power': 381.1, 'avg_efficiency': 0.848, 'match_q...
+[pump_efficiency]
+  Priority:   HIGH
+  Confidence: 0.85
+  Type:       pump_selection
+  Reasoning: The combination of pumps 1.1 and 1.2 offers the best balance of efficiency and operational smoothness, as both provide the target flow with the lowest...
+  Key Data: {'target_flow': 5000, 'recommended_combination': {'pumps': ['1.1', '1.2'], 'frequencies': {'1.1': 50.0, '1.2': 50.0}, 'total_flow': 5000.4, 'total_power': 573.8, 'avg_efficiency': 0.832, 'match_qualit...
 
-WATER_LEVEL_SAFETY:
-  Priority: LOW | Confidence: 0.95
-  Type: safety_assessment
-  Reasoning: The current water level is at 1.57m, which is well within the safe range (0-8m) and significantly below the alarm threshold of 7.2m. There is a substa...
-  Key Data: {'current_level': np.float64(1.5674792528152466), 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': np.float64(1.5674792528152466), 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'step...
+[water_level_safety]
+  Priority:   LOW
+  Confidence: 0.95
+  Type:       safety_assessment
+  Reasoning: The current water level is at 1.57m, which is well within the safe range (0-8m). The alarm threshold is set at 7.2m, providing a significant margin of...
+  Key Data: {'current_level': 1.5674792528152466, 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': 5.126330688476562, 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_max': 24, 'hours_to_...
 
-FLOW_SMOOTHNESS:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: flow_smoothness
-  Reasoning: The current outflow (F2) of 3165 m³/h is within the smoothness constraints as the maximum allowed flow change is 2000 m³/h per 15 min, and the recent ...
-  Key Data: {'variability_metrics': {'max_change_m3h': 619.872802734375, 'std_change_m3h': 187.2883757562839, 'current_flow': 3164.544189453125, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth flow ...
+[flow_smoothness]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       flow_smoothness
+  Reasoning: The current outflow (F2) is at 0 m³/h, which means there is no active pumping contributing to the system's flow. The inflow (F1) is relatively stable ...
+  Key Data: {'variability_metrics': {'max_change_m3h': 619.872802734375, 'std_change_m3h': 187.2883757562839, 'current_flow': 0.0, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Flow changes are currently...
 
-CONSTRAINT_COMPLIANCE:
-  Priority: CRITICAL | Confidence: 0.90
-  Type: constraint_compliance
-  Reasoning: The current state of the wastewater pumping station shows that no pumps are active, which violates the critical constraint that at least one pump must...
-  Key Data: {'compliance_status': 'VIOLATION', 'active_pumps': [], 'active_pump_details': {}, 'runtime_check': {'violations': [{'type': 'NO_PUMPS_RUNNING', 'message': 'At least 1 pump must always be running'}], '...
+[constraint_compliance]
+  Priority:   CRITICAL
+  Confidence: 0.95
+  Type:       constraint_compliance
+  Reasoning: The current system state shows that no pumps are active, which violates the critical constraint that requires at least one pump to be running at all t...
+  Key Data: {'compliance_status': 'Not compliant', 'active_pumps': [], 'active_pump_details': {}, 'runtime_check': {'violations': [{'type': 'NO_PUMPS_RUNNING', 'message': 'At least 1 pump must always be running'}...
 
 --- COORDINATOR SYNTHESIS ---
 Coordinator Decision:
-  Reasoning: Agent 6 highlighted a compliance violation, indicating that at least one pump must be active. Since the current water level is safe (Agent 4), and we have a critical compliance requirement to activate...
-  Priority Applied: COMPLIANCE / SAFETY / EFFICIENCY
+  Reasoning: Agent 6 indicated a compliance violation due to no pumps being active, which takes precedence over all other considerations. Therefore, at least one pump must be activated to comply with regulations. ...
+  Priority Applied: COMPLIANCE / SAFETY / COST / EFFICIENCY
   Confidence: 0.90
-  ⚠️ WARNING: Flow may be insufficient - current 1670m³/h < inflow 2792m³/h
+  ⚠️ WARNING: Flow may be insufficient - current_total_flow 1670m³/h < inflow 2792m³/h
      Coordinator should increase pump speeds or add pumps for cost savings
 
 --- FINAL PUMP COMMANDS ---
 Active Pumps: 1
-  P1L: 50.0 Hz → 1670 m³/h @ 192.7 kW (η=81.6%)
+  1.1: 50.0 Hz -> 1670.4 m³/h @ 192.7 kW (η=81.6%)
 
 💰 COST:
   Power: 192.7 kW | Energy: 48.17 kWh | Cost: €23.94
@@ -105,297 +111,327 @@ Active Pumps: 1
 TIMESTEP 501 - Decision Cycle 2
 ============================================================
 Time: 2024-11-20 05:15:00
-L1: 1.54m | F1: 620 m³/15min | Price: €0.497/kWh
+L1: 0.36m | F1: 620 m³/15min | Price: €0.497/kWh
 
 --- SPECIALIST AGENT ASSESSMENTS ---
 
-INFLOW_FORECASTING:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: inflow_forecast
-  Reasoning: The current inflow rate of 620 m³/15min is within the normal range for dry weather conditions, which indicates that the system is not experiencing unu...
-  Key Data: {'forecast_6h': [625.5559692382812, 629.2637939453125, 632.0047607421875, 626.6100463867188, 624.6716918945312, 634.7814331054688, 643.9191284179688, 665.3246459960938, 670.631591796875, 683.256774902...
+[inflow_forecasting]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       inflow_forecast
+  Reasoning: The current inflow rate is stable at 620 m³/15min, which is consistent with the dry weather conditions. The LSTM forecast indicates no significant cha...
+  Key Data: {'forecast_6h': [620.4679565429688, 620.4679565429688, 620.4679565429688, 620.4679565429688, 620.4679565429688, 620.4679565429688, 620.4679565429688, 620.4679565429688, 620.4679565429688, 620.46795654...
 
-ENERGY_COST:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: cost_optimization
-  Reasoning: The current electricity price of 0.497 EUR/kWh is relatively high compared to the identified cheap windows in the next 24 hours. The first cheap windo...
-  Key Data: {'current_price': np.float64(0.497), 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 6, 'duration_hours': 1.75, 'avg_price': np.float64(0.562142857142857)}, {'start_step': 23,...
+[energy_cost]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       cost_optimization
+  Reasoning: The current electricity price of 0.497 EUR/kWh is considered expensive compared to the identified cheap windows in the next 24 hours. The average pric...
+  Key Data: {'current_price': 0.497, 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 6, 'duration_hours': 1.75, 'avg_price': np.float64(0.562142857142857)}, {'start_step': 23, 'end_step':...
 
-PUMP_EFFICIENCY:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: pump_selection
-  Reasoning: The recommended pump combination maintains operational efficiency and flow requirements while ensuring smooth operation since it does not require a sw...
-  Key Data: {'target_flow': np.float64(3051.022216796875), 'recommended_combination': {'pumps': ['1.2'], 'frequencies': {'1.2': 50.0}, 'total_flow': 3330.0, 'total_power': 381.1, 'avg_efficiency': 0.848, 'match_q...
+[pump_efficiency]
+  Priority:   HIGH
+  Confidence: 0.85
+  Type:       pump_selection
+  Reasoning: The combination of pumps 1.1 and 1.2 is recommended because it achieves the exact target flow with the lowest total power consumption (573.8 kW), ensu...
+  Key Data: {'target_flow': 5000, 'recommended_combination': {'pumps': ['1.1', '1.2'], 'frequencies': {'1.1': 50.0, '1.2': 50.0}, 'total_flow': 5000.4, 'total_power': 573.8, 'avg_efficiency': 0.832, 'match_qualit...
 
-WATER_LEVEL_SAFETY:
-  Priority: LOW | Confidence: 0.95
-  Type: safety_assessment
-  Reasoning: The current water level of 1.54m is well within the safe range (0-8m) and significantly below the alarm threshold of 7.2m. The inflow rate is 620m³/15...
-  Key Data: {'current_level': np.float64(1.5373282432556152), 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': np.float64(1.5373282432556152), 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'step...
+[water_level_safety]
+  Priority:   LOW
+  Confidence: 0.90
+  Type:       safety_assessment
+  Reasoning: The current water level is at 0.36m, which is well within the safe operating range (0-8m). The alarm threshold is set at 7.2m, with a significant marg...
+  Key Data: {'current_level': 0.36142108299413644, 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': 4.731744851684571, 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_max': 24, 'hours_to...
 
-FLOW_SMOOTHNESS:
-  Priority: LOW | Confidence: 0.85
-  Type: flow_smoothness
-  Reasoning: The current outflow of 3051 m³/h is within the acceptable range given the maximum allowed flow change of 2000 m³/h per 15 minutes. The recent flow var...
-  Key Data: {'variability_metrics': {'max_change_m3h': 619.872802734375, 'std_change_m3h': 184.13261536686494, 'current_flow': 3051.022216796875, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth flow...
+[flow_smoothness]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       flow_smoothness
+  Reasoning: The current water level is within safe limits, and the inflow is significant at 620 m³/15min with no current outflow. The analysis shows a standard de...
+  Key Data: {'variability_metrics': {'max_change_m3h': 619.872802734375, 'std_change_m3h': 184.13261536686494, 'current_flow': 0.0, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth operation is maint...
 
-CONSTRAINT_COMPLIANCE:
-  Priority: HIGH | Confidence: 0.90
-  Type: constraint_compliance
-  Reasoning: The current system state shows that the water level is at 1.54m, which is within the safe range. Inflow is at 620m³/15min, which is below the 1000m³ t...
-  Key Data: {'compliance_status': 'Partially compliant', 'active_pumps': ['P1L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:00:00'), 'frequency': 50.0}}, 'runtime_check': {'violations...
+[constraint_compliance]
+  Priority:   LOW
+  Confidence: 0.90
+  Type:       constraint_compliance
+  Reasoning: The current state shows that the water level (L1) is at 0.36m, which is within the safe range. The inflow rate (F1) is 620m³/15min, translating to a f...
+  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['1.1'], 'active_pump_details': {'1.1': {'start_time': Timestamp('2024-11-20 05:00:00'), 'frequency': 50.0}}, 'runtime_check': {'violations': [], 'wa...
 
 --- COORDINATOR SYNTHESIS ---
 Coordinator Decision:
-  Reasoning: The current water level of 1.54m is well within the safe range and significantly below the alarm threshold of 7.2m (Agent 4). The inflow is at 620 m³/15min, which is manageable given the outflow of 30...
-  Priority Applied: SAFETY / COMPLIANCE / COST
+  Reasoning: Given the current inflow rate of 620 m³/15min (2480 m³/h), and the recommendation from Agent 4 to increase pumping due to a safe water level, we can safely operate at higher capacity without risk of o...
+  Priority Applied: SAFETY / EFFICIENCY
   Confidence: 0.85
-  ⚠️ WARNING: Flow may be insufficient - current 1670m³/h < inflow 2482m³/h
-     Coordinator should increase pump speeds or add pumps for cost savings
+  ✓ Flow adequate: 3341m³/h >= required 2482m³/h
 
 --- FINAL PUMP COMMANDS ---
-Active Pumps: 1
-  P1L: 50.0 Hz → 1670 m³/h @ 192.7 kW (η=81.6%)
+Active Pumps: 2
+  P1L: 50.0 Hz -> 1670.4 m³/h @ 192.7 kW (η=81.6%)
+  P2L: 50.0 Hz -> 1670.4 m³/h @ 192.3 kW (η=81.6%)
 
 💰 COST:
-  Power: 192.7 kW | Energy: 48.17 kWh | Cost: €23.94
-  Flow: 418 m³ | Specific Energy: 0.115362 kWh/m³
+  Power: 385.0 kW | Energy: 96.25 kWh | Cost: €47.84
+  Flow: 835 m³ | Specific Energy: 0.115242 kWh/m³
 
 ============================================================
 TIMESTEP 502 - Decision Cycle 3
 ============================================================
 Time: 2024-11-20 05:30:00
-L1: 1.51m | F1: 601 m³/15min | Price: €0.497/kWh
+L1: 0.34m | F1: 601 m³/15min | Price: €0.497/kWh
 
 --- SPECIALIST AGENT ASSESSMENTS ---
 
-INFLOW_FORECASTING:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: inflow_forecast
-  Reasoning: Current inflow is 601 m³/15min, indicating normal dry weather conditions, as it is below the 1000 m³/15min threshold. The LSTM forecast shows a slight...
-  Key Data: {'forecast_6h': [609.109619140625, 612.8555908203125, 615.9354858398438, 608.8088989257812, 607.3683471679688, 615.8750610351562, 625.5501708984375, 647.1949462890625, 651.49560546875, 663.96490478515...
+[inflow_forecasting]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       inflow_forecast
+  Reasoning: The current inflow is stable at 601 m³/15min, which is within the normal range for dry weather. The LSTM forecast indicates that this inflow rate is e...
+  Key Data: {'forecast_6h': [601.0291748046875, 601.0291748046875, 601.0291748046875, 601.0291748046875, 601.0291748046875, 601.0291748046875, 601.0291748046875, 601.0291748046875, 601.0291748046875, 601.02917480...
 
-ENERGY_COST:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: cost_optimization
-  Reasoning: The current electricity price of 0.497 EUR/kWh is considered expensive when compared to the identified cheap windows in the next 24 hours, which have ...
-  Key Data: {'current_price': np.float64(0.497), 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 5, 'duration_hours': 1.5, 'avg_price': np.float64(0.573)}, {'start_step': 22, 'end_step': ...
+[energy_cost]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       cost_optimization
+  Reasoning: The current electricity price of 0.497 EUR/kWh is considered high compared to the identified cheap windows in the next 24 hours. The average prices du...
+  Key Data: {'current_price': 0.497, 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 5, 'duration_hours': 1.5, 'avg_price': np.float64(0.573)}, {'start_step': 22, 'end_step': 41, 'duratio...
 
-PUMP_EFFICIENCY:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: pump_selection
-  Reasoning: The recommended combination of pump 1.2 operates at 50 Hz, yielding an efficient average efficiency of 84.8%. It provides a total flow of 3330 m³/h, w...
-  Key Data: {'target_flow': np.float64(3070.05322265625), 'recommended_combination': {'pumps': ['1.2'], 'frequencies': {'1.2': 50.0}, 'total_flow': 3330.0, 'total_power': 381.1, 'avg_efficiency': 0.848, 'match_qu...
+[pump_efficiency]
+  Priority:   HIGH
+  Confidence: 0.85
+  Type:       pump_selection
+  Reasoning: The combination of pumps 1.1 and 1.2 is recommended because it achieves the target flow of 5000.4 m³/h with a total power consumption of 573.8 kW, mat...
+  Key Data: {'target_flow': 5000, 'recommended_combination': {'pumps': ['1.1', '1.2'], 'frequencies': {'1.1': 50.0, '1.2': 50.0}, 'total_flow': 5000.4, 'total_power': 573.8, 'avg_efficiency': 0.832, 'match_qualit...
 
-WATER_LEVEL_SAFETY:
-  Priority: LOW | Confidence: 0.95
-  Type: safety_assessment
-  Reasoning: The current water level is at 1.51m, well within the safe range of 0-8m. The alarm threshold is at 7.2m, providing a margin of 5.69m to the alarm limi...
-  Key Data: {'current_level': np.float64(1.5104299783706665), 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': np.float64(1.5104299783706665), 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'step...
+[water_level_safety]
+  Priority:   LOW
+  Confidence: 0.95
+  Type:       safety_assessment
+  Reasoning: The current water level (0.34m) is well within the safe range (0-8m). The alarm threshold is at 7.2m, indicating there is a significant margin (6.86m)...
+  Key Data: {'current_level': 0.3421907744982196, 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': 4.561429150390625, 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_max': 24, 'hours_to_...
 
-FLOW_SMOOTHNESS:
-  Priority: LOW | Confidence: 0.85
-  Type: flow_smoothness
-  Reasoning: The current outflow rate (F2) is at 3070 m³/h, which is within the maximum allowed flow change of 2000 m³/h every 15 minutes. Recent flow variability ...
-  Key Data: {'variability_metrics': {'max_change_m3h': 619.872802734375, 'std_change_m3h': 192.27563817236287, 'current_flow': 3070.05322265625, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'smooth', 'al...
+[flow_smoothness]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       flow_smoothness
+  Reasoning: The current flow situation shows an inflow rate of 601 m³/15min with no outflow, leading to a net increase in the water volume. The recent flow variab...
+  Key Data: {'variability_metrics': {'max_change_m3h': 619.872802734375, 'std_change_m3h': 192.27563817236287, 'current_flow': 0.0, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth operation observed...
 
-CONSTRAINT_COMPLIANCE:
-  Priority: HIGH | Confidence: 0.85
-  Type: constraint_compliance
-  Reasoning: The current state of the wastewater pumping station shows that the water level (L1) is at 1.51m, which is within the safe range. The inflow (F1) is at...
-  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:00:00'), 'frequency': 50.0}}, 'runtime_check': {'violations': [], 'wa...
+[constraint_compliance]
+  Priority:   LOW
+  Confidence: 0.90
+  Type:       constraint_compliance
+  Reasoning: The current system state shows that both pumps are running within the acceptable frequency range and the water level is well below the alarm threshold...
+  Key Data: {'compliance_status': 'NON-COMPLIANT', 'active_pumps': ['P1L', 'P2L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:15:00'), 'frequency': 50.0}, 'P2L': {'start_time': Timesta...
 
 --- COORDINATOR SYNTHESIS ---
 Coordinator Decision:
-  Reasoning: Given the current water level is safe (1.51m) and under the alarm threshold (7.2m), the focus is on compliance and cost optimization. All agents confirm compliance and safety, allowing for an increase...
-  Priority Applied: SAFETY / COMPLIANCE / COST
+  Reasoning: The current inflow is stable at 601 m³/15min, which is manageable under current conditions. Safety is ensured as the water level is well below the alarm threshold (0.34m vs. 7.2m). Compliance is satis...
+  Priority Applied: SAFETY / COMPLIANCE / EFFICIENCY
   Confidence: 0.85
-  ⚠️ WARNING: Flow may be insufficient - current 1670m³/h < inflow 2404m³/h
-     Coordinator should increase pump speeds or add pumps for cost savings
+  ✓ Flow adequate: 3341m³/h >= required 2404m³/h
 
 --- FINAL PUMP COMMANDS ---
-Active Pumps: 1
-  P1L: 50.0 Hz → 1670 m³/h @ 192.7 kW (η=81.6%)
+Active Pumps: 2
+  P1L: 50.0 Hz -> 1670.4 m³/h @ 192.7 kW (η=81.6%)
+  P2L: 50.0 Hz -> 1670.4 m³/h @ 192.3 kW (η=81.6%)
 
 💰 COST:
-  Power: 192.7 kW | Energy: 48.17 kWh | Cost: €23.94
-  Flow: 418 m³ | Specific Energy: 0.115362 kWh/m³
+  Power: 385.0 kW | Energy: 96.25 kWh | Cost: €47.84
+  Flow: 835 m³ | Specific Energy: 0.115242 kWh/m³
 
 ============================================================
 TIMESTEP 503 - Decision Cycle 4
 ============================================================
 Time: 2024-11-20 05:45:00
-L1: 1.48m | F1: 577 m³/15min | Price: €0.497/kWh
+L1: 0.32m | F1: 577 m³/15min | Price: €0.497/kWh
 
 --- SPECIALIST AGENT ASSESSMENTS ---
 
-INFLOW_FORECASTING:
-  Priority: LOW | Confidence: 0.85
-  Type: inflow_forecast
-  Reasoning: The current inflow is 577 m³/15min, which is under the dry weather threshold of 1000 m³/15min. The LSTM forecast shows a slight increase in inflow ove...
-  Key Data: {'forecast_6h': [587.90380859375, 592.1163940429688, 595.4944458007812, 586.427734375, 585.7855224609375, 592.0241088867188, 602.7694091796875, 625.207763671875, 628.3228759765625, 641.0716552734375, ...
+[inflow_forecasting]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       inflow_forecast
+  Reasoning: The current inflow rate of 577 m³/15min is consistent with the LSTM forecast, which projects a stable flow over the next 6 hours. Given that the curre...
+  Key Data: {'forecast_6h': [576.8192138671875, 576.8192138671875, 576.8192138671875, 576.8192138671875, 576.8192138671875, 576.8192138671875, 576.8192138671875, 576.8192138671875, 576.8192138671875, 576.81921386...
 
-ENERGY_COST:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: cost_optimization
-  Reasoning: The current electricity price of 0.497 EUR/kWh is relatively high compared to the identified cheaper windows in the next 24 hours, specifically during...
-  Key Data: {'current_price': np.float64(0.497), 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 4, 'duration_hours': 1.25, 'avg_price': np.float64(0.5882)}, {'start_step': 21, 'end_step'...
+[energy_cost]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       cost_optimization
+  Reasoning: The current electricity price of 0.497 EUR/kWh is relatively high compared to the identified cheap windows in the next 24 hours, where average prices ...
+  Key Data: {'current_price': 0.497, 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 4, 'duration_hours': 1.25, 'avg_price': np.float64(0.5882)}, {'start_step': 21, 'end_step': 40, 'durat...
 
-PUMP_EFFICIENCY:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: pump_selection
-  Reasoning: The combination of pump 1.2 at 50 Hz provides the required flow rate of 3330 m³/h at a total power of 381.1 kW, maintaining an average efficiency of 0...
-  Key Data: {'target_flow': np.float64(3064.90771484375), 'recommended_combination': {'pumps': ['1.2'], 'frequencies': {'1.2': 50.0}, 'total_flow': 3330.0, 'total_power': 381.1, 'avg_efficiency': 0.848, 'match_qu...
+[pump_efficiency]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       pump_selection
+  Reasoning: Choosing the combination of pumps 1.1 and 1.2 ensures that we achieve the target flow while maintaining high efficiency. This combination requires a t...
+  Key Data: {'target_flow': 5000, 'recommended_combination': {'pumps': ['1.1', '1.2'], 'frequencies': {'1.1': 50.0, '1.2': 50.0}, 'total_flow': 5000.4, 'total_power': 573.8, 'avg_efficiency': 0.832, 'match_qualit...
 
-WATER_LEVEL_SAFETY:
-  Priority: LOW | Confidence: 0.95
-  Type: safety_assessment
-  Reasoning: The current water level is 1.48m, which is well within the safe range of 0-8m. The alarm threshold is set at 7.2m, which is 5.72m above the current le...
-  Key Data: {'current_level': np.float64(1.4785356521606445), 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': np.float64(1.4785356521606445), 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'step...
+[water_level_safety]
+  Priority:   LOW
+  Confidence: 0.90
+  Type:       safety_assessment
+  Reasoning: The current water level is at 0.32m, which is well within the safe range (0-8m). The alarm threshold is set at 7.2m, and the maximum limit is 8.0m. Th...
+  Key Data: {'current_level': 0.3212196276830943, 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': 4.357626678466797, 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_max': 24, 'hours_to_...
 
-FLOW_SMOOTHNESS:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: flow_smoothness
-  Reasoning: The current outflow (F2) of 3065 m³/h is well within the maximum allowed change of 2000 m³/h per 15 minutes. The recent flow variability is 198 m³/h, ...
-  Key Data: {'variability_metrics': {'max_change_m3h': 619.872802734375, 'std_change_m3h': 197.53748362605913, 'current_flow': 3064.90771484375, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth flow ...
+[flow_smoothness]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       flow_smoothness
+  Reasoning: The current flow situation shows an outflow rate of 0 m³/h with a falling trend in inflow. Although recent flow variability is 198 m³/h, which is belo...
+  Key Data: {'variability_metrics': {'max_change_m3h': 619.872802734375, 'std_change_m3h': 197.53748362605913, 'current_flow': 0.0, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'acceptable', 'allow_immed...
 
-CONSTRAINT_COMPLIANCE:
-  Priority: HIGH | Confidence: 0.90
-  Type: constraint_compliance
-  Reasoning: The current system state indicates that the water level (L1) is at 1.48m, which is safe and within the acceptable range. The inflow rate (F1) is 577 m...
-  Key Data: {'compliance_status': 'Partially Compliant', 'active_pumps': ['P1L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:00:00'), 'frequency': 50.0}}, 'runtime_check': {'violations...
+[constraint_compliance]
+  Priority:   LOW
+  Confidence: 0.95
+  Type:       constraint_compliance
+  Reasoning: The current system state indicates that the water level is at 0.32m, which is well within the safe range of 0-8m. The inflow rate is 577m³/15min, whic...
+  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L', 'P2L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:15:00'), 'frequency': 50.0}, 'P2L': {'start_time': Timestamp('...
 
 --- COORDINATOR SYNTHESIS ---
 Coordinator Decision:
-  Reasoning: Given that safety and compliance have strict priority, the system is currently safe with no overflow risk (Agent 4). Compliance is functional with no violations (Agent 6), which allows for operational...
-  Priority Applied: SAFETY / COMPLIANCE / EFFICIENCY
+  Reasoning: Safety (Agent 4) indicates that the current water level is safe, but recommends increasing pumping to prevent future overflow given the inflow rate. Compliance (Agent 6) confirms that we are within al...
+  Priority Applied: SAFETY / COST / EFFICIENCY
   Confidence: 0.85
-  ⚠️ WARNING: Flow may be insufficient - current 1670m³/h < inflow 2307m³/h
-     Coordinator should increase pump speeds or add pumps for cost savings
+  ✓ Flow adequate: 3341m³/h >= required 2307m³/h
 
 --- FINAL PUMP COMMANDS ---
-Active Pumps: 1
-  P1L: 50.0 Hz → 1670 m³/h @ 192.7 kW (η=81.6%)
+Active Pumps: 2
+  P1L: 50.0 Hz -> 1670.4 m³/h @ 192.7 kW (η=81.6%)
+  P2L: 50.0 Hz -> 1670.4 m³/h @ 192.3 kW (η=81.6%)
 
 💰 COST:
-  Power: 192.7 kW | Energy: 48.17 kWh | Cost: €23.94
-  Flow: 418 m³ | Specific Energy: 0.115362 kWh/m³
+  Power: 385.0 kW | Energy: 96.25 kWh | Cost: €47.84
+  Flow: 835 m³ | Specific Energy: 0.115242 kWh/m³
 
 ============================================================
 TIMESTEP 504 - Decision Cycle 5
 ============================================================
 Time: 2024-11-20 06:00:00
-L1: 1.44m | F1: 541 m³/15min | Price: €0.611/kWh
+L1: 0.30m | F1: 541 m³/15min | Price: €0.611/kWh
 
 --- SPECIALIST AGENT ASSESSMENTS ---
 
-INFLOW_FORECASTING:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: inflow_forecast
-  Reasoning: The current inflow rate of 541 m³/15min is within the safe range for dry weather conditions. The LSTM forecast indicates a rising trend in inflow, pea...
-  Key Data: {'forecast_6h': [613.6396484375, 629.6788330078125, 631.0977783203125, 638.8463134765625, 649.8955688476562, 660.8519287109375, 683.1453857421875, 710.9459838867188, 726.8919677734375, 749.29437255859...
+[inflow_forecasting]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       inflow_forecast
+  Reasoning: The current inflow rate of 541 m³/15min is consistent with typical dry weather conditions, as it is below the 1000 m³/15min threshold. The LSTM foreca...
+  Key Data: {'forecast_6h': [540.7921142578125, 540.7921142578125, 540.7921142578125, 540.7921142578125, 540.7921142578125, 540.7921142578125, 540.7921142578125, 540.7921142578125, 540.7921142578125, 540.79211425...
 
-ENERGY_COST:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: cost_optimization
-  Reasoning: The current electricity price of 0.611 EUR/kWh is within a NORMAL scenario, but it presents a potential opportunity for cost savings due to the identi...
-  Key Data: {'current_price': np.float64(0.611), 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 3, 'duration_hours': 1.0, 'avg_price': np.float64(0.611)}, {'start_step': 20, 'end_step': ...
+[energy_cost]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       cost_optimization
+  Reasoning: The current electricity price is relatively high at 0.611 EUR/kWh compared to the identified cheaper window starting in approximately 14 hours, where ...
+  Key Data: {'current_price': 0.611, 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 3, 'duration_hours': 1.0, 'avg_price': np.float64(0.611)}, {'start_step': 20, 'end_step': 39, 'duratio...
 
-PUMP_EFFICIENCY:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: pump_selection
-  Reasoning: The recommended combination of pump 1.2 running at 50 Hz offers the best balance between efficiency and operational continuity. It provides a total fl...
-  Key Data: {'target_flow': np.float64(3013.13134765625), 'recommended_combination': {'pumps': ['1.2'], 'frequencies': {'1.2': 50.0}, 'total_flow': 3330.0, 'total_power': 381.1, 'avg_efficiency': 0.848, 'match_qu...
+[pump_efficiency]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       pump_selection
+  Reasoning: The combination of pumps 1.1 and 1.2 has been selected as it meets the target flow with maximum efficiency while utilizing existing pumps. This minimi...
+  Key Data: {'target_flow': 5000, 'recommended_combination': {'pumps': ['1.1', '1.2'], 'frequencies': {'1.1': 50.0, '1.2': 50.0}, 'total_flow': 5000.4, 'total_power': 573.8, 'avg_efficiency': 0.832, 'match_qualit...
 
-WATER_LEVEL_SAFETY:
-  Priority: LOW | Confidence: 0.95
-  Type: safety_assessment
-  Reasoning: The current water level is at 1.44m, which is well within the safe range (0-8m) and significantly below the alarm threshold of 7.2m. The inflow rate i...
-  Key Data: {'current_level': np.float64(1.439332365989685), 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': np.float64(1.439332365989685), 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_...
+[water_level_safety]
+  Priority:   LOW
+  Confidence: 0.90
+  Type:       safety_assessment
+  Reasoning: The current water level is at 0.30m, which is well within the safe range of 0-8m. The alarm threshold is set at 7.2m, and the maximum limit is 8.0m, g...
+  Key Data: {'current_level': 0.29808036003231286, 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': 4.076868884277344, 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_max': 24, 'hours_to...
 
-FLOW_SMOOTHNESS:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: flow_smoothness
-  Reasoning: The current outflow (F2) of 3013 m³/h is significantly higher than the inflow (F1) of 541 m³/15min, which translates to approximately 2164 m³/h. This ...
-  Key Data: {'variability_metrics': {'max_change_m3h': 619.872802734375, 'std_change_m3h': 200.036195800277, 'current_flow': 3013.13134765625, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Stable', 'allo...
+[flow_smoothness]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       flow_smoothness
+  Reasoning: The current water level is well within the safe range, and inflow is steady. Outflow is currently at 0 m³/h, which poses a risk of increased water lev...
+  Key Data: {'variability_metrics': {'max_change_m3h': 619.872802734375, 'std_change_m3h': 200.036195800277, 'current_flow': 0.0, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth flow conditions obse...
 
-CONSTRAINT_COMPLIANCE:
-  Priority: HIGH | Confidence: 0.85
-  Type: constraint_compliance
-  Reasoning: The current system state indicates that the wastewater pumping station is operating within safe water level limits, with a level of 1.44m, which is we...
-  Key Data: {'compliance_status': 'Partially Compliant', 'active_pumps': ['P1L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:00:00'), 'frequency': 50.0}}, 'runtime_check': {'violations...
+[constraint_compliance]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       constraint_compliance
+  Reasoning: The current system state shows that the water level (L1) is at 0.30m, which is well within the safe operational range. The inflow (F1) is 541m³/15min,...
+  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L', 'P2L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:15:00'), 'frequency': 50.0}, 'P2L': {'start_time': Timestamp('...
 
 --- COORDINATOR SYNTHESIS ---
 Coordinator Decision:
-  Reasoning: All agents indicate that the current system status is safe with a water level of 1.44m, significantly below the alarm threshold (7.2m). Although the inflow is projected to increase, it remains managea...
-  Priority Applied: SAFETY / COMPLIANCE / COST
+  Reasoning: Based on Agent 4, the water level is currently safe at 0.30m, but with a significant inflow of 541 m³/15min and no outflow, the recommendation is to increase pumping to prevent any potential overflow....
+  Priority Applied: SAFETY / COST / EFFICIENCY
   Confidence: 0.85
-  ⚠️ WARNING: Flow may be insufficient - current 1670m³/h < inflow 2163m³/h
-     Coordinator should increase pump speeds or add pumps for cost savings
+  ✓ Flow adequate: 3341m³/h >= required 2163m³/h
 
 --- FINAL PUMP COMMANDS ---
-Active Pumps: 1
-  P1L: 50.0 Hz → 1670 m³/h @ 192.7 kW (η=81.6%)
+Active Pumps: 2
+  P1L: 50.0 Hz -> 1670.4 m³/h @ 192.7 kW (η=81.6%)
+  P2L: 50.0 Hz -> 1670.4 m³/h @ 192.3 kW (η=81.6%)
 
 💰 COST:
-  Power: 192.7 kW | Energy: 48.17 kWh | Cost: €29.43
-  Flow: 418 m³ | Specific Energy: 0.115362 kWh/m³
+  Power: 385.0 kW | Energy: 96.25 kWh | Cost: €58.81
+  Flow: 835 m³ | Specific Energy: 0.115242 kWh/m³
 
 ============================================================
 TIMESTEP 505 - Decision Cycle 6
 ============================================================
 Time: 2024-11-20 06:15:00
-L1: 1.39m | F1: 518 m³/15min | Price: €0.611/kWh
+L1: 0.27m | F1: 518 m³/15min | Price: €0.611/kWh
 
 --- SPECIALIST AGENT ASSESSMENTS ---
 
-INFLOW_FORECASTING:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: inflow_forecast
-  Reasoning: The current inflow rate of 518 m³/15min is considered low, especially under dry weather conditions where inflow is below 1000 m³/15min. The LSTM forec...
-  Key Data: {'forecast_6h': [592.9976806640625, 609.1420288085938, 610.8547973632812, 616.661865234375, 628.3152465820312, 637.4334716796875, 660.2907104492188, 688.3701782226562, 703.2755737304688, 725.458618164...
+[inflow_forecasting]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       inflow_forecast
+  Reasoning: The current inflow rate of 518 m³/15min is within a normal range for dry weather conditions, indicating stable wastewater management. The LSTM forecas...
+  Key Data: {'forecast_6h': [517.6731567382812, 517.6731567382812, 517.6731567382812, 517.6731567382812, 517.6731567382812, 517.6731567382812, 517.6731567382812, 517.6731567382812, 517.6731567382812, 517.67315673...
 
-ENERGY_COST:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: cost_optimization
-  Reasoning: The current electricity price is 0.611 EUR/kWh, which is within the NORMAL scenario. However, there are identified cheap windows within the next 24 ho...
-  Key Data: {'current_price': np.float64(0.611), 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 2, 'duration_hours': 0.75, 'avg_price': np.float64(0.611)}, {'start_step': 19, 'end_step':...
+[energy_cost]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       cost_optimization
+  Reasoning: The current electricity price of 0.611 EUR/kWh is classified as NORMAL and is higher than the identified cheaper periods later in the day. The forecas...
+  Key Data: {'current_price': 0.611, 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 2, 'duration_hours': 0.75, 'avg_price': np.float64(0.611)}, {'start_step': 19, 'end_step': 42, 'durati...
 
-PUMP_EFFICIENCY:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: pump_selection
-  Reasoning: The pump combination of '1.2' is recommended because it provides adequate flow exceeding the current outflow requirement while maintaining high effici...
-  Key Data: {'target_flow': np.float64(2973.154541015625), 'recommended_combination': {'pumps': ['1.2'], 'frequencies': {'1.2': 50.0}, 'total_flow': 3330.0, 'total_power': 381.1, 'avg_efficiency': 0.848, 'match_q...
+[pump_efficiency]
+  Priority:   HIGH
+  Confidence: 0.85
+  Type:       pump_selection
+  Reasoning: The combination of pumps 1.1 and 1.2 is recommended because it maintains the current configuration, ensuring operational smoothness and avoiding the n...
+  Key Data: {'target_flow': 5000, 'recommended_combination': {'pumps': ['1.1', '1.2'], 'frequencies': {'1.1': 50.0, '1.2': 50.0}, 'total_flow': 5000.4, 'total_power': 573.8, 'avg_efficiency': 0.832, 'match_qualit...
 
-WATER_LEVEL_SAFETY:
-  Priority: LOW | Confidence: 0.95
-  Type: safety_assessment
-  Reasoning: The current water level is 1.39m, which is well within the safe range of 0-8m. The alarm threshold is at 7.2m, meaning there is a significant margin o...
-  Key Data: {'current_level': np.float64(1.3929709196090698), 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': np.float64(1.3929709196090698), 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'step...
+[water_level_safety]
+  Priority:   LOW
+  Confidence: 0.90
+  Type:       safety_assessment
+  Reasoning: The current water level is at 0.27m, well within the safe range of 0-8m. The alarm threshold is set at 7.2m, and the projected maximum level in the ne...
+  Key Data: {'current_level': 0.2717146887738181, 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': 3.8645531677246097, 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_max': 24, 'hours_to...
 
-FLOW_SMOOTHNESS:
-  Priority: LOW | Confidence: 0.85
-  Type: flow_smoothness
-  Reasoning: The current outflow (F2) of 2973 m³/h is within the acceptable range given the maximum allowed flow change of 2000 m³/h per 15 minutes. The recent flo...
-  Key Data: {'variability_metrics': {'max_change_m3h': 299.325439453125, 'std_change_m3h': 92.06319159383862, 'current_flow': 2973.154541015625, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'SMOOTH', 'al...
+[flow_smoothness]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       flow_smoothness
+  Reasoning: The current outflow (F2) is at 0 m³/h while the inflow (F1) is at 518 m³/15min, which translates to a flow rate of 2072 m³/h. The recent flow variabil...
+  Key Data: {'variability_metrics': {'max_change_m3h': 299.325439453125, 'std_change_m3h': 92.06319159383862, 'current_flow': 0.0, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth flow conditions wit...
 
-CONSTRAINT_COMPLIANCE:
-  Priority: HIGH | Confidence: 0.85
-  Type: constraint_compliance
-  Reasoning: The current water level is at 1.39m, which is safe and well below the alarm threshold of 7.2m. The inflow rate is 518 m³ per 15 minutes, which equates...
-  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:00:00'), 'frequency': 50.0}}, 'runtime_check': {'violations': [], 'wa...
+[constraint_compliance]
+  Priority:   LOW
+  Confidence: 0.95
+  Type:       constraint_compliance
+  Reasoning: The current operational state of the wastewater pumping station is stable. The water level (0.27m) is well within the safe range, and the inflow rate ...
+  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L', 'P2L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:15:00'), 'frequency': 50.0}, 'P2L': {'start_time': Timestamp('...
 
 --- COORDINATOR SYNTHESIS ---
 Coordinator Decision:
-  Reasoning: The current water level (1.39m) is safe and compliant with regulations. The inflow forecasting indicates a rising trend but remains below critical thresholds, allowing for increased outflow without sa...
-  Priority Applied: SAFETY / COMPLIANCE / EFFICIENCY
+  Reasoning: Agent 4 indicates that safety is maintained, and water levels are well within safe limits. Agent 3 recommends using pumps 1.1 and 1.2 to maintain efficiency. Agent 2 advises deferring pumping to a che...
+  Priority Applied: SAFETY / COST / EFFICIENCY
   Confidence: 0.85
   ✓ Flow adequate: 3341m³/h >= required 2071m³/h
 
 --- FINAL PUMP COMMANDS ---
 Active Pumps: 2
-  P1L: 50.0 Hz → 1670 m³/h @ 192.7 kW (η=81.6%)
-  P2L: 50.0 Hz → 1670 m³/h @ 192.3 kW (η=81.6%)
+  P1L: 50.0 Hz -> 1670.4 m³/h @ 192.7 kW (η=81.6%)
+  P2L: 50.0 Hz -> 1670.4 m³/h @ 192.3 kW (η=81.6%)
 
 💰 COST:
   Power: 385.0 kW | Energy: 96.25 kWh | Cost: €58.81
@@ -405,236 +441,265 @@ Active Pumps: 2
 TIMESTEP 506 - Decision Cycle 7
 ============================================================
 Time: 2024-11-20 06:30:00
-L1: 1.34m | F1: 484 m³/15min | Price: €0.611/kWh
+L1: 0.24m | F1: 484 m³/15min | Price: €0.611/kWh
 
 --- SPECIALIST AGENT ASSESSMENTS ---
 
-INFLOW_FORECASTING:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: inflow_forecast
-  Reasoning: The current inflow of 484 m³/15min indicates dry weather conditions, which is well below the threshold of 1000 m³/15min for wet weather. The LSTM fore...
-  Key Data: {'forecast_6h': [565.6204223632812, 582.4425659179688, 584.4279174804688, 587.931640625, 600.5045776367188, 607.0203857421875, 631.0601806640625, 660.2015991210938, 673.9280395507812, 696.343566894531...
+[inflow_forecasting]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       inflow_forecast
+  Reasoning: The current inflow of 484 m³/15min is consistent with the LSTM forecast, which predicts stable inflow levels for the next 6 hours. The prediction indi...
+  Key Data: {'forecast_6h': [484.24615478515625, 484.24615478515625, 484.24615478515625, 484.24615478515625, 484.24615478515625, 484.24615478515625, 484.24615478515625, 484.24615478515625, 484.24615478515625, 484...
 
-ENERGY_COST:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: cost_optimization
-  Reasoning: The current electricity price is 0.611 EUR/kWh, which is on the higher side compared to the identified cheap windows in the next 24 hours. There is an...
-  Key Data: {'current_price': np.float64(0.611), 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 1, 'duration_hours': 0.5, 'avg_price': np.float64(0.611)}, {'start_step': 18, 'end_step': ...
+[energy_cost]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       cost_optimization
+  Reasoning: The current electricity price is 0.611 EUR/kWh, which falls within a NORMAL price scenario. However, there are identified cheap windows in the next 24...
+  Key Data: {'current_price': 0.611, 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 1, 'duration_hours': 0.5, 'avg_price': np.float64(0.611)}, {'start_step': 18, 'end_step': 41, 'duratio...
 
-PUMP_EFFICIENCY:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: pump_selection
-  Reasoning: The recommended combination of pump 1.2 operates at a total power of 381.1 kW, providing a total flow of 3330.0 m³/h with an average efficiency of 0.8...
-  Key Data: {'target_flow': np.float64(2935.801025390625), 'recommended_combination': {'pumps': ['1.2'], 'frequencies': {'1.2': 50.0}, 'total_flow': 3330.0, 'total_power': 381.1, 'avg_efficiency': 0.848, 'match_q...
+[pump_efficiency]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       pump_selection
+  Reasoning: The combination of pumps 1.1 and 1.2 has the lowest total power requirement at 573.8W while still achieving the target flow. This makes it the most en...
+  Key Data: {'target_flow': 5000, 'recommended_combination': {'pumps': ['1.1', '1.2'], 'frequencies': {'1.1': 50.0, '1.2': 50.0}, 'total_flow': 5000.4, 'total_power': 573.8, 'avg_efficiency': 0.832, 'match_qualit...
 
-WATER_LEVEL_SAFETY:
-  Priority: LOW | Confidence: 0.90
-  Type: safety_assessment
-  Reasoning: The current water level is at 1.34m, which is well within the safe range of 0-8m. The alarm threshold is set at 7.2m, providing a significant margin o...
-  Key Data: {'current_level': np.float64(1.342655062675476), 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': np.float64(1.342655062675476), 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_...
+[water_level_safety]
+  Priority:   LOW
+  Confidence: 0.90
+  Type:       safety_assessment
+  Reasoning: The current water level is at 0.24m, which is well within the safe range of 0-8m. The alarm threshold is at 7.2m, providing a significant margin of 6....
+  Key Data: {'current_level': 0.24327860139089647, 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': 3.5846094451904302, 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_max': 24, 'hours_t...
 
-FLOW_SMOOTHNESS:
-  Priority: LOW | Confidence: 0.85
-  Type: flow_smoothness
-  Reasoning: The current outflow (F2) is 2936 m³/h, which is within the acceptable limits of flow change. Recent flow variability is 37 m³/h, indicating stable ope...
-  Key Data: {'variability_metrics': {'max_change_m3h': 113.52197265625, 'std_change_m3h': 36.93807307362719, 'current_flow': 2935.801025390625, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth operat...
+[flow_smoothness]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       flow_smoothness
+  Reasoning: The current inflow rate is significant at 484 m³/15min, but the outflow is zero, indicating that the pumping station is not discharging any water. The...
+  Key Data: {'variability_metrics': {'max_change_m3h': 113.52197265625, 'std_change_m3h': 36.93807307362719, 'current_flow': 0.0, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth operation observed w...
 
-CONSTRAINT_COMPLIANCE:
-  Priority: HIGH | Confidence: 0.85
-  Type: constraint_compliance
-  Reasoning: The current system state shows a water level of 1.34m, which is within the safe range of 0-8m and below the alarm threshold of 7.2m. The inflow rate o...
-  Key Data: {'compliance_status': 'Partially compliant', 'active_pumps': ['P1L', 'P2L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:00:00'), 'frequency': 50.0}, 'P2L': {'start_time': T...
+[constraint_compliance]
+  Priority:   LOW
+  Confidence: 0.95
+  Type:       constraint_compliance
+  Reasoning: The current operational state of the wastewater pumping station is stable with no active violations. The water level is at 0.24m, which is well within...
+  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L', 'P2L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:15:00'), 'frequency': 50.0}, 'P2L': {'start_time': Timestamp('...
 
 --- COORDINATOR SYNTHESIS ---
 Coordinator Decision:
-  Reasoning: The system is currently safe with a water level of 1.34m, which is well below the alarm threshold of 7.2m. The inflow rate is manageable at 484 m³/15min, and the outflow is currently adequate at 2936 ...
-  Priority Applied: SAFETY / COST
+  Reasoning: The current inflow is 484 m³/15min with zero outflow. Agent 4 indicates that safety is not at risk, but it recommends increasing pumping to manage the inflow. Agent 5 confirms that flow changes can be...
+  Priority Applied: SAFETY / EFFICIENCY
   Confidence: 0.85
-  ⚠️ WARNING: Flow may be insufficient - current 1670m³/h < inflow 1937m³/h
-     Coordinator should increase pump speeds or add pumps for cost savings
+  ✓ Flow adequate: 3341m³/h >= required 1937m³/h
 
 --- FINAL PUMP COMMANDS ---
-Active Pumps: 1
-  P1L: 50.0 Hz → 1670 m³/h @ 192.7 kW (η=81.6%)
+Active Pumps: 2
+  P1L: 50.0 Hz -> 1670.4 m³/h @ 192.7 kW (η=81.6%)
+  P2L: 50.0 Hz -> 1670.4 m³/h @ 192.3 kW (η=81.6%)
 
 💰 COST:
-  Power: 192.7 kW | Energy: 48.17 kWh | Cost: €29.43
-  Flow: 418 m³ | Specific Energy: 0.115362 kWh/m³
+  Power: 385.0 kW | Energy: 96.25 kWh | Cost: €58.81
+  Flow: 835 m³ | Specific Energy: 0.115242 kWh/m³
 
 ============================================================
 TIMESTEP 507 - Decision Cycle 8
 ============================================================
 Time: 2024-11-20 06:45:00
-L1: 1.29m | F1: 453 m³/15min | Price: €0.611/kWh
+L1: 0.21m | F1: 453 m³/15min | Price: €0.611/kWh
 
 --- SPECIALIST AGENT ASSESSMENTS ---
 
-INFLOW_FORECASTING:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: inflow_forecast
-  Reasoning: The current inflow rate of 453 m³/15min is indicative of a normal dry weather condition, remaining well below the 1000 m³/15min threshold. The LSTM fo...
-  Key Data: {'forecast_6h': [542.5836791992188, 559.6796264648438, 561.9200439453125, 563.1785888671875, 576.3943481445312, 580.7003784179688, 605.4656982421875, 635.2583618164062, 647.6347045898438, 669.98138427...
+[inflow_forecasting]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       inflow_forecast
+  Reasoning: The current inflow rate of 453 m³/15min is stable and in line with the forecasted values from the LSTM model, which shows consistent predictions for t...
+  Key Data: {'forecast_6h': [453.2642822265625, 453.2642822265625, 453.2642822265625, 453.2642822265625, 453.2642822265625, 453.2642822265625, 453.2642822265625, 453.2642822265625, 453.2642822265625, 453.26428222...
 
-ENERGY_COST:
-  Priority: HIGH | Confidence: 0.85
-  Type: cost_optimization
-  Reasoning: The current electricity price is 0.611 EUR/kWh, which is within the NORMAL scenario. In the next 24 hours, a cheap window has been identified from hou...
-  Key Data: {'current_price': np.float64(0.611), 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 0, 'duration_hours': 0.25, 'avg_price': np.float64(0.611)}, {'start_step': 17, 'end_step':...
+[energy_cost]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       cost_optimization
+  Reasoning: The current electricity price is 0.611 EUR/kWh, which is relatively high compared to the forecasted cheaper period starting at step 17 with an average...
+  Key Data: {'current_price': 0.611, 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 0, 'end_step': 0, 'duration_hours': 0.25, 'avg_price': np.float64(0.611)}, {'start_step': 17, 'end_step': 40, 'durati...
 
-PUMP_EFFICIENCY:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: pump_selection
-  Reasoning: While the combination of pumps 1.2, 1.3, and 1.4 would provide a higher total flow while maintaining efficiency, the current setup is already meeting ...
-  Key Data: {'target_flow': np.float64(2809.79736328125), 'recommended_combination': {'pumps': ['1.2'], 'frequencies': {'1.2': 50.0}, 'total_flow': 3330.0, 'total_power': 381.1, 'avg_efficiency': 0.848, 'match_qu...
+[pump_efficiency]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       pump_selection
+  Reasoning: The combination of pumps 1.1 and 1.2 should be recommended as they provide the best match quality and total power consumption is on the lower side com...
+  Key Data: {'target_flow': 5000, 'recommended_combination': {'pumps': ['1.1', '1.2'], 'frequencies': {'1.1': 50.0, '1.2': 50.0}, 'total_flow': 5000.4, 'total_power': 573.8, 'avg_efficiency': 0.832, 'match_qualit...
 
-WATER_LEVEL_SAFETY:
-  Priority: LOW | Confidence: 0.95
-  Type: safety_assessment
-  Reasoning: The current water level is 1.29m, which is within the safe range of 0-8m. The alarm threshold is set at 7.2m, providing a significant margin of 5.91m ...
-  Key Data: {'current_level': np.float64(1.2879313230514526), 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': np.float64(1.2879313230514526), 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'step...
+[water_level_safety]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       safety_assessment
+  Reasoning: The current water level is at 0.21m, which is well within the safe range of 0-8m. The alarm threshold is set at 7.2m, indicating that there is no imme...
+  Key Data: {'current_level': 0.21184896190786248, 'risk_level': 'NONE', 'status': 'Safe', 'trajectory': {'max_level': 3.3109797485351566, 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_max': 24, 'hours_t...
 
-FLOW_SMOOTHNESS:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: flow_smoothness
-  Reasoning: The current outflow of 2810 m³/h is well within the maximum allowed flow change of 2000 m³/h per 15 minutes. The recent flow variability, with a stand...
-  Key Data: {'variability_metrics': {'max_change_m3h': 126.003662109375, 'std_change_m3h': 45.92550080931544, 'current_flow': 2809.79736328125, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth operat...
+[flow_smoothness]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       flow_smoothness
+  Reasoning: The current system state shows a falling trend in flow, with an outflow of 0 m³/h and a recent flow variability of 46 m³/h. Given that the maximum rec...
+  Key Data: {'variability_metrics': {'max_change_m3h': 126.003662109375, 'std_change_m3h': 45.92550080931544, 'current_flow': 0.0, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Current flow is stable but...
 
-CONSTRAINT_COMPLIANCE:
-  Priority: HIGH | Confidence: 0.85
-  Type: constraint_compliance
-  Reasoning: The current operational state of the pumping station shows that the water level is within a safe range, and the inflow and outflow rates are being man...
-  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:00:00'), 'frequency': 50.0}}, 'runtime_check': {'violations': [], 'wa...
+[constraint_compliance]
+  Priority:   LOW
+  Confidence: 0.95
+  Type:       constraint_compliance
+  Reasoning: The current operational state of the wastewater pumping station is stable. The water level (L1) is at 0.21m, which is well within the safe range. The ...
+  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L', 'P2L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:15:00'), 'frequency': 50.0}, 'P2L': {'start_time': Timestamp('...
 
 --- COORDINATOR SYNTHESIS ---
 Coordinator Decision:
-  Reasoning: The system is currently safe (Agent 4), compliant (Agent 6), and pumping efficiently (Agent 3), with no immediate need for additional pumping capacity. Energy costs are higher than optimal (Agent 2), ...
-  Priority Applied: SAFETY / COMPLIANCE / COST
+  Reasoning: Based on agent inputs, the current water level is well within safe limits (0.21m, alarm at 7.2m) and there's no immediate risk of overflow. Agent 4 recommends increasing pumping to manage inflow effec...
+  Priority Applied: SAFETY / EFFICIENCY / COST
   Confidence: 0.85
-  ⚠️ WARNING: Flow may be insufficient - current 1670m³/h < inflow 1813m³/h
-     Coordinator should increase pump speeds or add pumps for cost savings
+  ✓ Flow adequate: 3341m³/h >= required 1813m³/h
 
 --- FINAL PUMP COMMANDS ---
-Active Pumps: 1
-  P1L: 50.0 Hz → 1670 m³/h @ 192.7 kW (η=81.6%)
+Active Pumps: 2
+  P1L: 50.0 Hz -> 1670.4 m³/h @ 192.7 kW (η=81.6%)
+  P2L: 50.0 Hz -> 1670.4 m³/h @ 192.3 kW (η=81.6%)
 
 💰 COST:
-  Power: 192.7 kW | Energy: 48.17 kWh | Cost: €29.43
-  Flow: 418 m³ | Specific Energy: 0.115362 kWh/m³
+  Power: 385.0 kW | Energy: 96.25 kWh | Cost: €58.81
+  Flow: 835 m³ | Specific Energy: 0.115242 kWh/m³
 
 ============================================================
 TIMESTEP 508 - Decision Cycle 9
 ============================================================
 Time: 2024-11-20 07:00:00
-L1: 1.24m | F1: 449 m³/15min | Price: €0.848/kWh
+L1: 0.18m | F1: 449 m³/15min | Price: €0.848/kWh
 
 --- SPECIALIST AGENT ASSESSMENTS ---
 
-INFLOW_FORECASTING:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: inflow_forecast
-  Reasoning: The current inflow of 449 m³/15min is within a safe range, and dry weather conditions are confirmed. The LSTM forecast indicates a rising trend in inf...
-  Key Data: {'forecast_6h': [621.3949584960938, 642.5072631835938, 647.4508056640625, 659.4166870117188, 680.0311279296875, 688.9877319335938, 720.7348022460938, 750.92333984375, 770.5159301757812, 799.548828125,...
+[inflow_forecasting]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       inflow_forecast
+  Reasoning: The current inflow of 449 m³/15min is stable and consistent with the LSTM forecast, which predicts the inflow to remain at a similar level over the ne...
+  Key Data: {'forecast_6h': [449.36627197265625, 449.36627197265625, 449.36627197265625, 449.36627197265625, 449.36627197265625, 449.36627197265625, 449.36627197265625, 449.36627197265625, 449.36627197265625, 449...
 
-ENERGY_COST:
-  Priority: HIGH | Confidence: 0.85
-  Type: cost_optimization
-  Reasoning: The current electricity price of 0.848 EUR/kWh is relatively high compared to the identified cheap window price of approximately 0.582 EUR/kWh. Given ...
-  Key Data: {'current_price': np.float64(0.848), 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 16, 'end_step': 39, 'duration_hours': 6.0, 'avg_price': np.float64(0.5816666666666667)}], 'arbitrage_valu...
+[energy_cost]
+  Priority:   HIGH
+  Confidence: 0.85
+  Type:       cost_optimization
+  Reasoning: The current electricity price is 0.848 EUR/kWh, which is significantly higher than the identified average price of 0.5817 EUR/kWh during the cheap win...
+  Key Data: {'current_price': 0.848, 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 16, 'end_step': 39, 'duration_hours': 6.0, 'avg_price': np.float64(0.5816666666666667)}], 'arbitrage_value': {'saving...
 
-PUMP_EFFICIENCY:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: pump_selection
-  Reasoning: The recommended combination of pumps 1.2 and 1.3 operates at the same frequency of 47.8 Hz, providing a total flow of 3183.48 m³/h, which exceeds the ...
-  Key Data: {'target_flow': np.float64(2655.020751953125), 'recommended_combination': {'pumps': ['1.2'], 'frequencies': {'1.2': 47.8}, 'total_flow': 3183.48, 'total_power': 332.9757651776, 'avg_efficiency': 0.846...
+[pump_efficiency]
+  Priority:   HIGH
+  Confidence: 0.85
+  Type:       pump_selection
+  Reasoning: The recommended combination of pumps 1.1 and 1.2 balances efficiency and operational stability. Since both pumps are already in operation, switching t...
+  Key Data: {'target_flow': 5000, 'recommended_combination': {'pumps': ['1.1', '1.2'], 'frequencies': {'1.1': 50.0, '1.2': 50.0}, 'total_flow': 5000.4, 'total_power': 573.8, 'avg_efficiency': 0.832, 'match_qualit...
 
-WATER_LEVEL_SAFETY:
-  Priority: LOW | Confidence: 0.95
-  Type: safety_assessment
-  Reasoning: The current water level is 1.24m, which is well within the safe range of 0-8m. The alarm threshold is at 7.2m, giving a margin of 5.96m before an alar...
-  Key Data: {'current_level': np.float64(1.2365802526474), 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': np.float64(1.2365802526474), 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_m...
+[water_level_safety]
+  Priority:   LOW
+  Confidence: 0.90
+  Type:       safety_assessment
+  Reasoning: The current water level is 0.18m, which is well within the safe range (0-8m). The alarm threshold is set at 7.2m, providing a significant margin of 7....
+  Key Data: {'current_level': 0.17764474366382416, 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': 3.192107757568359, 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_max': 24, 'hours_to...
 
-FLOW_SMOOTHNESS:
-  Priority: LOW | Confidence: 0.85
-  Type: flow_smoothness
-  Reasoning: The current outflow rate (F2) of 2655 m³/h is within the acceptable limits given the smoothness analysis. Recent flow variability of 57 m³/h and a max...
-  Key Data: {'variability_metrics': {'max_change_m3h': 154.776611328125, 'std_change_m3h': 57.370584489420914, 'current_flow': 2655.020751953125, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Smooth oper...
+[flow_smoothness]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       flow_smoothness
+  Reasoning: The current outflow (F2) is 0 m³/h, which is not contributing to any flow variability downstream. The inflow (F1) is at 449 m³/15min, which translates...
+  Key Data: {'variability_metrics': {'max_change_m3h': 154.776611328125, 'std_change_m3h': 57.370584489420914, 'current_flow': 0.0, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Current flow changes are ...
 
-CONSTRAINT_COMPLIANCE:
-  Priority: LOW | Confidence: 0.90
-  Type: constraint_compliance
-  Reasoning: The current system state indicates that there is one active pump running (P1L), which is compliant with the requirement that at least one pump must al...
-  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:00:00'), 'frequency': 50.0}}, 'runtime_check': {'violations': [], 'wa...
+[constraint_compliance]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       constraint_compliance
+  Reasoning: The system is currently operating within safe limits with a water level of 0.18m, which is well below the alarm threshold of 7.2m. Both pumps are runn...
+  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L', 'P2L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:15:00'), 'frequency': 50.0}, 'P2L': {'start_time': Timestamp('...
 
 --- COORDINATOR SYNTHESIS ---
 Coordinator Decision:
-  Reasoning: Given the current water level at 1.24m, which is well below the alarm threshold of 7.2m, and the absence of any safety risks, the system is safe. Compliance checks show that we are operating within re...
-  Priority Applied: SAFETY / COMPLIANCE / COST
+  Reasoning: Given the current inflow of 449 m³/15min and the water level of 0.18m, the situation is safe without immediate overflow risk (Agent 4). The recommendation from Agent 3 supports using pumps 1.1 and 1.2...
+  Priority Applied: SAFETY / COST / EFFICIENCY
   Confidence: 0.85
-  ⚠️ WARNING: Flow may be insufficient - current 1670m³/h < inflow 1797m³/h
-     Coordinator should increase pump speeds or add pumps for cost savings
+  ✓ Flow adequate: 3341m³/h >= required 1797m³/h
 
 --- FINAL PUMP COMMANDS ---
-Active Pumps: 1
-  P1L: 50.0 Hz → 1670 m³/h @ 192.7 kW (η=81.6%)
+Active Pumps: 2
+  P1L: 50.0 Hz -> 1670.4 m³/h @ 192.7 kW (η=81.6%)
+  P2L: 50.0 Hz -> 1670.4 m³/h @ 192.3 kW (η=81.6%)
 
 💰 COST:
-  Power: 192.7 kW | Energy: 48.17 kWh | Cost: €40.85
-  Flow: 418 m³ | Specific Energy: 0.115362 kWh/m³
+  Power: 385.0 kW | Energy: 96.25 kWh | Cost: €81.62
+  Flow: 835 m³ | Specific Energy: 0.115242 kWh/m³
 
 ============================================================
 TIMESTEP 509 - Decision Cycle 10
 ============================================================
 Time: 2024-11-20 07:15:00
-L1: 1.19m | F1: 436 m³/15min | Price: €0.848/kWh
+L1: 0.14m | F1: 436 m³/15min | Price: €0.848/kWh
 
 --- SPECIALIST AGENT ASSESSMENTS ---
 
-INFLOW_FORECASTING:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: inflow_forecast
-  Reasoning: The current inflow rate of 436 m³/15min is within the safe range for dry weather conditions, indicating normal operations at this moment. However, the...
-  Key Data: {'forecast_6h': [603.6578979492188, 625.383056640625, 630.5665283203125, 641.0960083007812, 662.4776611328125, 669.6173095703125, 702.33203125, 733.348388671875, 752.2772216796875, 781.5689086914062, ...
+[inflow_forecasting]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       inflow_forecast
+  Reasoning: The current inflow is stable at 436 m³/15min, which is within the safe operational parameters for dry weather conditions. The LSTM forecast indicates ...
+  Key Data: {'forecast_6h': [436.0274658203125, 436.0274658203125, 436.0274658203125, 436.0274658203125, 436.0274658203125, 436.0274658203125, 436.0274658203125, 436.0274658203125, 436.0274658203125, 436.02746582...
 
-ENERGY_COST:
-  Priority: HIGH | Confidence: 0.85
-  Type: cost_optimization
-  Reasoning: The current electricity price of 0.848 EUR/kWh is significantly higher than the average price of 0.5817 EUR/kWh identified for the cheap window in the...
-  Key Data: {'current_price': np.float64(0.848), 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 15, 'end_step': 38, 'duration_hours': 6.0, 'avg_price': np.float64(0.5816666666666667)}], 'arbitrage_valu...
-⚠️ pump_efficiency failed: could not convert string to float: '80%'
+[energy_cost]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       cost_optimization
+  Reasoning: The current electricity price of 0.848 EUR/kWh is significantly higher than the identified average price of 0.5817 EUR/kWh during the next cheap windo...
+  Key Data: {'current_price': 0.848, 'price_level': 'NORMAL', 'cheap_windows': [{'start_step': 15, 'end_step': 38, 'duration_hours': 6.0, 'avg_price': np.float64(0.5816666666666667)}], 'arbitrage_value': {'saving...
 
-WATER_LEVEL_SAFETY:
-  Priority: LOW | Confidence: 0.95
-  Type: safety_assessment
-  Reasoning: The current water level of 1.19m is well within the safe range (0-8m) and significantly below the alarm threshold of 7.2m. The maximum projected water...
-  Key Data: {'current_level': np.float64(1.1871984004974365), 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': np.float64(1.1871984004974365), 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'step...
+[pump_efficiency]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       pump_selection
+  Reasoning: The combination of pumps 1.1 and 1.2 is recommended due to its optimal balance of power consumption (573.8 kW) and flow rate (5000.4 m³/h). This combi...
+  Key Data: {'target_flow': 5000, 'recommended_combination': {'pumps': ['1.1', '1.2'], 'frequencies': {'1.1': 50.0, '1.2': 50.0}, 'total_flow': 5000.4, 'total_power': 573.8, 'avg_efficiency': 0.832, 'match_qualit...
 
-FLOW_SMOOTHNESS:
-  Priority: MEDIUM | Confidence: 0.85
-  Type: flow_smoothness
-  Reasoning: The current outflow rate of 2520 m³/h is well within the maximum allowed flow change of 2000 m³/h per 15 minutes, and the recent variability of 60 m³/...
-  Key Data: {'variability_metrics': {'max_change_m3h': 154.776611328125, 'std_change_m3h': 60.12169394782315, 'current_flow': 2519.7177734375, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'Stable', 'allo...
+[water_level_safety]
+  Priority:   LOW
+  Confidence: 0.85
+  Type:       safety_assessment
+  Reasoning: The current water level is at 0.14m, which is well within the safe range of 0-8m. The alarm threshold is at 7.2m, and the maximum level is 8.0m. There...
+  Key Data: {'current_level': 0.14309143946830855, 'risk_level': 'NONE', 'status': 'SAFE', 'trajectory': {'max_level': 3.0156164886474612, 'steps_to_alarm': 24, 'hours_to_alarm': 6.0, 'steps_to_max': 24, 'hours_t...
 
-CONSTRAINT_COMPLIANCE:
-  Priority: LOW | Confidence: 0.95
-  Type: constraint_compliance
-  Reasoning: The current system state shows that the water level (L1) is at 1.19m, which is well within the safe range. The inflow rate (F1) is 436m³/15min, transl...
-  Key Data: {'compliance_status': 'All constraints are being met.', 'active_pumps': ['P1L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:00:00'), 'frequency': 50.0}}, 'runtime_check': {...
+[flow_smoothness]
+  Priority:   MEDIUM
+  Confidence: 0.85
+  Type:       flow_smoothness
+  Reasoning: The current flow situation indicates that outflow (F2) is at 0 m³/h while inflow (F1) is significantly high at 436 m³/15min, leading to an increasing ...
+  Key Data: {'variability_metrics': {'max_change_m3h': 154.776611328125, 'std_change_m3h': 60.12169394782315, 'current_flow': 0.0, 'trend': 'FALLING', 'is_smooth': np.True_}, 'status': 'smooth', 'allow_immediate_...
+
+[constraint_compliance]
+  Priority:   LOW
+  Confidence: 0.95
+  Type:       constraint_compliance
+  Reasoning: The current system state shows that both pumps are running at the correct frequency and within the safe operational limits for water level and inflow....
+  Key Data: {'compliance_status': 'COMPLIANT', 'active_pumps': ['P1L', 'P2L'], 'active_pump_details': {'P1L': {'start_time': Timestamp('2024-11-20 05:15:00'), 'frequency': 50.0}, 'P2L': {'start_time': Timestamp('...
 
 --- COORDINATOR SYNTHESIS ---
 Coordinator Decision:
-  Reasoning: All safety and compliance conditions are met as per Agent 4 and Agent 6, with no violations. However, the current electricity price is significantly higher than the forecasted cheaper rate, prompting ...
-  Priority Applied: SAFETY / COST / EFFICIENCY
-  Confidence: 0.85
-  ⚠️ WARNING: Flow may be insufficient - current 1670m³/h < inflow 1744m³/h
-     Coordinator should increase pump speeds or add pumps for cost savings
+  Reasoning: Agent 4 (Water Level Safety) recommends to INCREASE_PUMPING to prevent any risk of overflow, as the inflow is stable at 436 m³/15min and the water level is currently safe at 0.14m. Agent 2 (Energy Cos...
+  Priority Applied: SAFETY / COMPLIANCE / EFFICIENCY
+  Confidence: 0.90
+  ✓ Flow adequate: 3341m³/h >= required 1744m³/h
 
 --- FINAL PUMP COMMANDS ---
-Active Pumps: 1
-  P1L: 50.0 Hz → 1670 m³/h @ 192.7 kW (η=81.6%)
+Active Pumps: 2
+  P1L: 50.0 Hz -> 1670.4 m³/h @ 192.7 kW (η=81.6%)
+  P2L: 50.0 Hz -> 1670.4 m³/h @ 192.3 kW (η=81.6%)
 
 💰 COST:
-  Power: 192.7 kW | Energy: 48.17 kWh | Cost: €40.85
-  Flow: 418 m³ | Specific Energy: 0.115362 kWh/m³
+  Power: 385.0 kW | Energy: 96.25 kWh | Cost: €81.62
+  Flow: 835 m³ | Specific Energy: 0.115242 kWh/m³
 
 ============================================================
 EVALUATION COMPLETE
@@ -643,45 +708,37 @@ EVALUATION COMPLETE
 📊 COMPLETED: 10/10 timesteps
 
 💰 COST METRICS
-  Total Cost:           €324.59
-  Cost per timestep:    €32.46
+  Total Cost:           €565.93
+  Cost per timestep:    €56.59
 
 ⚡ ENERGY METRICS
-  Total Energy:         529.83 kWh
-  Total Flow Pumped:    4,593.60 m³
-  Specific Energy:      0.115340 kWh/m³
+  Total Energy:         914.42 kWh
+  Total Flow Pumped:    7,934.40 m³
+  Specific Energy:      0.115248 kWh/m³
 
 🚨 CONSTRAINT COMPLIANCE
   Total Violations:     0
     ✅ Perfect compliance!
 
-💾 Saved results to: /Users/hasaanahmed/Documents/flow-optimize/ai_evaluation_normal_10steps.json
+💾 Saved AI evaluation results to: /Users/applepc/Documents/flow-optimize/ai_evaluation_normal_10steps.json
 
 ============================================================
-COMPARISON: AI vs BASELINE
+COMPARISON WITH BASELINE
 ============================================================
-Loading HSY historical data...
-✓ Loaded 1536 records from 2024-11-15 00:00:00 to 2024-11-30 23:45:00
-✓ Loaded volume-level map with 142 entries
 
-📊 Calculating baseline for SAME timesteps as AI evaluation:
-  Start index: 500
-  Timesteps: 10
-  Price scenario: normal
-
-📊 RESULTS (10 timesteps)
+📊 RESULTS (10 timesteps completed)
 
 Metric                         Baseline             AI System            Improvement    
 -------------------------------------------------------------------------------------
-Total Cost (EUR)               €            576.19 €            324.59          43.7%
-Total Energy (kWh)                         938.48             529.83          43.5%
-Specific Energy (kWh/m³)                 0.128308           0.115340          10.1%
+Total Cost (EUR)               €          2,821.03 €            565.93          79.9%
+Total Energy (kWh)                       1,282.99             914.42          28.7%
+Specific Energy (kWh/m³)                 0.109414           0.115248          -5.3%
 
 💰 SAVINGS
-  Cost Savings:         €251.60
-  Energy Savings:       408.66 kWh
+  Cost Savings:         €2,255.11
+  Energy Savings:       368.56 kWh
 
-✅ AI system is 43.7% BETTER than baseline!
-💾 Saved comparison to: /Users/hasaanahmed/Documents/flow-optimize/comparison_normal_10steps.json
+✅ AI system is 79.9% BETTER than baseline!
+💾 Saved comparison to: /Users/applepc/Documents/flow-optimize/comparison_normal_10steps.json
 
 ✓ Evaluation complete!
