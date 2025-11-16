@@ -466,7 +466,14 @@ class FlowSmoothnessAgent(BaseAgent):
     def _tool_calculate_flow_variability(self, state: SystemState, lookback_steps: int = 8) -> dict:
         """Tool: Calculate recent flow variability"""
         if state.historical_data is None or state.current_index < lookback_steps:
-            return {"variability": 0, "max_change": 0, "trend": "STABLE"}
+            # Return consistent format with all required keys
+            return {
+                "max_change_m3h": 0.0,
+                "std_change_m3h": 0.0,
+                "current_flow": float(state.F2),
+                "trend": "STABLE",
+                "is_smooth": True
+            }
 
         # Get recent F2 values
         start_idx = max(0, state.current_index - lookback_steps)
