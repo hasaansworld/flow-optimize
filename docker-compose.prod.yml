@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: wastewater-frontend
     ports:
-      - "80:80"
+      - "${FRONTEND_PORT:-80}:80"
     restart: unless-stopped
     networks:
       - wastewater-network

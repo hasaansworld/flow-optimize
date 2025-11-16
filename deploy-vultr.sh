@@ -88,6 +88,11 @@ if command -v netstat &> /dev/null; then
 fi
 if [ -n "$PORTS_IN_USE" ]; then
     echo -e "${YELLOW}⚠️  Ports in use:${PORTS_IN_USE}${NC}"
+    if echo "$PORTS_IN_USE" | grep -q " 80 "; then
+        echo -e "${YELLOW}   Port 80 is in use!${NC}"
+        echo -e "${YELLOW}   Run ./fix-port-80-frontend.sh to resolve${NC}"
+        echo -e "${YELLOW}   Or set FRONTEND_PORT=8080 in .env to use port 8080${NC}"
+    fi
     echo -e "${YELLOW}   You may need to stop conflicting services${NC}"
     read -p "Continue anyway? (y/n) " -n 1 -r
     echo

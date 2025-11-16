@@ -82,9 +82,12 @@ echo ""
 echo "📊 Service Status:"
 echo ""
 
+# Get frontend port from env or default to 80
+FRONTEND_PORT=${FRONTEND_PORT:-80}
+
 # Check frontend
-if curl -s http://localhost/health > /dev/null 2>&1; then
-    echo "✅ Frontend: http://${SERVER_IP}"
+if curl -s http://localhost:${FRONTEND_PORT}/health > /dev/null 2>&1; then
+    echo "✅ Frontend: http://${SERVER_IP}:${FRONTEND_PORT}"
 else
     echo "⚠️  Frontend: Starting..."
 fi
@@ -128,7 +131,7 @@ echo "=========================================="
 echo ""
 echo "📖 Access Your Services:"
 echo ""
-echo "  Frontend:  http://${SERVER_IP}"
+echo "  Frontend:  http://${SERVER_IP}:${FRONTEND_PORT:-80}"
 echo "  API:       http://${SERVER_IP}:8000"
 echo "  API Docs:  http://${SERVER_IP}:8000/docs"
 echo "  n8n:       http://${SERVER_IP}:5678"
