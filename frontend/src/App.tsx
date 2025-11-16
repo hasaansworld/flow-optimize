@@ -58,7 +58,7 @@ export default function App() {
     setPumpStates(prevPumpStates => {
       return prevPumpStates.map(pump => {
         // Map UI pump IDs to agent pump IDs
-        // Note: P1L maps to pump 1.1, P2L maps to pump 1.2 (based on user clarification)
+        // Note: P1L maps to pump 1.1, P2L maps to pump 1.2
         const pumpIdMap: { [key: string]: string[] } = {
           'P1.1': ['1.1', 'P1L', 'P1.1'],
           'P1.2': ['1.2', 'P2L', 'P1.2'],
@@ -147,7 +147,7 @@ export default function App() {
 
   const activePumpCount = pumpStates.filter(p => p.active).length;
 
-  // Fixed pipe Y position
+  // pipe Y position
   const pipeY = 250;
 
   // Component positions
