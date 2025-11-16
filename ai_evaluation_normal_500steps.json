@@ -1,17 +1,17 @@
 {
   "metadata": {
-    "timesteps_requested": 10,
+    "timesteps_requested": 500,
     "timesteps_completed": 10,
     "duration_hours": 2.5,
     "price_scenario": "normal",
     "start_index": 500,
-    "completed_successfully": true
+    "completed_successfully": false
   },
   "metrics": {
-    "total_cost_eur": 589.8199999999999,
-    "total_energy_kwh": 962.5,
-    "total_flow_m3": 8352.0,
-    "specific_energy_kwh_per_m3": 0.11524185823754789
+    "total_cost_eur": 612.8000000000001,
+    "total_energy_kwh": 1000.0,
+    "total_flow_m3": 8325.0,
+    "specific_energy_kwh_per_m3": 0.12012012012012012
   },
   "violations": {
     "count": 0,
@@ -27,17 +27,17 @@
           "pump_id": "P1L",
           "start": true,
           "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.7,
-          "efficiency": 0.816
+          "flow_m3h": 3330.0,
+          "power_kw": 400.0,
+          "efficiency": 0.848
         },
         {
           "pump_id": "P2L",
-          "start": true,
-          "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.3,
-          "efficiency": 0.816
+          "start": false,
+          "frequency_hz": 0.0,
+          "flow_m3h": 0,
+          "power_kw": 0,
+          "efficiency": 0
         },
         {
           "pump_id": "1.1",
@@ -108,15 +108,15 @@
         "L1_m": 1.5674792528152466,
         "V_m3": 3755.4365234375,
         "F1_m3_per_15min": 697.9119262695312,
-        "F2_total_m3h": 3340.8,
+        "F2_total_m3h": 3330.0,
         "electricity_price_eur_kwh": 0.497
       },
       "cost_calculation": {
-        "total_power_kw": 385.0,
-        "energy_consumed_kwh": 96.25,
-        "cost_eur": 47.83625,
-        "flow_pumped_m3": 835.2,
-        "specific_energy_kwh_per_m3": 0.11524185823754789
+        "total_power_kw": 400.0,
+        "energy_consumed_kwh": 100.0,
+        "cost_eur": 49.7,
+        "flow_pumped_m3": 832.5,
+        "specific_energy_kwh_per_m3": 0.12012012012012012
       },
       "agent_assessments": {
         "inflow_forecasting": {
@@ -136,17 +136,17 @@
         },
         "water_level_safety": {
           "priority": "LOW",
-          "confidence": 0.95,
+          "confidence": 0.9,
           "recommendation_type": "safety_assessment"
         },
         "flow_smoothness": {
-          "priority": "LOW",
+          "priority": "MEDIUM",
           "confidence": 0.9,
           "recommendation_type": "flow_smoothness"
         },
         "constraint_compliance": {
           "priority": "CRITICAL",
-          "confidence": 0.85,
+          "confidence": 0.9,
           "recommendation_type": "constraint_compliance"
         }
       },
@@ -161,17 +161,17 @@
           "pump_id": "P1L",
           "start": true,
           "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.7,
-          "efficiency": 0.816
+          "flow_m3h": 3330.0,
+          "power_kw": 400.0,
+          "efficiency": 0.848
         },
         {
           "pump_id": "P2L",
-          "start": true,
-          "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.3,
-          "efficiency": 0.816
+          "start": false,
+          "frequency_hz": 0.0,
+          "flow_m3h": 0,
+          "power_kw": 0,
+          "efficiency": 0
         },
         {
           "pump_id": "1.1",
@@ -242,15 +242,15 @@
         "L1_m": 1.5373282432556152,
         "V_m3": 3613.14892578125,
         "F1_m3_per_15min": 620.4679565429688,
-        "F2_total_m3h": 3340.8,
+        "F2_total_m3h": 3330.0,
         "electricity_price_eur_kwh": 0.497
       },
       "cost_calculation": {
-        "total_power_kw": 385.0,
-        "energy_consumed_kwh": 96.25,
-        "cost_eur": 47.83625,
-        "flow_pumped_m3": 835.2,
-        "specific_energy_kwh_per_m3": 0.11524185823754789
+        "total_power_kw": 400.0,
+        "energy_consumed_kwh": 100.0,
+        "cost_eur": 49.7,
+        "flow_pumped_m3": 832.5,
+        "specific_energy_kwh_per_m3": 0.12012012012012012
       },
       "agent_assessments": {
         "inflow_forecasting": {
@@ -274,12 +274,12 @@
           "recommendation_type": "safety_assessment"
         },
         "flow_smoothness": {
-          "priority": "MEDIUM",
+          "priority": "LOW",
           "confidence": 0.85,
           "recommendation_type": "flow_smoothness"
         },
         "constraint_compliance": {
-          "priority": "HIGH",
+          "priority": "CRITICAL",
           "confidence": 0.9,
           "recommendation_type": "constraint_compliance"
         }
@@ -295,17 +295,17 @@
           "pump_id": "P1L",
           "start": true,
           "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.7,
-          "efficiency": 0.816
+          "flow_m3h": 3330.0,
+          "power_kw": 400.0,
+          "efficiency": 0.848
         },
         {
           "pump_id": "P2L",
-          "start": true,
-          "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.3,
-          "efficiency": 0.816
+          "start": false,
+          "frequency_hz": 0.0,
+          "flow_m3h": 0,
+          "power_kw": 0,
+          "efficiency": 0
         },
         {
           "pump_id": "1.1",
@@ -376,15 +376,15 @@
         "L1_m": 1.5104299783706665,
         "V_m3": 3446.664794921875,
         "F1_m3_per_15min": 601.0291748046875,
-        "F2_total_m3h": 3340.8,
+        "F2_total_m3h": 3330.0,
         "electricity_price_eur_kwh": 0.497
       },
       "cost_calculation": {
-        "total_power_kw": 385.0,
-        "energy_consumed_kwh": 96.25,
-        "cost_eur": 47.83625,
-        "flow_pumped_m3": 835.2,
-        "specific_energy_kwh_per_m3": 0.11524185823754789
+        "total_power_kw": 400.0,
+        "energy_consumed_kwh": 100.0,
+        "cost_eur": 49.7,
+        "flow_pumped_m3": 832.5,
+        "specific_energy_kwh_per_m3": 0.12012012012012012
       },
       "agent_assessments": {
         "inflow_forecasting": {
@@ -408,12 +408,12 @@
           "recommendation_type": "safety_assessment"
         },
         "flow_smoothness": {
-          "priority": "MEDIUM",
+          "priority": "LOW",
           "confidence": 0.85,
           "recommendation_type": "flow_smoothness"
         },
         "constraint_compliance": {
-          "priority": "HIGH",
+          "priority": "CRITICAL",
           "confidence": 0.9,
           "recommendation_type": "constraint_compliance"
         }
@@ -429,17 +429,17 @@
           "pump_id": "P1L",
           "start": true,
           "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.7,
-          "efficiency": 0.816
+          "flow_m3h": 3330.0,
+          "power_kw": 400.0,
+          "efficiency": 0.848
         },
         {
           "pump_id": "P2L",
-          "start": true,
-          "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.3,
-          "efficiency": 0.816
+          "start": false,
+          "frequency_hz": 0.0,
+          "flow_m3h": 0,
+          "power_kw": 0,
+          "efficiency": 0
         },
         {
           "pump_id": "1.1",
@@ -510,15 +510,15 @@
         "L1_m": 1.4785356521606445,
         "V_m3": 3257.257080078125,
         "F1_m3_per_15min": 576.8192138671875,
-        "F2_total_m3h": 3340.8,
+        "F2_total_m3h": 3330.0,
         "electricity_price_eur_kwh": 0.497
       },
       "cost_calculation": {
-        "total_power_kw": 385.0,
-        "energy_consumed_kwh": 96.25,
-        "cost_eur": 47.83625,
-        "flow_pumped_m3": 835.2,
-        "specific_energy_kwh_per_m3": 0.11524185823754789
+        "total_power_kw": 400.0,
+        "energy_consumed_kwh": 100.0,
+        "cost_eur": 49.7,
+        "flow_pumped_m3": 832.5,
+        "specific_energy_kwh_per_m3": 0.12012012012012012
       },
       "agent_assessments": {
         "inflow_forecasting": {
@@ -547,7 +547,7 @@
           "recommendation_type": "flow_smoothness"
         },
         "constraint_compliance": {
-          "priority": "HIGH",
+          "priority": "CRITICAL",
           "confidence": 0.9,
           "recommendation_type": "constraint_compliance"
         }
@@ -563,17 +563,17 @@
           "pump_id": "P1L",
           "start": true,
           "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.7,
-          "efficiency": 0.816
+          "flow_m3h": 3330.0,
+          "power_kw": 400.0,
+          "efficiency": 0.848
         },
         {
           "pump_id": "P2L",
-          "start": true,
-          "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.3,
-          "efficiency": 0.816
+          "start": false,
+          "frequency_hz": 0.0,
+          "flow_m3h": 0,
+          "power_kw": 0,
+          "efficiency": 0
         },
         {
           "pump_id": "1.1",
@@ -644,15 +644,15 @@
         "L1_m": 1.439332365989685,
         "V_m3": 3044.766357421875,
         "F1_m3_per_15min": 540.7921142578125,
-        "F2_total_m3h": 3340.8,
+        "F2_total_m3h": 3330.0,
         "electricity_price_eur_kwh": 0.611
       },
       "cost_calculation": {
-        "total_power_kw": 385.0,
-        "energy_consumed_kwh": 96.25,
-        "cost_eur": 58.808749999999996,
-        "flow_pumped_m3": 835.2,
-        "specific_energy_kwh_per_m3": 0.11524185823754789
+        "total_power_kw": 400.0,
+        "energy_consumed_kwh": 100.0,
+        "cost_eur": 61.1,
+        "flow_pumped_m3": 832.5,
+        "specific_energy_kwh_per_m3": 0.12012012012012012
       },
       "agent_assessments": {
         "inflow_forecasting": {
@@ -677,12 +677,12 @@
         },
         "flow_smoothness": {
           "priority": "LOW",
-          "confidence": 0.9,
+          "confidence": 0.85,
           "recommendation_type": "flow_smoothness"
         },
         "constraint_compliance": {
-          "priority": "HIGH",
-          "confidence": 0.85,
+          "priority": "CRITICAL",
+          "confidence": 0.9,
           "recommendation_type": "constraint_compliance"
         }
       },
@@ -697,17 +697,17 @@
           "pump_id": "P1L",
           "start": true,
           "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.7,
-          "efficiency": 0.816
+          "flow_m3h": 3330.0,
+          "power_kw": 400.0,
+          "efficiency": 0.848
         },
         {
           "pump_id": "P2L",
-          "start": true,
-          "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.3,
-          "efficiency": 0.816
+          "start": false,
+          "frequency_hz": 0.0,
+          "flow_m3h": 0,
+          "power_kw": 0,
+          "efficiency": 0
         },
         {
           "pump_id": "1.1",
@@ -778,15 +778,15 @@
         "L1_m": 1.3929709196090698,
         "V_m3": 2819.15087890625,
         "F1_m3_per_15min": 517.6731567382812,
-        "F2_total_m3h": 3340.8,
+        "F2_total_m3h": 3330.0,
         "electricity_price_eur_kwh": 0.611
       },
       "cost_calculation": {
-        "total_power_kw": 385.0,
-        "energy_consumed_kwh": 96.25,
-        "cost_eur": 58.808749999999996,
-        "flow_pumped_m3": 835.2,
-        "specific_energy_kwh_per_m3": 0.11524185823754789
+        "total_power_kw": 400.0,
+        "energy_consumed_kwh": 100.0,
+        "cost_eur": 61.1,
+        "flow_pumped_m3": 832.5,
+        "specific_energy_kwh_per_m3": 0.12012012012012012
       },
       "agent_assessments": {
         "inflow_forecasting": {
@@ -800,7 +800,7 @@
           "recommendation_type": "cost_optimization"
         },
         "pump_efficiency": {
-          "priority": "MEDIUM",
+          "priority": "HIGH",
           "confidence": 0.85,
           "recommendation_type": "pump_selection"
         },
@@ -815,8 +815,8 @@
           "recommendation_type": "flow_smoothness"
         },
         "constraint_compliance": {
-          "priority": "HIGH",
-          "confidence": 0.85,
+          "priority": "CRITICAL",
+          "confidence": 0.92,
           "recommendation_type": "constraint_compliance"
         }
       },
@@ -831,17 +831,17 @@
           "pump_id": "P1L",
           "start": true,
           "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.7,
-          "efficiency": 0.816
+          "flow_m3h": 3330.0,
+          "power_kw": 400.0,
+          "efficiency": 0.848
         },
         {
           "pump_id": "P2L",
-          "start": true,
-          "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.3,
-          "efficiency": 0.816
+          "start": false,
+          "frequency_hz": 0.0,
+          "flow_m3h": 0,
+          "power_kw": 0,
+          "efficiency": 0
         },
         {
           "pump_id": "1.1",
@@ -912,15 +912,15 @@
         "L1_m": 1.342655062675476,
         "V_m3": 2569.44677734375,
         "F1_m3_per_15min": 484.24615478515625,
-        "F2_total_m3h": 3340.8,
+        "F2_total_m3h": 3330.0,
         "electricity_price_eur_kwh": 0.611
       },
       "cost_calculation": {
-        "total_power_kw": 385.0,
-        "energy_consumed_kwh": 96.25,
-        "cost_eur": 58.808749999999996,
-        "flow_pumped_m3": 835.2,
-        "specific_energy_kwh_per_m3": 0.11524185823754789
+        "total_power_kw": 400.0,
+        "energy_consumed_kwh": 100.0,
+        "cost_eur": 61.1,
+        "flow_pumped_m3": 832.5,
+        "specific_energy_kwh_per_m3": 0.12012012012012012
       },
       "agent_assessments": {
         "inflow_forecasting": {
@@ -944,13 +944,13 @@
           "recommendation_type": "safety_assessment"
         },
         "flow_smoothness": {
-          "priority": "LOW",
+          "priority": "MEDIUM",
           "confidence": 0.85,
           "recommendation_type": "flow_smoothness"
         },
         "constraint_compliance": {
-          "priority": "HIGH",
-          "confidence": 0.85,
+          "priority": "CRITICAL",
+          "confidence": 0.9,
           "recommendation_type": "constraint_compliance"
         }
       },
@@ -965,17 +965,17 @@
           "pump_id": "P1L",
           "start": true,
           "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.7,
-          "efficiency": 0.816
+          "flow_m3h": 3330.0,
+          "power_kw": 400.0,
+          "efficiency": 0.848
         },
         {
           "pump_id": "P2L",
-          "start": true,
-          "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.3,
-          "efficiency": 0.816
+          "start": false,
+          "frequency_hz": 0.0,
+          "flow_m3h": 0,
+          "power_kw": 0,
+          "efficiency": 0
         },
         {
           "pump_id": "1.1",
@@ -1046,15 +1046,15 @@
         "L1_m": 1.2879313230514526,
         "V_m3": 2320.26171875,
         "F1_m3_per_15min": 453.2642822265625,
-        "F2_total_m3h": 3340.8,
+        "F2_total_m3h": 3330.0,
         "electricity_price_eur_kwh": 0.611
       },
       "cost_calculation": {
-        "total_power_kw": 385.0,
-        "energy_consumed_kwh": 96.25,
-        "cost_eur": 58.808749999999996,
-        "flow_pumped_m3": 835.2,
-        "specific_energy_kwh_per_m3": 0.11524185823754789
+        "total_power_kw": 400.0,
+        "energy_consumed_kwh": 100.0,
+        "cost_eur": 61.1,
+        "flow_pumped_m3": 832.5,
+        "specific_energy_kwh_per_m3": 0.12012012012012012
       },
       "agent_assessments": {
         "inflow_forecasting": {
@@ -1068,22 +1068,22 @@
           "recommendation_type": "cost_optimization"
         },
         "pump_efficiency": {
-          "priority": "MEDIUM",
+          "priority": "HIGH",
           "confidence": 0.85,
           "recommendation_type": "pump_selection"
         },
         "water_level_safety": {
           "priority": "LOW",
-          "confidence": 0.95,
+          "confidence": 0.9,
           "recommendation_type": "safety_assessment"
         },
         "flow_smoothness": {
-          "priority": "LOW",
+          "priority": "MEDIUM",
           "confidence": 0.85,
           "recommendation_type": "flow_smoothness"
         },
         "constraint_compliance": {
-          "priority": "HIGH",
+          "priority": "CRITICAL",
           "confidence": 0.9,
           "recommendation_type": "constraint_compliance"
         }
@@ -1099,17 +1099,17 @@
           "pump_id": "P1L",
           "start": true,
           "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.7,
-          "efficiency": 0.816
+          "flow_m3h": 3330.0,
+          "power_kw": 400.0,
+          "efficiency": 0.848
         },
         {
           "pump_id": "P2L",
-          "start": true,
-          "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.3,
-          "efficiency": 0.816
+          "start": false,
+          "frequency_hz": 0.0,
+          "flow_m3h": 0,
+          "power_kw": 0,
+          "efficiency": 0
         },
         {
           "pump_id": "1.1",
@@ -1180,15 +1180,15 @@
         "L1_m": 1.2365802526474,
         "V_m3": 2105.872802734375,
         "F1_m3_per_15min": 449.36627197265625,
-        "F2_total_m3h": 3340.8,
+        "F2_total_m3h": 3330.0,
         "electricity_price_eur_kwh": 0.848
       },
       "cost_calculation": {
-        "total_power_kw": 385.0,
-        "energy_consumed_kwh": 96.25,
-        "cost_eur": 81.62,
-        "flow_pumped_m3": 835.2,
-        "specific_energy_kwh_per_m3": 0.11524185823754789
+        "total_power_kw": 400.0,
+        "energy_consumed_kwh": 100.0,
+        "cost_eur": 84.8,
+        "flow_pumped_m3": 832.5,
+        "specific_energy_kwh_per_m3": 0.12012012012012012
       },
       "agent_assessments": {
         "inflow_forecasting": {
@@ -1208,17 +1208,17 @@
         },
         "water_level_safety": {
           "priority": "LOW",
-          "confidence": 0.9,
+          "confidence": 0.95,
           "recommendation_type": "safety_assessment"
         },
         "flow_smoothness": {
-          "priority": "LOW",
+          "priority": "MEDIUM",
           "confidence": 0.85,
           "recommendation_type": "flow_smoothness"
         },
         "constraint_compliance": {
-          "priority": "LOW",
-          "confidence": 0.95,
+          "priority": "CRITICAL",
+          "confidence": 0.9,
           "recommendation_type": "constraint_compliance"
         }
       },
@@ -1233,17 +1233,17 @@
           "pump_id": "P1L",
           "start": true,
           "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.7,
-          "efficiency": 0.816
+          "flow_m3h": 3330.0,
+          "power_kw": 400.0,
+          "efficiency": 0.848
         },
         {
           "pump_id": "P2L",
-          "start": true,
-          "frequency_hz": 50.0,
-          "flow_m3h": 1670.4,
-          "power_kw": 192.3,
-          "efficiency": 0.816
+          "start": false,
+          "frequency_hz": 0.0,
+          "flow_m3h": 0,
+          "power_kw": 0,
+          "efficiency": 0
         },
         {
           "pump_id": "1.1",
@@ -1314,15 +1314,15 @@
         "L1_m": 1.1871984004974365,
         "V_m3": 1911.9708251953125,
         "F1_m3_per_15min": 436.0274658203125,
-        "F2_total_m3h": 3340.8,
+        "F2_total_m3h": 3330.0,
         "electricity_price_eur_kwh": 0.848
       },
       "cost_calculation": {
-        "total_power_kw": 385.0,
-        "energy_consumed_kwh": 96.25,
-        "cost_eur": 81.62,
-        "flow_pumped_m3": 835.2,
-        "specific_energy_kwh_per_m3": 0.11524185823754789
+        "total_power_kw": 400.0,
+        "energy_consumed_kwh": 100.0,
+        "cost_eur": 84.8,
+        "flow_pumped_m3": 832.5,
+        "specific_energy_kwh_per_m3": 0.12012012012012012
       },
       "agent_assessments": {
         "inflow_forecasting": {
@@ -1337,17 +1337,17 @@
         },
         "water_level_safety": {
           "priority": "LOW",
-          "confidence": 0.95,
+          "confidence": 0.9,
           "recommendation_type": "safety_assessment"
         },
         "flow_smoothness": {
-          "priority": "LOW",
+          "priority": "MEDIUM",
           "confidence": 0.85,
           "recommendation_type": "flow_smoothness"
         },
         "constraint_compliance": {
-          "priority": "LOW",
-          "confidence": 0.85,
+          "priority": "CRITICAL",
+          "confidence": 0.9,
           "recommendation_type": "constraint_compliance"
         }
       },

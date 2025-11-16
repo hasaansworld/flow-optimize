@@ -53,7 +53,8 @@ class WastewaterVisualizer:
         self.wwtp_level = 30      # WWTP elevation
 
         # Data storage for time series
-        self.history_size = 100
+        # INCREASED history_size to 1500 to show full dataset
+        self.history_size = 1500 
         self.time_history = []
         self.L1_history = []
         self.F1_history = []
@@ -67,6 +68,8 @@ class WastewaterVisualizer:
         # Initialize plots
         self._setup_cross_section()
         self._setup_metrics()
+
+    # ... (Keep _setup_cross_section and _setup_metrics unchanged) ...
 
     def _setup_cross_section(self):
         """Setup the cross-sectional view"""
@@ -173,7 +176,7 @@ class WastewaterVisualizer:
             ax.plot([pump_x + 3, wwtp_x], [y_pos + 1, self.wwtp_level],
                    'k-', linewidth=1, alpha=0.3)
 
-        # Inflow arrow (will be updated)
+        # Inflow arrow (we need to be able to update this artist)
         self.inflow_arrow = ax.arrow(0, self.tunnel_height + 2, 5, -3,
                                     head_width=1, head_length=1,
                                     fc='blue', ec='blue', alpha=0.7,
@@ -235,6 +238,8 @@ class WastewaterVisualizer:
 
         self.current_state = state
 
+        # --- Cross-Section Update ---
+
         # Update water level
         L1 = state.L1
         water_height = max(0, L1 - self.tunnel_ground)
@@ -244,13 +249,14 @@ class WastewaterVisualizer:
 
         # Update water color based on alarm status
         if L1 > 8.0:
-            self.water_patch.set_facecolor('#8B0000')  # Dark red
+            self.water_patch.set_facecolor('#8B0000')  # Dark red (Critical)
         elif L1 > 7.2:
-            self.water_patch.set_facecolor('#FF6347')  # Tomato red
+            self.water_patch.set_facecolor('#FF6347')  # Tomato red (Alarm)
         else:
-            self.water_patch.set_facecolor('#1E90FF')  # Dodger blue
+            self.water_patch.set_facecolor('#1E90FF')  # Dodger blue (Normal)
 
-        # Update pump colors based on status
+        # Update pump colors based on status (Fix: Ensure correct state access)
+        # Pump IDs are the keys in self.pump_patches, and they should match state.active_pumps
         for pump_id, pump_patch in self.pump_patches.items():
             if pump_id in state.active_pumps:
                 # Green if running
@@ -266,15 +272,17 @@ class WastewaterVisualizer:
         self.inflow_text.set_text(f'Inflow\n{state.F1:.0f} m³/15min')
         self.outflow_text.set_text(f'Outflow\n{state.F2:.0f} m³/h')
 
-        # Update history
-        self.time_history.append(len(self.time_history))
+        # --- History Update ---
+
+        current_step = len(self.time_history)
+        self.time_history.append(current_step)
         self.L1_history.append(L1)
         self.F1_history.append(state.F1)
         self.F2_history.append(state.F2 / 4)  # Convert to m³/15min for comparison
         self.cost_history.append(state.total_energy_cost)
         self.price_history.append(state.electricity_price)
 
-        # Keep only recent history
+        # Keep history size fixed (important for visualization performance/window)
         if len(self.time_history) > self.history_size:
             self.time_history.pop(0)
             self.L1_history.pop(0)
@@ -282,25 +290,49 @@ class WastewaterVisualizer:
             self.F2_history.pop(0)
             self.cost_history.pop(0)
             self.price_history.pop(0)
+        
+        # Recalculate time history for x-axis if history was trimmed
+        # This ensures the plot always starts at 0 steps relative to the window
+        if len(self.time_history) == self.history_size and self.history_size > 0:
+            start_step = current_step - self.history_size + 1
+            x_data = np.arange(start_step, current_step + 1)
+        else:
+            x_data = np.array(self.time_history)
 
-        # Update time series plots
-        self.level_line.set_data(self.time_history, self.L1_history)
-        self.F1_line.set_data(self.time_history, self.F1_history)
-        self.F2_line.set_data(self.time_history, self.F2_history)
-        self.cost_line.set_data(self.time_history, self.cost_history)
-        self.price_line.set_data(self.time_history, self.price_history)
 
-        # Auto-scale axes
-        if len(self.time_history) > 1:
-            self.ax_level.set_xlim(min(self.time_history), max(self.time_history))
-            self.ax_level.set_ylim(0, max(max(self.L1_history) + 1, 8.5))
+        # --- Time Series Plot Update (Key Fixes for Axes) ---
 
-            self.ax_flow.set_xlim(min(self.time_history), max(self.time_history))
-            self.ax_flow.set_ylim(0, max(max(self.F1_history), max(self.F2_history)) * 1.1)
+        self.level_line.set_data(x_data, self.L1_history)
+        self.F1_line.set_data(x_data, self.F1_history)
+        self.F2_line.set_data(x_data, self.F2_history)
+        self.cost_line.set_data(x_data, self.cost_history)
+        self.price_line.set_data(x_data, self.price_history)
 
-            self.ax_cost.set_xlim(min(self.time_history), max(self.time_history))
-            self.ax_cost.set_ylim(0, max(self.cost_history) * 1.1)
-            self.ax_cost_twin.set_ylim(0, max(self.price_history) * 1.2)
+        # Auto-scale axes - *Crucial fix for graph failure*
+        if len(x_data) > 1:
+            # Set X-limits to the current time window
+            self.ax_level.set_xlim(x_data[0], x_data[-1])
+            self.ax_flow.set_xlim(x_data[0], x_data[-1])
+            self.ax_cost.set_xlim(x_data[0], x_data[-1])
+            
+            # Set Y-limits
+            self.ax_level.set_ylim(0, max(max(self.L1_history) * 1.05, 8.5))
+            
+            flow_max = max(max(self.F1_history), max(self.F2_history))
+            self.ax_flow.set_ylim(0, flow_max * 1.1)
+
+            cost_max = max(self.cost_history) if self.cost_history else 0
+            self.ax_cost.set_ylim(0, cost_max * 1.1)
+            
+            price_max = max(self.price_history) if self.price_history else 0
+            self.ax_cost_twin.set_ylim(0, price_max * 1.2)
+        
+        # If the plot only has one point, ensure a reasonable scale
+        elif len(x_data) == 1:
+            self.ax_level.set_xlim(x_data[0] - 1, x_data[0] + 1)
+            self.ax_flow.set_xlim(x_data[0] - 1, x_data[0] + 1)
+            self.ax_cost.set_xlim(x_data[0] - 1, x_data[0] + 1)
+
 
         # Update title with timestamp
         self.fig.suptitle(
@@ -308,8 +340,11 @@ class WastewaterVisualizer:
             fontsize=16, fontweight='bold'
         )
 
+        # --- Return artists (must return all modified artists) ---
         return [self.water_patch, self.water_line, self.level_text,
-                self.inflow_text, self.outflow_text]
+                self.inflow_text, self.outflow_text, self.inflow_arrow,
+                self.level_line, self.F1_line, self.F2_line,
+                self.cost_line, self.price_line] + list(self.pump_patches.values())
 
     def show(self):
         """Display the visualization"""
@@ -318,10 +353,7 @@ class WastewaterVisualizer:
 
 
 class SimulationVisualizer:
-    """
-    Runs simulation with real-time visualization
-    """
-
+    # ... (Keep this class largely unchanged) ...
     def __init__(self, simulator: TunnelSimulator, interval_ms: int = 100):
         """
         Args:
@@ -330,13 +362,13 @@ class SimulationVisualizer:
         """
         self.simulator = simulator
         self.interval_ms = interval_ms
-        self.viz = WastewaterVisualizer()
+        self.viz = WastewaterVisualizer() # Now uses the fixed visualizer
         self.running = True
-
+        
     def control_strategy(self, state: SystemState) -> list:
         """
         Define pump control strategy
-        Override this method for different strategies
+        Fix: Ensures all pumps are explicitly commanded ON or OFF.
 
         Args:
             state: Current system state
@@ -345,36 +377,53 @@ class SimulationVisualizer:
             List of PumpCommand
         """
 
-        # Simple baseline strategy: Run 2-3 large pumps to maintain level
         commands = []
-
         L1 = state.L1
+        
+        # --- 1. Define the pumps we want to be ON and their frequency ---
+        pumps_to_turn_on = {}
 
         if L1 > 6.0:
             # High level - run 4 pumps
-            commands = [
-                PumpCommand('1.2', start=True, frequency=50.0),
-                PumpCommand('1.4', start=True, frequency=50.0),
-                PumpCommand('2.2', start=True, frequency=50.0),
-                PumpCommand('2.3', start=True, frequency=50.0),
-            ]
+            pumps_to_turn_on = {
+                '1.2': 50.0,
+                '1.4': 50.0,
+                '2.2': 50.0,
+                '2.3': 50.0,
+            }
         elif L1 > 3.0:
-            # Medium level - run 2-3 pumps
-            commands = [
-                PumpCommand('2.2', start=True, frequency=49.0),
-                PumpCommand('2.3', start=True, frequency=49.0),
-            ]
+            # Medium level - run 2 pumps
+            pumps_to_turn_on = {
+                '2.2': 49.0,
+                '2.3': 49.0,
+            }
         elif L1 > 1.0:
             # Low level - run 2 pumps at lower frequency
-            commands = [
-                PumpCommand('2.2', start=True, frequency=48.0),
-                PumpCommand('2.3', start=True, frequency=48.0),
-            ]
+            pumps_to_turn_on = {
+                '2.2': 48.0,
+                '2.3': 48.0,
+            }
         else:
             # Very low - run 1 pump minimum
-            commands = [
-                PumpCommand('2.1', start=True, frequency=47.5),
-            ]
+            pumps_to_turn_on = {
+                '2.1': 47.5,
+            }
+
+        # --- 2. Generate commands for all 8 pumps (ON or OFF) ---
+        all_pump_ids = ['1.1', '1.2', '1.3', '1.4', '2.1', '2.2', '2.3', '2.4']
+        
+        for pump_id in all_pump_ids:
+            if pump_id in pumps_to_turn_on:
+                # Command ON
+                commands.append(
+                    PumpCommand(pump_id, start=True, frequency=pumps_to_turn_on[pump_id])
+                )
+            else:
+                # Command OFF
+                # This explicitly stops any pump not selected in the current strategy
+                commands.append(
+                    PumpCommand(pump_id, start=False) 
+                )
 
         return commands
 
@@ -415,6 +464,7 @@ class SimulationVisualizer:
         print("Close the window to stop.")
 
         # Create animation
+        # Note: blit=False is safer when updating complex elements like axes and text.
         anim = FuncAnimation(
             self.viz.fig,
             self.step,
@@ -457,8 +507,8 @@ def main():
     sim_viz = SimulationVisualizer(simulator, interval_ms=100)
 
     # Run simulation
-    sim_viz.run(max_steps=200)  # Run first 200 steps (~50 hours)
-
+    # Run the full 1600 steps (full dataset) or the first 2000 as requested
+    sim_viz.run(max_steps=1600) # Use 1500 for the actual dataset length
 
 if __name__ == "__main__":
     main()

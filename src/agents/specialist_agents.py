@@ -682,11 +682,11 @@ class ConstraintComplianceAgent(BaseAgent):
                         "min_allowed": CONSTRAINTS.FREQ_MIN,
                         "type": "FREQUENCY_TOO_LOW"
                     })
-                elif freq > CONSTRAINTS.FREQ_MAX:
+                elif freq > CONSTRAINTS.FREQ_NOMINAL:
                     violations.append({
                         "pump": pump_id,
                         "frequency": freq,
-                        "max_allowed": CONSTRAINTS.FREQ_MAX,
+                        "max_allowed": CONSTRAINTS.FREQ_NOMINAL,
                         "type": "FREQUENCY_TOO_HIGH"
                     })
 
@@ -698,9 +698,16 @@ class ConstraintComplianceAgent(BaseAgent):
     def assess(self, state: SystemState) -> AgentRecommendation:
         """Assess constraint compliance"""
 
-        # Simplified: assume current pumps continue (would get proposal from coordinator)
-        proposed_pumps = list(state.active_pumps)
-        proposed_frequencies = {pump: 50.0 for pump in proposed_pumps}
+        # Get currently active pumps from state tracking
+        # state.active_pumps is a dict: {pump_id: {'start_time': timestamp, 'frequency': float}}
+        proposed_pumps = list(state.active_pumps.keys()) if state.active_pumps else []
+        
+        # If no active pumps (shouldn't happen), this will be caught as violation
+        # Build frequency dict for validation
+        proposed_frequencies = {
+            pump_id: state.active_pumps[pump_id].get('frequency', 50.0) 
+            for pump_id in proposed_pumps
+        }
 
         # Use tools
         runtime_check = self._tool_check_pump_runtimes(state, proposed_pumps)
@@ -713,12 +720,26 @@ class ConstraintComplianceAgent(BaseAgent):
             frequency_check['violations']
         )
 
+        # Format active pump info for LLM
+        active_pump_info = ""
+        if proposed_pumps:
+            active_pump_info = "\nActive Pumps Running:\n"
+            for pump_id in proposed_pumps:
+                pump_info = state.active_pumps[pump_id]
+                start_time = pump_info['start_time']
+                freq = pump_info['frequency']
+                runtime_hours = (state.timestamp - start_time).total_seconds() / 3600
+                active_pump_info += f"  - {pump_id}: {freq:.1f} Hz (running {runtime_hours:.1f}h)\n"
+        else:
+            active_pump_info = "\n⚠️ NO PUMPS CURRENTLY ACTIVE ⚠️\n"
+
         # LLM reasoning
         prompt = self._format_reasoning_prompt(state, f"""
 Constraint Compliance Analysis:
 
 Current Situation:
-- Active pumps: {len(state.active_pumps)}
+- Active pumps: {len(proposed_pumps)}
+{active_pump_info}
 - Water level L1: {state.L1:.2f}m
 - Current inflow F1: {state.F1:.0f} m³/15min
 
@@ -747,9 +768,9 @@ Critical Constraints (MUST enforce):
 
 Your task:
 1. Identify any constraint violations or risks
-2. Determine if proposed actions are safe
-3. Provide VETO if constraints would be violated
-4. Suggest compliant alternatives
+2. Determine if current state is safe
+3. Warn if constraints are violated
+4. Always report actual active pump status
 
 These are HARD constraints - they CANNOT be violated for any reason!
 
@@ -764,6 +785,8 @@ Think like a compliance officer who enforces safety rules absolutely.
         # Determine priority based on violations
         if len(all_violations) > 0:
             priority = "CRITICAL"
+        elif len(proposed_pumps) == 0:
+            priority = "CRITICAL"  # No pumps running is always critical
         elif emptying_check['action_needed']:
             priority = "HIGH"
         else:
@@ -778,6 +801,8 @@ Think like a compliance officer who enforces safety rules absolutely.
             reasoning=response.get('analysis', ''),
             data={
                 'compliance_status': response.get('compliance_status', 'COMPLIANT'),
+                'active_pumps': proposed_pumps,
+                'active_pump_details': state.active_pumps,
                 'runtime_check': runtime_check,
                 'emptying_check': emptying_check,
                 'frequency_check': frequency_check,

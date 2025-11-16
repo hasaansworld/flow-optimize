@@ -70,6 +70,10 @@ class EvaluationController:
         self.total_flow_m3 = 0.0
         self.constraint_violations = []
         self.predictions = []
+        
+        # Track pump states across cycles for constraint compliance agent
+        self.active_pumps = {}  # pump_id -> {'start_time': timestamp, 'frequency': float}
+        self.pump_start_times = {}  # pump_id -> when it was turned on
 
         print(f"\nSettings:")
         print(f"  Price scenario: {price_scenario.upper()}")
@@ -84,28 +88,81 @@ class EvaluationController:
         if frequency == 0:
             return 0, 0, 0
 
+        # Map legacy pump IDs to real IDs
+        pump_id_map = {'P1L': '1.1', 'P2L': '2.1'}
+        real_pump_id = pump_id_map.get(pump_id, pump_id)
+
         try:
             flow, power, efficiency = self.pump_model.calculate_pump_performance(
-                pump_id, frequency, L1
+                real_pump_id, frequency, L1
             )
             return flow, power, efficiency
-        except:
-            # Fallback estimation if pump curve fails
-            # Simple linear approximation based on frequency
+        except Exception as e:
+            # Fallback: still use PumpModel specs but with simple affinity laws
+            try:
+                specs = self.pump_model.get_pump_specs(real_pump_id)
+            except:
+                # If even mapping fails, use hard specs
+                if 'large' in pump_id.lower() or real_pump_id in ['1.1', '1.2', '1.4', '2.2', '2.3', '2.4']:
+                    specs = self.pump_model.LARGE_PUMP_SPECS
+                else:
+                    specs = self.pump_model.SMALL_PUMP_SPECS
+            
             freq_ratio = frequency / 50.0
-
-            # Estimate based on pump type (large vs small)
-            if 'L' in pump_id or pump_id in ['P1.4', 'P2.1', 'P2.2']:
-                # Large pump
-                flow = 3000 * freq_ratio
-                power = 180 * (freq_ratio ** 3)  # Cubic law
-            else:
-                # Small pump
-                flow = 1500 * freq_ratio
-                power = 90 * (freq_ratio ** 3)
-
-            efficiency = 0.80  # Assume reasonable efficiency
+            
+            flow = specs.rated_flow_ls * freq_ratio * 3.6  # l/s to m³/h
+            power = specs.rated_power_kw * (freq_ratio ** 3)  # Cubic law
+            efficiency = max(0.7, specs.rated_efficiency * max(0.95, 1.0 - abs(freq_ratio - 1.0) * 0.05))
+            
             return flow, power, efficiency
+
+    def _validate_and_correct_pump_commands(self, pump_commands: list, state: SystemState) -> list:
+        """
+        Validate pump commands and correct obvious errors.
+        
+        Issues fixed:
+        - Ensure at least 1 pump is running
+        - Verify total flow can handle current inflow (F1)
+        - Add backup pumps if LLM solution is inadequate
+        """
+        active_pumps = [cmd for cmd in pump_commands if cmd.start]
+        
+        # Calculate what the current commands will produce
+        current_total_flow = 0
+        for cmd in active_pumps:
+            flow, _, _ = self.calculate_pump_power(cmd.pump_id, cmd.frequency, state.L1)
+            current_total_flow += flow
+        
+        # Minimum required: handle current inflow rate (convert F1 from m³/15min to m³/h)
+        min_required_flow = state.F1 * 4 if state.F1 > 0 else 3000  # F1 is per 15 min
+        
+        # If not enough flow, add more pumps
+        if current_total_flow < min_required_flow or len(active_pumps) == 0:
+            print(f"  ⚠️ VALIDATION: Adding pumps - current {current_total_flow:.0f}m³/h < required {min_required_flow:.0f}m³/h")
+            
+            # Add second pump if not already running
+            for cmd in pump_commands:
+                # Look for P2L or another large pump that's off
+                if cmd.pump_id in ['P2L', '1.2', '2.2', '2.3'] and not cmd.start:
+                    cmd.start = True
+                    cmd.frequency = 50.0
+                    flow, _, _ = self.calculate_pump_power(cmd.pump_id, cmd.frequency, state.L1)
+                    current_total_flow += flow
+                    print(f"    Added {cmd.pump_id}, new total: {current_total_flow:.0f}m³/h")
+                    break
+            
+            # Add third pump if still not enough
+            if current_total_flow < min_required_flow:
+                for cmd in pump_commands:
+                    if not cmd.start and cmd.pump_id not in ['P1L', 'P2L']:
+                        cmd.start = True
+                        cmd.frequency = 50.0
+                        flow, _, _ = self.calculate_pump_power(cmd.pump_id, cmd.frequency, state.L1)
+                        current_total_flow += flow
+                        print(f"    Added {cmd.pump_id}, new total: {current_total_flow:.0f}m³/h")
+                        break
+        
+        return pump_commands
 
     def run_decision_cycle(self, state: SystemState, timestep: int) -> dict:
         """
@@ -161,15 +218,22 @@ class EvaluationController:
                 return None
             raise
 
-        # Step 3: Calculate power and flow for each pump
+        # Step 3: Validate and correct pump commands if needed
+        # IMPORTANT: Ensure minimum viable flow to handle current inflow
+        pump_commands = self._validate_and_correct_pump_commands(pump_commands, state)
+
+        # Step 4: Calculate power and flow for each pump
         enhanced_commands = []
         total_power_kw = 0
         total_flow_m3h = 0
 
         for cmd in pump_commands:
+            # Calculate power and flow for this pump
+            # IMPORTANT: Use the frequency only if pump is started, otherwise 0
+            pump_frequency = cmd.frequency if cmd.start else 0
             flow, power, efficiency = self.calculate_pump_power(
                 cmd.pump_id,
-                cmd.frequency if cmd.start else 0,
+                pump_frequency,
                 state.L1
             )
 
@@ -182,14 +246,17 @@ class EvaluationController:
                 'efficiency': efficiency
             })
 
+            # Sum only active (started) pumps
             if cmd.start:
                 total_power_kw += power
                 total_flow_m3h += flow
 
-        # Step 4: Calculate cost for this timestep
+        # Step 5: Calculate cost for this timestep
+        # Energy = Power (kW) × Time (hours)
+        # For 15-minute intervals: 15 min = 0.25 hours
         energy_kwh = total_power_kw * 0.25  # 15 min = 0.25 h
         cost_eur = energy_kwh * state.electricity_price
-        flow_m3 = total_flow_m3h * 0.25
+        flow_m3 = total_flow_m3h * 0.25  # Flow in 15 minutes
         specific_energy = energy_kwh / flow_m3 if flow_m3 > 0 else 0
 
         # Print pump commands and costs
@@ -202,7 +269,7 @@ class EvaluationController:
         print(f"  Power: {total_power_kw:.1f} kW | Energy: {energy_kwh:.2f} kWh | Cost: €{cost_eur:.2f}")
         print(f"  Flow: {flow_m3:.0f} m³ | Specific Energy: {specific_energy:.6f} kWh/m³")
 
-        # Step 5: Check constraints
+        # Step 6: Check constraints
         violations = []
         if state.L1 > CONSTRAINTS.L1_MAX or state.L1 < CONSTRAINTS.L1_MIN:
             violations.append({
@@ -218,14 +285,33 @@ class EvaluationController:
                 'limit': CONSTRAINTS.F2_MAX
             })
 
-        # Step 6: Accumulate metrics
+        # Step 7: Accumulate metrics
         self.total_cost += cost_eur
         self.total_energy_kwh += energy_kwh
         self.total_flow_m3 += flow_m3
         if violations:
             self.constraint_violations.extend(violations)
 
-        # Step 7: Create prediction output
+        # Step 7b: UPDATE ACTIVE PUMPS STATE FOR NEXT CYCLE
+        # This allows the Constraint Compliance Agent to track which pumps are running
+        for cmd in pump_commands:
+            if cmd.start:
+                # Pump is starting or continuing
+                if cmd.pump_id not in self.active_pumps:
+                    # First time this pump starts - record start time
+                    self.active_pumps[cmd.pump_id] = {
+                        'start_time': state.timestamp,
+                        'frequency': cmd.frequency
+                    }
+                else:
+                    # Pump already running - just update frequency
+                    self.active_pumps[cmd.pump_id]['frequency'] = cmd.frequency
+            else:
+                # Pump is stopping
+                if cmd.pump_id in self.active_pumps:
+                    del self.active_pumps[cmd.pump_id]
+
+        # Step 8: Create prediction output
         prediction = {
             'timestamp': str(state.timestamp),
             'timestep': timestep,
@@ -297,6 +383,7 @@ class EvaluationController:
                 F2=self.data['F2'].iloc[idx],
                 electricity_price=self.data[price_col].iloc[idx],
                 price_scenario=self.price_scenario,
+                active_pumps=self.active_pumps.copy(),  # Pass previous pump states
                 historical_data=self.data,
                 current_index=idx
             )

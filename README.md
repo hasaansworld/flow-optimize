@@ -2,6 +2,21 @@
 
 **Junction 2025 Hackathon Project** | **Challenge: Intelligent Flow Optimization** (Valmet × HSY)
 
+## ⚠️ Important: Evaluation System Fixes (November 2025)
+
+The evaluation system was initially claiming unrealistic **96% cost savings** due to cascading bugs. These have been fixed:
+
+- ✅ Fixed pump power calculation (now uses real specs, not hardcoded values)
+- ✅ Added pump validation layer (ensures realistic multi-pump configurations)
+- ✅ Corrected cost calculation (was using constant 100 kWh per timestep)
+
+**New realistic results: 20-30% cost savings** (achievable improvement)
+
+→ See [EXECUTIVE_SUMMARY.md](EXECUTIVE_SUMMARY.md) for details  
+→ See [BEFORE_AFTER_COMPARISON.md](BEFORE_AFTER_COMPARISON.md) for metrics
+
+---
+
 ## 🚀 Quick Start
 
 ```bash

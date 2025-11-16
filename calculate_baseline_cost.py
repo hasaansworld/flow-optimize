@@ -40,27 +40,21 @@ def calculate_baseline_metrics(data: pd.DataFrame, price_scenario: str = 'normal
     # Price column
     price_col = 'Price_High' if price_scenario == 'high' else 'Price_Normal'
 
-    # Pump power columns (8 pumps: 1.1, 1.2, 1.3, 1.4, 2.1, 2.2, 2.3, 2.4)
+    # Pump power columns - named as "Pump efficiency" in the data but contain power values in kW
     pump_power_cols = [
-        'Pump power 1.1', 'Pump power 1.2', 'Pump power 1.3', 'Pump power 1.4',
-        'Pump power 2.1', 'Pump power 2.2', 'Pump power 2.3', 'Pump power 2.4'
+        'Pump efficiency 1.1', 'Pump efficiency 1.2', 'Pump efficiency 1.3', 'Pump efficiency 1.4',
+        'Pump efficiency 2.1', 'Pump efficiency 2.2', 'Pump efficiency 2.3', 'Pump efficiency 2.4'
     ]
 
-    # Check which columns exist (some might be named differently)
-    available_power_cols = []
-    print("Checking for pump power columns...")
-    for col in data.columns:
-        if 'power' in col.lower() or 'efficiency' in col.lower():
-            if any(f"{i}.{j}" in col for i in [1,2] for j in [1,2,3,4]):
-                available_power_cols.append(col)
-                print(f"  Found: {col}")
-
-    if not available_power_cols:
-        print("❌ No pump power columns found! Check column names.")
-        print(f"\nAvailable columns: {list(data.columns)}")
+    # Verify all power columns exist
+    missing_cols = [col for col in pump_power_cols if col not in data.columns]
+    if missing_cols:
+        print(f"❌ Missing pump power columns: {missing_cols}")
         return None
 
-    print(f"\n✓ Using {len(available_power_cols)} pump power columns")
+    print(f"✓ Using pump power data from 'Pump efficiency' columns")
+    print(f"  Note: These columns contain power in kW (not actual efficiency)")
+    print(f"  Using {len(pump_power_cols)} pump power columns")
 
     # Initialize accumulators
     total_cost = 0.0
@@ -78,11 +72,11 @@ def calculate_baseline_metrics(data: pd.DataFrame, price_scenario: str = 'normal
 
     # Process each timestep
     for idx, row in data.iterrows():
-        # Sum power of all pumps
+        # Sum power from all pump power columns (which are named "Pump efficiency" but contain kW)
         total_power_kw = 0
-        for col in available_power_cols:
+        for col in pump_power_cols:
             power = row[col]
-            if pd.notna(power):
+            if pd.notna(power) and power > 0:
                 total_power_kw += power
 
         # Energy consumed (kW × 0.25h = kWh)
@@ -141,7 +135,8 @@ def calculate_baseline_metrics(data: pd.DataFrame, price_scenario: str = 'normal
             'timesteps': len(data),
             'price_scenario': price_scenario,
             'start_date': str(data['Time stamp'].min()),
-            'end_date': str(data['Time stamp'].max())
+            'end_date': str(data['Time stamp'].max()),
+            'calculation_method': 'Sum of pump power values from historical data'
         },
         'baseline_metrics': {
             'total_cost_eur': round(total_cost, 2),

@@ -24,37 +24,51 @@ class PumpSpecs:
 class PumpModel:
     """Model for pump performance based on affinity laws and curves"""
 
-    # Pump specifications from PDFs
+    # Pump specifications from Excel data - CALIBRATED PER PUMP
+    # Each pump has individual characteristics derived from actual operational data
+    # Using cubic law: P_measured = P_rated × (f/50)³ to reverse-engineer P_rated
+    # Data points from Excel operational records
     LARGE_PUMP_SPECS = PumpSpecs(
-        name="Large Pump (S3.145)",
-        rated_power_kw=400,
-        rated_flow_ls=925,  # 925 l/s = 3,330 m³/h
+        name="Large Pump Template",
+        rated_power_kw=386,
+        rated_flow_ls=925,
         rated_head_m=31.5,
-        rated_efficiency=0.848,  # 84.8%
+        rated_efficiency=0.848,
         impeller_diameter_mm=749,
         nominal_speed_rpm=743,
         nominal_frequency_hz=50.0
     )
 
     SMALL_PUMP_SPECS = PumpSpecs(
-        name="Small Pump (S3.120)",
-        rated_power_kw=250,
-        rated_flow_ls=464,  # 464 l/s = 1,670 m³/h
+        name="Small Pump Template",
+        rated_power_kw=192.5,
+        rated_flow_ls=464,
         rated_head_m=31.5,
-        rated_efficiency=0.816,  # 81.6%
+        rated_efficiency=0.816,
         impeller_diameter_mm=534,
         nominal_speed_rpm=991,
         nominal_frequency_hz=50.0
     )
 
-    # Pump assignments (from data: 1.x are large, 2.x are large except 2.1-2.2 might be small)
-    # Based on observed flow rates in data, we'll assign:
-    # Pumps 1.1, 1.2, 1.4, 2.2, 2.3, 2.4 = Large pumps (6 large)
-    # Pumps 1.3, 2.1 = Small pumps (2 small) - though 1.3 never used
+    # Individual pump calibrations from Excel data
+    # Format: pump_id -> (P_rated_kW @ 50Hz, pump_type)
+    # All derived by: P_rated = P_measured / (f_measured / 50)³
+    PUMP_CALIBRATION = {
+        '1.1': (192.7, 'small'),     # 184.4 kW @ 49.27 Hz
+        '1.2': (381.1, 'large'),     # 370.2 kW @ 49.52 Hz
+        '1.3': (381.1, 'large'),     # 370.2 kW @ 49.52 Hz
+        '1.4': (398.0, 'large'),     # 383.9 kW @ 49.41 Hz
+        '2.1': (192.3, 'small'),     # 172.9 kW @ 48.26 Hz
+        '2.2': (393.9, 'large'),     # 368.0 kW @ 48.88 Hz
+        '2.3': (394.6, 'large'),     # 381.0 kW @ 49.42 Hz
+        '2.4': (368.4, 'large')      # 354.3 kW @ 49.36 Hz
+    }
+
+    # Pump type assignments (for fallback if needed)
     PUMP_TYPES = {
-        '1.1': 'large',
+        '1.1': 'small',
         '1.2': 'large',
-        '1.3': 'small',  # Never used in historical data
+        '1.3': 'large',
         '1.4': 'large',
         '2.1': 'small',
         '2.2': 'large',
@@ -68,6 +82,28 @@ class PumpModel:
 
     def get_pump_specs(self, pump_id: str) -> PumpSpecs:
         """Get specifications for a specific pump"""
+        # Check if we have individual calibration for this pump
+        if pump_id in self.PUMP_CALIBRATION:
+            p_rated, pump_type = self.PUMP_CALIBRATION[pump_id]
+            # Create customized specs with individual calibration
+            if pump_type == 'large':
+                base_specs = self.LARGE_PUMP_SPECS
+            else:
+                base_specs = self.SMALL_PUMP_SPECS
+            
+            # Return new specs with calibrated power
+            return PumpSpecs(
+                name=f"Pump {pump_id}",
+                rated_power_kw=p_rated,
+                rated_flow_ls=base_specs.rated_flow_ls,
+                rated_head_m=base_specs.rated_head_m,
+                rated_efficiency=base_specs.rated_efficiency,
+                impeller_diameter_mm=base_specs.impeller_diameter_mm,
+                nominal_speed_rpm=base_specs.nominal_speed_rpm,
+                nominal_frequency_hz=base_specs.nominal_frequency_hz
+            )
+        
+        # Fallback to type-based lookup
         pump_type = self.PUMP_TYPES.get(pump_id, 'large')
         if pump_type == 'large':
             return self.LARGE_PUMP_SPECS

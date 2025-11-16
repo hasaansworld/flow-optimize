@@ -4,7 +4,8 @@
     "timesteps": 1536,
     "price_scenario": "high",
     "start_date": "2024-11-15 00:00:00",
-    "end_date": "2024-11-30 23:45:00"
+    "end_date": "2024-11-30 23:45:00",
+    "calculation_method": "Sum of pump power values from historical data"
   },
   "baseline_metrics": {
     "total_cost_eur": 12182463.44,
