@@ -25,8 +25,8 @@ export default function App() {
   const [allAgentMessages, setAllAgentMessages] = useState<AgentMessage[]>([]);
 
   // System state values from API
-  const [waterLevel, setWaterLevel] = useState(0); // L1 in meters
-  const [waterLevelPercent, setWaterLevelPercent] = useState(0); // L1 as percentage of 8m
+  const [waterLevel, setWaterLevel] = useState(0.5); // L1 in meters
+  const [waterLevelPercent, setWaterLevelPercent] = useState(6.25); // L1 as percentage of 8m
   const [volume, setVolume] = useState(0); // V in m³
   const [inflow, setInflow] = useState(0); // F1 in m³/15min
   const [outflow, setOutflow] = useState(0); // F2 in m³/h
@@ -48,7 +48,7 @@ export default function App() {
   const updatePumpStates = useCallback((data: AgentResponse) => {
     // Update system state values
     setWaterLevel(data.L1);
-    setWaterLevelPercent((data.L1 / 8) * 100); // Convert to percentage (0-8m range)
+    setWaterLevelPercent(Math.round((data.L1 / 8) * 100)); // Convert to percentage and round to whole number
     setVolume(data.V);
     setInflow(data.F1);
     setOutflow(data.F2);
@@ -60,8 +60,8 @@ export default function App() {
         // Map UI pump IDs to agent pump IDs
         // Note: P1L maps to pump 1.1, P2L maps to pump 1.2 (based on user clarification)
         const pumpIdMap: { [key: string]: string[] } = {
-          'P1.1': ['1.1', 'P1L'],
-          'P1.2': ['1.2', 'P2L'],
+          'P1.1': ['1.1', 'P1L', 'P1.1'],
+          'P1.2': ['1.2', 'P2L', 'P1.2'],
           'P1.3': ['1.3'],
           'P1.4': ['1.4'],
           'P2.1': ['2.1'],
@@ -73,9 +73,14 @@ export default function App() {
         };
 
         const possibleIds = pumpIdMap[pump.id] || [pump.id];
-        const pumpCommand = data.pump_commands.find(cmd =>
+
+        // Find all matching pump commands
+        const matchingCommands = data.pump_commands.filter(cmd =>
           possibleIds.includes(cmd.pump_id)
         );
+
+        // Prefer active pumps over inactive ones
+        const pumpCommand = matchingCommands.find(cmd => cmd.start) || matchingCommands[0];
 
         if (pumpCommand) {
           return {
